@@ -10,7 +10,7 @@
 
 <script setup>
 
-import { tagsViewStore } from '@/store/modules/tagsView.js'
+import { tagsViewStore } from '@/store/modules/core/tagsView.js'
 import { computed } from 'vue'
 
 const _tagViewStore = tagsViewStore()

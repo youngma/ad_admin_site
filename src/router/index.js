@@ -3,14 +3,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 /* Layout */
 import Layout from '@/layout/index.vue'
-// import * as permission from '../permission.js'
-// import { generateRoutes } from '../permission.js'
 
 /* Router Modules */
 import componentsRouter from './components'
-// import chartsRouter from './modules/charts'
-// import tableRouter from './modules/table'
-// import nestedRouter from './modules/nested'
+
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -146,10 +142,42 @@ export const asyncRoutes = [
   // },
   //
   // /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
+  // componentsRouter,
   // chartsRouter,
   // nestedRouter,
   // tableRouter,
+
+  {
+    path: '/admin-management',
+    component: Layout,
+    // component: () => import('@/views/admin-management/AdminManagement.vue'),
+    meta: {
+      title: '어드민 관리',
+      icon: 'el-icon-s-help'
+    },
+    name: 'AdminManagement',
+    redirect: '/admin-management/search',
+    children: [
+      {
+          path: 'search',
+          component: () => import('@/views/admin-management/AdminManagement.vue'),
+          name: 'AdminSearch',
+          meta: { title: '어드민 조회', icon: 'list' }
+      },
+      {
+        path: 'register',
+        component: () => import('@/views/admin-management/AdminManagement.vue'),
+        name: 'AdminRegister',
+        meta: { title: '어드민 등록', icon: 'list' }
+      },
+      {
+        path: 'modify',
+        component: () => import('@/views/admin-management/AdminManagement.vue'),
+        name: 'AdminModify',
+        meta: { title: '어드민 수정', icon: 'list' }
+      }
+    ]
+  },
   //
   // {
   //   path: '/example',
@@ -196,30 +224,30 @@ export const asyncRoutes = [
   //   ]
   // },
   //
-  {
-    path: '/error',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'ErrorPages',
-    meta: {
-      title: 'Error Pages',
-      icon: '404'
-    },
-    children: [
-      {
-        path: '401',
-        component: () => import('@/views/error-page/401.vue'),
-        name: 'Page401',
-        meta: { title: '401', noCache: true }
-      },
-      {
-        path: '404',
-        component: () => import('@/views/error-page/404.vue'),
-        name: 'Page404',
-        meta: { title: '404', noCache: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/error',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   name: 'ErrorPages',
+  //   meta: {
+  //     title: 'Error Pages',
+  //     icon: '404'
+  //   },
+  //   children: [
+  //     {
+  //       path: '401',
+  //       component: () => import('@/views/error-page/401.vue'),
+  //       name: 'Page401',
+  //       meta: { title: '401', noCache: true }
+  //     },
+  //     {
+  //       path: '404',
+  //       component: () => import('@/views/error-page/404.vue'),
+  //       name: 'Page404',
+  //       meta: { title: '404', noCache: true }
+  //     }
+  //   ]
+  // },
   //
   // {
   //   path: '/error-log',

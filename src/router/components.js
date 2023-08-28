@@ -25,17 +25,23 @@ const componentsRouter = {
     //   meta: { title: 'Markdown' }
     // },
     {
-      path: 'json-editor',
-      component: () => import('@/views/demo/jsonEditor.vue'),
-      name: 'JsonEditorDemo',
-      meta: { title: 'JSON Editor' }
+      path: 'Admin-Search',
+      component: () => import('@/views/admin-management/AdminManagement.vue'),
+      name: 'AdminSearch',
+      meta: { title: '관리자 목록' }
     },
-    {
-      path: 'code-jar-editor',
-      component: () => import('@/views/demo/codeJarEditor.vue'),
-      name: 'CodeJarEditorDemo',
-      meta: { title: 'Code-Jar Editor' }
-    },
+    // {
+    //   path: 'json-editor',
+    //   component: () => import('@/views/demo/jsonEditor.vue'),
+    //   name: 'JsonEditorDemo',
+    //   meta: { title: 'JSON Editor' }
+    // },
+    // {
+    //   path: 'code-jar-editor',
+    //   component: () => import('@/views/demo/codeJarEditor.vue'),
+    //   name: 'CodeJarEditorDemo',
+    //   meta: { title: 'Code-Jar Editor' }
+    // },
     // {
     //   path: 'split-pane',
     //   component: () => import('@/views/components-demo/split-pane.vue'),

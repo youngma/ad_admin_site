@@ -1,4 +1,4 @@
-import { appStore } from '@/store/modules/app.js'
+import { appStore } from '@/store/modules/core/app.js'
 
 export default {
   setup() {
