@@ -25,8 +25,15 @@ $color_emph: #ff3e3d;
   .frame_comp {
     border-top: 1px solid $color_darker;
     border-bottom: 1px solid $color_darker;
+
+    .el-input {
+      margin-top: 5px;
+      input {
+        width: 80%;
+      }
+    }
   }
-  .frame_comp > .row + .row {
+  .frame_comp > .el-row + .el-row {
     border-top: 1px solid $color-gray;
   }
   .btn_register{
@@ -215,6 +222,7 @@ $color_emph: #ff3e3d;
 .el-input__wrapper {
   //padding: 5px 11px !important;
   //margin-top: 5px;
+
   input[type="text"] {
     height: 40px !important
   }

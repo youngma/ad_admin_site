@@ -59,10 +59,10 @@ export const adminManagementStore = defineStore('adminManagementStore', {
       this.adminUsers.forEach(function(user) {
         const { userSeq } = user
         if (modifyUsersMap[userSeq]) {
-          const modifyUser = modifyUsersMap[userSeq]
-          user.userStatus = modifyUser.userStatus
-          user.userStatusNm = modifyUser.userStatusNm
-          user.updatedAt = modifyUser.updatedAt
+          const { userStatus, userStatusNm, updatedAt } = modifyUsersMap[userSeq]
+          user.userStatus = userStatus
+          user.userStatusNm = userStatusNm
+          user.updatedAt = updatedAt
         }
       })
     }
