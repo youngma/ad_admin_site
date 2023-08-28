@@ -33,10 +33,10 @@
 <script>
 import ScrollPane from './ScrollPane.vue'
 import path from 'path'
-import { permissionStore } from '@/store/modules/permission'
-import { settingStore } from '@/store/modules/settings'
-import { appStore } from '@/store/modules/app'
-import { tagsViewStore } from '@/store/modules/tagsView'
+import { permissionStore } from '@/store/modules/core/permission.js'
+import { settingStore } from '@/store/modules/core/settings.js'
+import { appStore } from '@/store/modules/core/app.js'
+import { tagsViewStore } from '@/store/modules/core/tagsView.js'
 
 import { ref, inject, watch, nextTick } from 'vue'
 

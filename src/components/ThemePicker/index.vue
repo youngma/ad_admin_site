@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { settingStore } from '@/store/modules/settings'
+import { settingStore } from '@/store/modules/core/settings.js'
 
 const version = '2.3.6' // element-ui version from node_modules
 const ORIGINAL_THEME = '#409EFF' // default color

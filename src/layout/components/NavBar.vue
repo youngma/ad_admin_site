@@ -54,8 +54,8 @@ defineOptions({
   inheritAttrs: false
 })
 
-import { appStore } from '@/store/modules/app'
-import { userStore } from '@/store/modules/user'
+import { appStore } from '@/store/modules/core/app.js'
+import { authStore } from '@/store/modules/core/auth.js'
 
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import Hamburger from '@/components/Hamburger/index.vue'
@@ -66,10 +66,10 @@ import SizeSelect from '@/components/SizeSelect/index.vue'
 
 import { computed } from 'vue'
 
-const _userStore = userStore()
+const _authStore = authStore()
 const _appStore = appStore()
 
-const usrInfo = computed(() => _userStore.state)
+const usrInfo = computed(() => _authStore.status)
 const sidebar = computed(() => _appStore.sidebar)
 const device = computed(() => _appStore.device)
 
@@ -80,7 +80,7 @@ function toggleSideBar() {
 }
 
 async function logout() {
-  await _userStore.logout()
+  await _authStore.logout()
   const currentPath = router.currentRoute.value.fullPath
   await router.push(`/login?redirect=${currentPath}`)
 }

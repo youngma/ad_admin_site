@@ -1,7 +1,7 @@
 
 import variables from '@/styles/element-variables.module.scss'
 
-import setting from '@/settings'
+import setting from '@/settings.js'
 import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
 
@@ -32,6 +32,14 @@ export const settingStore = defineStore('settingStore', () => {
   }
   return { state, settings, changeSetting }
 }, {
-  persist: true
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        key: 'setting',
+        storage: localStorage
+      }
+    ]
+  }
 })
 

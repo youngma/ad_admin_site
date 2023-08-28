@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard-editor-container">
     <div class=" clearfix">
-      <pan-thumb :image="userState.avatar" style="float: left">
+      <pan-thumb :image="authStatus.avatar" style="float: left">
         Your roles:
-        <span v-for="item in userState.roles" :key="item" class="pan-info-roles">{{ item }}</span>
+        <span v-for="item in authStatus.roles" :key="item" class="pan-info-roles">{{ item }}</span>
       </pan-thumb>
       <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
       <div class="info-container">
@@ -17,30 +17,38 @@
   </div>
 </template>
 
-<script>
-// import { mapGetters } from 'vuex'
+<script setup>
 // import PanThumb from '@/components/PanThumb/index.vue'
 // import GithubCorner from '@/components/GithubCorner/index.vue'
-import { userStore } from '@/store/modules/user'
 
-export default {
-  name: 'DashboardEditor',
-  components: {
-    // PanThumb,
-    // GithubCorner
-  },
-  data() {
-    return {
-      emptyGif: 'https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3'
-    }
-  },
-  computed: {
-    userState() {
-      const user = userStore()
-      return user.state
-    }
-  }
-}
+import { ref, computed } from 'vue'
+import { authStore } from '@/store/modules/core/auth.js'
+
+defineOptions({
+  name: 'DashboardEditor'
+})
+
+const _authStore = authStore()
+
+const emptyGif = ref('https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3')
+
+const authStatus = computed(() => _authStore.status)
+
+//
+// export default {
+//   name: 'DashboardEditor',
+//   data() {
+//     return {
+//       emptyGif: 'https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3'
+//     }
+//   },
+//   computed: {
+//     ...mapState('authStore', ['status']),
+//     authStatus() {
+//       return status
+//     }
+//   }
+// }
 </script>
 
 <style lang="scss" scoped>

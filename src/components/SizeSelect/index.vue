@@ -17,8 +17,8 @@
 
 import { computed, reactive } from 'vue'
 import router from '@/router'
-import { tagsViewStore } from '@/store/modules/tagsView.js'
-import { appStore } from '@/store/modules/app.js'
+import { tagsViewStore } from '@/store/modules/core/tagsView.js'
+import { appStore } from '@/store/modules/core/app.js'
 
 const sizeOptions = reactive([
   { label: 'Default', value: 'default' },

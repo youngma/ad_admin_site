@@ -1,36 +1,49 @@
 <template>
   <div class="dashboard-container">
-    <component :is="currentRole" />
+    <component :is="currentRole === 'editorDashboard' ? editorDashboard : adminDashboard" />
   </div>
 </template>
 
-<script>
-// import { mapGetters } from 'vuex'
+<script setup>
 import adminDashboard from './admin/index.vue'
 import editorDashboard from './editor/index.vue'
 
-import { userStore } from '@/store/modules/user.js'
-export default {
-  name: 'DashboardMain',
-  components: { adminDashboard, editorDashboard },
-  setup() {
-    const user = userStore()
-    return {
-      user
-    }
-  },
-  data() {
-    return {
-      currentRole: 'adminDashboard'
-    }
-  },
-  computed: {
-    role() { return this.user.state.roles }
-  },
-  created() {
-    if (!this.role.includes('ADMIN')) {
-      this.currentRole = 'editorDashboard'
-    }
+import { authStore } from '@/store/modules/core/auth.js'
+import { ref, onMounted } from 'vue'
+
+defineOptions({
+  name: 'DashBoard'
+})
+
+const currentRole = ref('adminDashboard')
+
+const auth = authStore()
+
+onMounted(() => {
+  if (!auth.status.roles.includes('ADMIN')) {
+    currentRole.value = 'editorDashboard'
   }
-}
+})
+
+// export default {
+//   name: 'DashboardMain',
+//   components: { adminDashboard, editorDashboard },
+//   setup() {
+//   },
+//   data() {
+//     return {
+//       currentRole: 'adminDashboard'
+//     }
+//   },
+//   computed: {
+//     const auth = authStore();
+//
+//     role() { return this.status.roles }
+//   },
+//   created() {
+//     if (!this.role.includes('ADMIN')) {
+//       this.currentRole = 'editorDashboard'
+//     }
+//   }
+// }
 </script>

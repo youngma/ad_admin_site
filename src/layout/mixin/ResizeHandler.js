@@ -1,4 +1,4 @@
-import { appStore } from '@/store/modules/app'
+import { appStore } from '@/store/modules/core/app.js'
 
 const { body } = document
 const WIDTH = 992 // refer to Bootstrap's responsive design

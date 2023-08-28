@@ -46,8 +46,8 @@ import RightPanel from '@/components/RightPanel/index.vue'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 // import ResizeMixin from './mixin/ResizeHandler'
 
-import { appStore } from '@/store/modules/app'
-import { settingStore } from '@/store/modules/settings'
+import { appStore } from '@/store/modules/core/app.js'
+import { settingStore } from '@/store/modules/core/settings.js'
 import {computed, inject, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch} from 'vue'
 
 const router = inject('$router')

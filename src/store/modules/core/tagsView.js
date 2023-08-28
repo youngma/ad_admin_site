@@ -144,6 +144,14 @@ export const tagsViewStore = defineStore('tagsViewStore',
       }
     }
   }, {
-    persist: true
+    persist: {
+      enabled: true,
+      strategies: [
+        {
+          key: 'tagViews',
+          storage: localStorage
+        }
+      ]
+    }
   }
 )

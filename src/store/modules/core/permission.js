@@ -1,4 +1,4 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import { asyncRoutes, constantRoutes } from '@/router/index.js'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 
@@ -43,10 +43,8 @@ export const permissionStore = defineStore('permissionStore', () => {
   }
 
   function generateRoutes(router, roles) {
-
     return new Promise(resolve => {
       let accessedRoutes
-
 
       if (roles.includes('ADMIN')) {
         accessedRoutes = asyncRoutes || []
@@ -65,5 +63,14 @@ export const permissionStore = defineStore('permissionStore', () => {
 
   return { state, generateRoutes }
 }, {
-  persist: true
+
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        key: 'permission',
+        storage: localStorage
+      }
+    ]
+  }
 })

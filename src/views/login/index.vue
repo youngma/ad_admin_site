@@ -78,18 +78,18 @@
 import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin.vue'
 
-import { userStore } from '@/store/modules/user.js'
+import { authStore } from '@/store/modules/core/auth.js'
 import { inject } from 'vue'
-import { Hide, Lock, User, View } from "@element-plus/icons-vue";
+import { Hide, Lock, User, View } from '@element-plus/icons-vue'
 
 export default {
   name: 'LoginMain',
   components: { View, Hide, Lock, User, SocialSign },
   setup: () => {
-    const _userStore = userStore()
+    const _authStore = authStore()
     const router = inject('$router')
     return {
-      userStore: _userStore,
+      autoStore: _authStore,
       router
     }
   },
@@ -169,14 +169,16 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.userStore.login(this.loginForm)
+          this.autoStore.login(this.loginForm)
             .then((d) => {
-              this.userStore.getInfo().then((info) => {
+              console.log(d)
+              this.autoStore.getInfo().then((info) => {
                 this.router.push({ path: this.redirect || '/', query: this.otherQuery })
                 this.loading = false
               })
             })
             .catch((e) => {
+              console.error(e)
               this.loading = false
             })
         } else {

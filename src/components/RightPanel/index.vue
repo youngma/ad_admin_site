@@ -16,7 +16,7 @@
 
 <script>
 import { addClass, removeClass } from '@/utils'
-import { settingStore } from '@/store/modules/settings'
+import { settingStore } from '@/store/modules/core/settings.js'
 
 export default {
   name: 'RightPanel',

@@ -1,16 +1,16 @@
-import * as userAPI from '@/api/user'
-import * as AuthUtils from '@/utils/auth'
-import router, { resetRouter } from '@/router'
+import * as userAPI from '@/api/user.js'
+import * as AuthUtils from '@/utils/auth.js'
+import router, { resetRouter } from '@/router/index.js'
 
-import { permissionStore } from '@/store/modules/permission'
-import { tagsViewStore } from '@/store/modules/tagsView'
+import { permissionStore } from '@/store/modules/core/permission.js'
+import { tagsViewStore } from '@/store/modules/core/tagsView.js'
 
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 
-export const userStore = defineStore(
-  'user', () => {
-    const state = reactive({
+export const authStore = defineStore(
+  'authStore', () => {
+    const status = reactive({
       token: AuthUtils.getToken(),
       name: '',
       avatar: '',
@@ -22,9 +22,9 @@ export const userStore = defineStore(
       const { username, password } = userInfo
       return new Promise((resolve, reject) => {
         userAPI.login({ userId: username.trim(), password: password }).then(response => {
-          const { authorization } = response.headers;
+          const { authorization } = response.headers
 
-          state.token = authorization
+          status.token = authorization
           AuthUtils.setToken(authorization)
 
           resolve()
@@ -36,11 +36,7 @@ export const userStore = defineStore(
 
     const getInfo = () => {
       return new Promise((resolve, reject) => {
-
-        userAPI.getInfo(state.token).then(response => {
-
-          const { result } = response.data
-
+        userAPI.getInfo(status.token).then(result => {
           if (!result) {
             reject('Verification failed, please Login again.')
           }
@@ -48,21 +44,19 @@ export const userStore = defineStore(
           const { userRole, userName, avatar, introduction } = result
 
           // roles must be a non-empty array
-          if (!userRole ) {
+          if (!userRole) {
             reject('getInfo: roles must be a non-null array!')
           }
 
-          state.roles = [userRole]
-          state.name = userName
+          status.roles = [userRole]
+          status.name = userName
 
-          state.avatar = avatar
-          state.introduction = introduction
+          status.avatar = avatar
+          status.introduction = introduction
 
           resolve(result)
         }).catch(error => {
-
-          console.log(error)
-          if (error.response.status === 401) {
+          if (error.status === 401) {
             reject('Verification failed, please Login again.')
           } else {
             reject(error)
@@ -73,7 +67,7 @@ export const userStore = defineStore(
 
     const logout = () => {
       return new Promise((resolve, reject) => {
-        userAPI.logout(state.token).then(() => {
+        userAPI.logout(status.token).then(() => {
           resetToken().then(r => {
             resetRouter()
             resolve()
@@ -91,8 +85,8 @@ export const userStore = defineStore(
     // remove token
     const resetToken = () => {
       return new Promise(resolve => {
-        state.token = ''
-        state.roles = []
+        status.token = ''
+        status.roles = []
         AuthUtils.removeToken()
         resolve()
       })
@@ -101,7 +95,7 @@ export const userStore = defineStore(
     // dynamically modify permissions
     const changeRoles = async(role) => {
       const token = role + '-token'
-      state.token = token
+      status.token = token
 
       AuthUtils.setToken(token)
 
@@ -110,20 +104,26 @@ export const userStore = defineStore(
       resetRouter()
 
       // generate accessible routes map based on roles
-      await permissionStore.generateRoutes(router, roles)
-
+      await permissionStore.generateRoutes(router, userRoles)
 
       // dynamically add accessible routes
       // router.addRoute(accessRoutes)
-
 
       // reset visited views and cached views
       // dispatch('tagsView/delAllViews', null, { root: true })
     }
 
-    return { state, login, getInfo, logout, resetToken, changeRoles }
+    return { status, login, getInfo, logout, resetToken, changeRoles }
   }, {
-    persist: true
+    persist: {
+      enabled: true,
+      strategies: [
+        {
+          key: 'user',
+          storage: localStorage
+        }
+      ]
+    }
   }
 )
 

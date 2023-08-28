@@ -4,24 +4,24 @@ import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
-import { permissionStore } from '@/store/modules/permission.js'
-import { userStore } from '@/store/modules/user.js'
+import { permissionStore } from '@/store/modules/core/permission.js'
+import { authStore } from '@/store/modules/core/auth.js'
 
 export {
   generateRoutes
 }
 
+
 async function generateRoutes(router) {
-
-  const _permissionStore = permissionStore()
-  const _userStore = userStore()
-
   try {
-    const { userRole } = await _userStore.getInfo()
+    const _permissionStore = permissionStore()
+    const _authStore = authStore()
+
+    const { userRole } = await _authStore.getInfo()
 
     await _permissionStore.generateRoutes(router, [userRole])
-  } catch( error ) {
-    console.log( 'error : ', error );
+  } catch (error) {
+    console.log('error : ', error)
   }
 
   // generate accessible routes map based on roles
@@ -31,6 +31,8 @@ async function generateRoutes(router) {
 
 function install(router) {
 
+  const _authStore = authStore()
+
   // const _permissionStore = permissionStore()
 
   NProgress.configure({ showSpinner: false }) // NProgress Configuration
@@ -38,9 +40,6 @@ function install(router) {
   const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
   router.beforeEach(async(to, from, next) => {
-
-    const _userStore = userStore()
-
     // start progress bar
     NProgress.start()
 
@@ -57,7 +56,7 @@ function install(router) {
         NProgress.done() // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
       } else {
         // determine whether the user has obtained his permission roles through getInfo
-        const hasRoles = _userStore.state.roles && _userStore.state.roles.length > 0
+        const hasRoles = _authStore.status.roles && _authStore.status.roles.length > 0
         if (hasRoles) {
           // this.generateRoutes(router)
           next()

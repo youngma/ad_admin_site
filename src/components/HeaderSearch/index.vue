@@ -23,7 +23,7 @@
 import Fuse from 'fuse.js'
 import path from 'path'
 
-import { permissionStore } from '@/store/modules/permission.js'
+import { permissionStore } from '@/store/modules/core/permission.js'
 import { mapState } from 'pinia'
 
 export default {

@@ -24,9 +24,9 @@ import Logo from './Logo.vue'
 import SidebarItem from './SidebarItem.vue'
 import variables from '@/styles/variables.module.scss'
 
-import { permissionStore } from '@/store/modules/permission'
-import { settingStore } from '@/store/modules/settings'
-import { appStore } from '@/store/modules/app'
+import { permissionStore } from '@/store/modules/core/permission.js'
+import { settingStore } from '@/store/modules/core/settings.js'
+import { appStore } from '@/store/modules/core/app.js'
 
 export default {
   name: 'SidebarIndex',

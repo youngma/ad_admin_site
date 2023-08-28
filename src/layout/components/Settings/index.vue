@@ -29,7 +29,7 @@
 
 <script>
 import ThemePicker from '@/components/ThemePicker/index.vue'
-import { settingStore } from '@/store/modules/settings'
+import { settingStore } from '@/store/modules/core/settings.js'
 
 export default {
   name: 'SettingsView',

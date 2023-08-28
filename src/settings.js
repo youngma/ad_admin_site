@@ -1,5 +1,5 @@
 const setting = {
-  title: 'Vue Element Admin',
+  title: 'SmartAd Admin',
 
   /**
    * @type {boolean} true | false

@@ -1,22 +1,31 @@
 import axios from 'axios'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
-import { userStore } from '@/store/modules/user'
+// import { useRouter } from 'vue-router'
+import { authStore } from '@/store/modules/core/auth.js'
 import { getToken } from '@/utils/auth'
-import router from "@/router/index.js";
+import router from '@/router/index.js'
+
+import qs from 'qs'
+
+
 // create an axios instance
 const service = axios.create({
   baseURL: import.meta.env.VITE_ADMIN_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 5000, // request timeout
+  paramsSerializer: function(params) {
+    return qs.stringify(params)
+  }
 })
 
 // request interceptor
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    const store = userStore()
-    if (store.state.token) {
+    const _authStore = authStore()
+    const { token } = _authStore.status
+
+    if (token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
@@ -42,10 +51,8 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    // const res = response.data
-
-    const user = userStore()
-    // if the custom code is not 20000, it is judged as an error.
+    console.log('# response => ', response)
+    const res = response.data
     if (response.status !== 200) {
       ElMessage({
         message: res.message || 'Error',
@@ -54,30 +61,30 @@ service.interceptors.response.use(
       })
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
-      return response
+      return res.result || response
     }
   },
   error => {
-    const user = userStore()
-    if (error.response.status === 401 || 403) {
-      if(window.location.pathname !== '/login') {
+    const _authStore = authStore()
+    if (error.response.status === 401 || error.response.status === 403) {
+      if (window.location.pathname !== '/login') {
         // to re-login
         ElMessageBox.confirm('로그인 페이지로 이동 합니다.', '알림', {
           confirmButtonText: '확인',
           type: 'warning'
         }).then(() => {
-          user.resetToken().then(() => {
-            router.push(`/login?redirect=${router.currentRoute.value.path}`)
+          _authStore.resetToken().then(() => {
+            router.push(`/login?redirect=${router.currentRoute.value.path}`).then(r => {})
           })
           // store.dispatch('user/resetToken')
         })
       } else {
-        user.resetToken().then(() => {})
+        _authStore.resetToken().then(() => {})
       }
     } else {
-      console.log('err' + error) // for debug
+      console.log('err', error.response.data) // for debug
       ElMessage({
-        message: error.message,
+        message: error.response.data.message || error.message,
         type: 'error',
         duration: 5 * 1000
       })
