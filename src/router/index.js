@@ -7,7 +7,6 @@ import Layout from '@/layout/index.vue'
 /* Router Modules */
 import componentsRouter from './components'
 
-
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -159,14 +158,14 @@ export const asyncRoutes = [
     redirect: '/admin-management/search',
     children: [
       {
-          path: 'search',
-          component: () => import('@/views/admin-management/AdminManagement.vue'),
-          name: 'AdminSearch',
-          meta: { title: '어드민 조회', icon: 'list' }
+        path: 'search',
+        component: () => import('@/views/admin-management/AdminManagement.vue'),
+        name: 'AdminSearch',
+        meta: { title: '어드민 조회', icon: 'list' }
       },
       {
         path: 'register',
-        component: () => import('@/views/admin-management/AdminManagement.vue'),
+        component: () => import('@/views/admin-management/AdminRegister.vue'),
         name: 'AdminRegister',
         meta: { title: '어드민 등록', icon: 'list' }
       },

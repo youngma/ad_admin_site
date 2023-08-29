@@ -9,13 +9,13 @@
           <strong class="comm_tit_box">관리자 아이디</strong>
         </el-col>
         <el-col :span="8">
-          <el-input v-model="store.searchParams.userId" placeholder="Please input" />
+          <el-input v-model="searchParams.userId" placeholder="Please input" />
         </el-col>
         <el-col :span="4">
           <strong class="comm_tit_box">관리자 이름</strong>
         </el-col>
         <el-col :span="8">
-          <el-input v-model="store.searchParams.userName" placeholder="Please input" />
+          <el-input v-model="searchParams.userName" placeholder="Please input" />
         </el-col>
       </el-row>
 
@@ -24,18 +24,19 @@
           <strong class="comm_tit_box">전화 번호</strong>
         </el-col>
         <el-col :span="8">
-          <el-input v-model="store.searchParams.phoneNumber" placeholder="Please input" />
+          <el-input v-model="searchParams.phoneNumber" placeholder="Please input" />
         </el-col>
         <el-col :span="4">
           <strong class="comm_tit_box">상태</strong>
         </el-col>
         <el-col :span="8">
-          <el-select v-model="store.searchParams.userStatus" class="m-2" placeholder="Select" size="large">
+          <el-select v-model="searchParams.userStatus" class="m-2" placeholder="Select" size="large">
+            <el-option key="" label="전체" value=""/>
             <el-option
-              v-for="item in options"
-              :key="item.code"
-              :label="item.value"
-              :value="item.value"
+              v-for="code of UserStatus"
+              :key="code.key"
+              :label="code.value"
+              :value="code.value"
             />
           </el-select>
         </el-col>
@@ -57,33 +58,27 @@
 
 <script setup>
 
-import { ref } from 'vue'
 import { adminManagementStore } from '@/store/modules/admin/adminManagementStore.js'
+import { commonStore } from '@/store/modules/admin/commonStore.js'
+import { storeToRefs } from 'pinia'
 
 defineOptions({
   name: 'AdminSearchFrom'
 })
 
 const store = adminManagementStore()
+const common = commonStore()
+
+const { searchParams } = storeToRefs(store)
+const { UserStatus } = storeToRefs(common)
 
 function clickInit() {
-  store.init()
+  this.store.init()
 }
 
 function search({ page, size }) {
-  store.search({ page, size })
+  this.store.search({ page, size })
 }
-
-const options = ref([{
-  code: 'search',
-  value: 'search'
-}, {
-  code: 'search',
-  value: 'search'
-}, {
-  code: 'search',
-  value: 'search'
-}])
 
 </script>
 

@@ -57,6 +57,8 @@ declare module '@vue/runtime-core' {
     IconSupport: typeof import('./components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./components/icons/IconTooling.vue')['default']
     JsonEditor: typeof import('./components/JsonEditor/index.vue')['default']
+    ModifyModal: typeof import('./components/AdminManagement/ModifyModal.vue')['default']
+    RegisterForm: typeof import('./components/AdminManagement/RegisterForm.vue')['default']
     RightPanel: typeof import('./components/RightPanel/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

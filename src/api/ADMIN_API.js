@@ -8,6 +8,14 @@ export function search(query) {
   })
 }
 
+export function userIdCheck(query) {
+  return request({
+    url: '/admin/v1/users/check',
+    method: 'get',
+    params: query
+  })
+}
+
 export function userDisabled(data) {
   return request({
     url: '/admin/v1/users/disabled',
@@ -20,6 +28,22 @@ export function userEnabled(data) {
   return request({
     url: '/admin/v1/users/enabled',
     method: 'put',
+    data
+  })
+}
+
+export function register(data) {
+  return request({
+    url: '/admin/v1/users/register',
+    method: 'POST',
+    data
+  })
+}
+
+export function modify(data) {
+  return request({
+    url: '/admin/v1/users/info',
+    method: 'PUT',
     data
   })
 }

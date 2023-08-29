@@ -5,7 +5,11 @@
     style="width: 100%"
   >
     <el-table-column fixed prop="userId" label="사용자 아이디" width="150" header-align="center" align="center" />
-    <el-table-column prop="userName" label="사용자 이름" header-align="center" />
+    <el-table-column prop="userName" label="사용자 이름" width="220" header-align="center" >
+      <template #default="scope">
+        <el-button @click="open(scope.row)">{{ scope.row.userName }}</el-button>
+      </template>
+    </el-table-column>
     <el-table-column prop="phoneNumber" label="전화 번호" :formatter="phoneFormatter" header-align="center" align="center">
     </el-table-column>
     <el-table-column prop="userStatusNm" label="사용자 상태" header-align="center" align="center" />
@@ -13,7 +17,7 @@
     <el-table-column prop="updatedAt" label="등록일" width="210" header-align="center" />
     <el-table-column prop="userStatus" label="" width="150" header-align="center" align="center">
       <template #default="scope">
-          <el-button v-if="scope.row.userStatus !== 'ENABLED'" type="primary" tag="span" class="comm_form_btn" @click="enabled(scope.row)">활성화</el-button>
+          <el-button v-if="scope.row.userStatus !== 'Enable'" type="primary" tag="span" class="comm_form_btn" @click="enabled(scope.row)">활성화</el-button>
           <el-button v-else type="warning" tag="span" class="comm_form_btn" @click="disabled(scope.row)">비활성화</el-button>
       </template>
     </el-table-column>
@@ -35,6 +39,10 @@
 <!--    <b-pagination hide-ellipsis v-model="listCondition.offset" :total-rows="listCondition.total" :per-page="listCondition.limit" @input="pageChange" />-->
   </div>
 
+  <div v-if="selectedUser != null">
+    <ModifyModal />
+  </div>
+
 </template>
 
 <script setup>
@@ -43,13 +51,15 @@ import { adminManagementStore } from '@/store/modules/admin/adminManagementStore
 import { phoneFormatter } from '@/utils/customElTableFormatter'
 import { storeToRefs } from 'pinia'
 
+import ModifyModal from '@/components/AdminManagement/ModifyModal.vue'
+
 defineOptions({
   name: 'DataTable'
 })
 
 const store = adminManagementStore()
 
-const { adminUsers, searchParams, total } = storeToRefs(store)
+const { adminUsers, selectedUser, searchParams, total } = storeToRefs(store)
 
 function pageChange(number) {
   this.store.search({ page: number })
@@ -63,6 +73,10 @@ function enabled(row) {
 function disabled(row) {
   const { userSeq } = row
   this.store.disabled(userSeq)
+}
+
+function open(row) {
+  this.store.selected(row)
 }
 
 </script>

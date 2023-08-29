@@ -27,15 +27,25 @@ import router from './router'
 import * as permission from '@/permission.js'
 
 const pinia = createPinia()
+
+
+
 pinia.use(piniaPersist)
 
 const newApp = createApp(App)
   .use(pinia)
   .use(ElementPlus, {
-    size: Cookies.get('size') || 'medium', // set element-ui default size
+    size: 'default', // set element-ui default size
     locale: koLang
   })
+//
+pinia.use(({ store }) => {
+  store.$messageBox = newApp.config.globalProperties.$messageBox
+  store.$alert = newApp.config.globalProperties.$alert
+  store.$confirm = newApp.config.globalProperties.$confirm
+})
 
+console.log(newApp.config.globalProperties)
 // if (useRouter.currentRoute.value.path ==);
 
 await permission.generateRoutes(router)

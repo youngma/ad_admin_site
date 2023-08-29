@@ -18,10 +18,10 @@ export default {
   props: {
   },
   setup(props) {
-
     const store = adminManagementStore()
 
     onMounted(async() => {
+      store.init()
       await store.search({ page: 1 })
     })
   }

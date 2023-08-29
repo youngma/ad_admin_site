@@ -22,9 +22,8 @@ import { appStore } from '@/store/modules/core/app.js'
 
 const sizeOptions = reactive([
   { label: 'Default', value: 'default' },
-  { label: 'Medium', value: 'medium' },
   { label: 'Small', value: 'small' },
-  { label: 'Mini', value: 'mini' }
+  { label: 'Large', value: 'large' }
 ])
 
 const _tagsViewStore = tagsViewStore()

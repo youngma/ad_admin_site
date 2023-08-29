@@ -4,6 +4,7 @@ import router, { resetRouter } from '@/router/index.js'
 
 import { permissionStore } from '@/store/modules/core/permission.js'
 import { tagsViewStore } from '@/store/modules/core/tagsView.js'
+import { commonStore } from '@/store/modules/admin/commonStore.js'
 
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
@@ -47,6 +48,9 @@ export const authStore = defineStore(
           if (!userRole) {
             reject('getInfo: roles must be a non-null array!')
           }
+
+          const _commonStore = commonStore()
+          _commonStore.loadCode()
 
           status.roles = [userRole]
           status.name = userName

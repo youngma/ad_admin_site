@@ -57,7 +57,7 @@ $color_emph: #ff3e3d;
     line-height: 52px;
     color: $color_darker;
     background-color: $color_cloud;
-    border-right: 1px solid $color_graydark;
+    //border-right: 1px solid $color_graydark;
   }
   .comm_form_btn {
     display: inline-block;
@@ -109,9 +109,8 @@ $color_emph: #ff3e3d;
   }
 }
 
-
 .comm_comp_table {
-  padding:0 15px;
+  //padding:0 15px;
   p, ul {
     margin:0;
     padding:0;
@@ -119,10 +118,15 @@ $color_emph: #ff3e3d;
   label {
     margin:0;
   }
-  .row {
+  .el-row {
     align-items: center;
+    margin: 0 !important;
+    //padding: 5px 0 5px 0 !important;
+    .el-col {
+      padding-right: 0 !important;
+    }
   }
-  & > .row {
+  & > .el-row {
     &:first-child {
       border-top: 1px solid #dee2e6;
     }
@@ -141,7 +145,7 @@ $color_emph: #ff3e3d;
   }
   .col_tit {
     align-self: stretch;
-    padding:15px;
+    //padding:15px;
     border-right: 1px solid #ccc;
     background-color: #f0f3f5;
     .tit_comm {
@@ -151,7 +155,7 @@ $color_emph: #ff3e3d;
     }
   }
   .col_desc {
-    padding:15px;
+    padding: 10px;
   }
   .wrap_img {
     display: inline-block;
@@ -219,14 +223,22 @@ $color_emph: #ff3e3d;
   }
 }
 
+
+
 .el-input__wrapper {
   //padding: 5px 11px !important;
   //margin-top: 5px;
-
-  input[type="text"] {
+  input[type="text"], input[type="password"] {
     height: 40px !important
   }
 }
+
+.is-error {
+  .el-input__wrapper{
+    box-shadow: 0 0 0 1px var(--el-color-danger) inset;
+  }
+}
+
 
 .page-box {
   margin-top: 1rem;
@@ -288,3 +300,13 @@ $color_emph: #ff3e3d;
   font-size: 1em !important;
 }
 
+
+.float-right {
+  float: right;
+}
+
+.invalid-feedback {
+  font-size:  small;
+  color: var(--el-color-danger);
+  padding: 5px 0 0 7px;
+}
