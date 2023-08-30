@@ -149,7 +149,7 @@ export const asyncRoutes = [
   {
     path: '/admin-management',
     component: Layout,
-    // component: () => import('@/views/admin-management/AdminManagement.vue'),
+    // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
     meta: {
       title: '어드민 관리',
       icon: 'el-icon-s-help'
@@ -168,13 +168,38 @@ export const asyncRoutes = [
         component: () => import('@/views/admin-management/AdminRegister.vue'),
         name: 'AdminRegister',
         meta: { title: '어드민 등록', icon: 'list' }
+      }
+    ]
+  },
+  {
+    path: '/advertiser-management',
+    component: Layout,
+    // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
+    meta: {
+      title: '광고주 관리',
+      icon: 'el-icon-s-help'
+    },
+    name: 'AdvertiserManagement',
+    redirect: '/advertiser-management/search',
+    children: [
+      {
+        path: 'search',
+        component: () => import('@/views/advertiser-management/AdvertiserManagement.vue'),
+        name: 'AdvertiserSearch',
+        meta: { title: '광고주 조회', icon: 'list' }
       },
       {
-        path: 'modify',
-        component: () => import('@/views/admin-management/AdminManagement.vue'),
-        name: 'AdminModify',
-        meta: { title: '어드민 수정', icon: 'list' }
-      }
+        path: 'register',
+        component: () => import('@/views/advertiser-management/AdvertiserRegister.vue'),
+        name: 'AdvertiserRegister',
+        meta: { title: '광고주 등록', icon: 'list' }
+      },
+      // {
+      //   path: 'register',
+      //   component: () => import('@/views/advertiser-management/AdminRegister.vue'),
+      //   name: 'AdvertiserUserSearch',
+      //   meta: { title: '광고주 사용자 관리', icon: 'list' }
+      // }
     ]
   },
   //
