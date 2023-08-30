@@ -58,7 +58,7 @@
 import { advertiserManagementStore } from '@/store/modules/admin/advertiserManagementStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 import { storeToRefs } from 'pinia'
-import {businessNumberFormatter, phoneFormatter} from '@/utils/customElTableFormatter.js'
+import { businessNumberFormatter, phoneFormatter } from '@/utils/customElTableFormatter.js'
 
 defineOptions({
   name: 'AdvertiserSearchFrom'

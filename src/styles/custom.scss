@@ -26,7 +26,7 @@ $color_emph: #ff3e3d;
     border-top: 1px solid $color_darker;
     border-bottom: 1px solid $color_darker;
 
-    .el-input {
+    .el-input,  {
       margin-top: 5px;
       input {
         width: 80%;
@@ -156,6 +156,9 @@ $color_emph: #ff3e3d;
   }
   .col_desc {
     padding: 10px;
+    p {
+      padding-left: 10px !important;
+    }
   }
   .wrap_img {
     display: inline-block;
@@ -223,13 +226,18 @@ $color_emph: #ff3e3d;
   }
 }
 
-
-
-.el-input__wrapper {
+.el-input__wrapper, .el-select-v2__wrapper {
   //padding: 5px 11px !important;
   //margin-top: 5px;
   input[type="text"], input[type="password"] {
     height: 40px !important
+  }
+}
+
+.el-select-v2__wrapper {
+  margin-top: 5px;
+  input[type="text"], input[type="password"] {
+    height: 32px !important
   }
 }
 

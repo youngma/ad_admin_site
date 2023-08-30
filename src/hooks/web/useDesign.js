@@ -4,7 +4,7 @@ export const useDesign = () => {
   const lessVariables = variables
 
   /**
-   * @param scope 类名
+   * @param scope
    * @returns string
    */
   const getPrefixCls = (scope) => {
