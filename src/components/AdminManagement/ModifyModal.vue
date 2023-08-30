@@ -69,7 +69,7 @@ import { ref, getCurrentInstance } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 defineOptions({
-  name: 'AdminRegisterForm'
+  name: 'AdminModifyModal'
 })
 
 const { appContext } = getCurrentInstance()

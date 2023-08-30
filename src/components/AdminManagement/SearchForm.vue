@@ -24,7 +24,9 @@
           <strong class="comm_tit_box">전화 번호</strong>
         </el-col>
         <el-col :span="8">
-          <el-input v-model="searchParams.phoneNumber" placeholder="Please input" />
+          <el-input v-model="searchParams.phoneNumber"
+                    :formatter="(value) => businessNumberFormatter(value)"
+                    placeholder="Please input" />
         </el-col>
         <el-col :span="4">
           <strong class="comm_tit_box">상태</strong>
@@ -61,6 +63,7 @@
 import { adminManagementStore } from '@/store/modules/admin/adminManagementStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 import { storeToRefs } from 'pinia'
+import {businessNumberFormatter} from "@/utils/customElTableFormatter.js";
 
 defineOptions({
   name: 'AdminSearchFrom'

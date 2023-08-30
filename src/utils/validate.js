@@ -64,6 +64,17 @@ export function validEmail(email) {
   return reg.test(email)
 }
 
+export function validPhone(phone) {
+  const reg = /^(01(?:0|1|[6-9]))?\d{7,8}$/
+  return reg.test(phone.replaceAll('-', ''))
+}
+
+export function validBusinessNumber(str) {
+  // const reg = /^[0-9]{3}[0-9]{2}[0-9]{5}$/
+  const reg = /^([0-2])([0-9])([0-9])([0-9])([0-9])([0-9])([1-4])([0-9])([0-9])([0-9])$/
+  return reg.test(str.replaceAll('-', ''))
+}
+
 /**
  * @param {string} str
  * @returns {Boolean}

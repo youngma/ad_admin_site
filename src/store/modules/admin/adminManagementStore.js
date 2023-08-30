@@ -1,9 +1,6 @@
 import { defineStore } from 'pinia'
 import * as ADMIN_API from '@/api/ADMIN_API'
 import _ from 'lodash'
-import { ElMessageBox } from 'element-plus'
-import { getCurrentInstance } from 'vue'
-
 
 const initData = {
   searchParams: {
@@ -110,8 +107,6 @@ export const adminManagementStore = defineStore('adminManagementStore', {
     adminModify() {
       const { userSeq, userName, phoneNumber } = this.selectedUser
       ADMIN_API.modify({ userSeq, userName, phoneNumber }).then(() => {
-        console.log(this)
-
         this.$alert('수정 되었습니다.', '확인', {})
         this.reload().then(() => {
           this.modifyPopup = false

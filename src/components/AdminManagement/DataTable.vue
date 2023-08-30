@@ -10,7 +10,11 @@
         <el-button @click="open(scope.row)">{{ scope.row.userName }}</el-button>
       </template>
     </el-table-column>
-    <el-table-column prop="phoneNumber" label="전화 번호" :formatter="phoneFormatter" header-align="center" align="center">
+<!--    <el-table-column prop="phoneNumber" label="전화 번호" :formatter="phoneFormatter" header-align="center" align="center">-->
+    <el-table-column prop="phoneNumber" label="전화 번호" header-align="center" align="center">
+      <template #default="scope">
+        {{ phoneFormatter(scope.row.phoneNumber) }}
+      </template>
     </el-table-column>
     <el-table-column prop="userStatusNm" label="사용자 상태" header-align="center" align="center" />
     <el-table-column prop="insertedAt" label="등록일" width="210" header-align="center" />
@@ -39,9 +43,7 @@
 <!--    <b-pagination hide-ellipsis v-model="listCondition.offset" :total-rows="listCondition.total" :per-page="listCondition.limit" @input="pageChange" />-->
   </div>
 
-  <div v-if="selectedUser != null">
-    <ModifyModal />
-  </div>
+  <ModifyModal v-if="selectedUser"/>
 
 </template>
 
@@ -54,7 +56,7 @@ import { storeToRefs } from 'pinia'
 import ModifyModal from '@/components/AdminManagement/ModifyModal.vue'
 
 defineOptions({
-  name: 'DataTable'
+  name: 'AdminDataTable'
 })
 
 const store = adminManagementStore()
