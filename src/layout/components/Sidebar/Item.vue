@@ -1,16 +1,14 @@
 <template>
   <div>
-    <i v-if="icon && icon.includes('el-icon')" :class="[icon, 'sub-el-icon']"></i>
-    <svg-icon v-else-if="icon" :icon-class="icon" />
+    <Icon :icon=icon></Icon>
     <span v-if="title">
-<!--      <template #title>-->
-          {{ title }}
-<!--      </template>-->
+         {{ title }}
     </span>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'MenuItem',
   functional: true,
@@ -24,24 +22,25 @@ export default {
       default: ''
     }
   },
-  render() {
-    const { icon, title } = this.$props
-    const vnodes = []
-
-    if (icon) {
-      if (icon.includes('el-icon')) {
-        vnodes.push(`<i class={[icon, 'sub-el-icon']} />`)
-      } else {
-        vnodes.push(`<svg-icon icon-class={icon} />`)
-      }
-    }
-
-    if (title) {
-      vnodes.push(`<span slot="title">{title}</span>`)
-    }
-
-    return vnodes
-  }
+  // render() {
+  //   const { icon, title } = this.$props
+  //   const vnodes = []
+  //
+  //   if (icon) {
+  //     // if (icon.includes('el-icon')) {
+  //     //   vnodes.push(`<i class={[icon, 'sub-el-icon']} />`)
+  //     // } else {
+  //     //   vnodes.push(`<svg-icon icon-class={icon} />`)
+  //     // }
+  //     vnodes.push(`<Icon icon={[icon]}></Icon>`)
+  //   }
+  //
+  //   if (title) {
+  //     vnodes.push(`<span slot="title">{title}</span>`)
+  //   }
+  //
+  //   return vnodes
+  // }
 }
 </script>
 

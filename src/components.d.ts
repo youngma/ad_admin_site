@@ -52,6 +52,7 @@ declare module '@vue/runtime-core' {
     Hamburger: typeof import('./components/Hamburger/index.vue')['default']
     HeaderSearch: typeof import('./components/HeaderSearch/index.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    Icon: typeof import('./components/icons/src/Icon.vue')['default']
     IconCommunity: typeof import('./components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./components/icons/IconEcosystem.vue')['default']

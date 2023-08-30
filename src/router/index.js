@@ -74,7 +74,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index.vue'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: 'Dashboard', icon: 'ri:dashboard-fill', affix: true }
       }
     ]
   }
@@ -152,7 +152,7 @@ export const asyncRoutes = [
     // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
     meta: {
       title: '어드민 관리',
-      icon: 'el-icon-s-help'
+      icon: 'ri:admin-fill'
     },
     name: 'AdminManagement',
     redirect: '/admin-management/search',
@@ -161,13 +161,13 @@ export const asyncRoutes = [
         path: 'search',
         component: () => import('@/views/admin-management/AdminManagement.vue'),
         name: 'AdminSearch',
-        meta: { title: '어드민 조회', icon: 'list' }
+        meta: { title: '어드민 조회', icon: 'ri:menu-search-fill' }
       },
       {
         path: 'register',
         component: () => import('@/views/admin-management/AdminRegister.vue'),
         name: 'AdminRegister',
-        meta: { title: '어드민 등록', icon: 'list' }
+        meta: { title: '어드민 등록', icon: 'ri:add-box-fill' }
       }
     ]
   },
@@ -177,7 +177,7 @@ export const asyncRoutes = [
     // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
     meta: {
       title: '광고주 관리',
-      icon: 'el-icon-s-help'
+      icon: 'ri:advertisement-fill'
     },
     name: 'AdvertiserManagement',
     redirect: '/advertiser-management/search',
@@ -186,14 +186,20 @@ export const asyncRoutes = [
         path: 'search',
         component: () => import('@/views/advertiser-management/AdvertiserManagement.vue'),
         name: 'AdvertiserSearch',
-        meta: { title: '광고주 조회', icon: 'list' }
+        meta: { title: '광고주 조회', icon: 'ri:menu-search-fill' }
       },
       {
         path: 'register',
         component: () => import('@/views/advertiser-management/AdvertiserRegister.vue'),
         name: 'AdvertiserRegister',
-        meta: { title: '광고주 등록', icon: 'list' }
+        meta: { title: '광고주 등록', icon: 'ri:add-box-fill' }
       },
+      {
+        path: 'detail',
+        component: () => import('@/views/advertiser-management/AdvertiserDetail.vue'),
+        name: 'AdvertiserDetail',
+        meta: { title: '광고주 상세', icon: 'ri:database-fill' }
+      }
       // {
       //   path: 'register',
       //   component: () => import('@/views/advertiser-management/AdminRegister.vue'),

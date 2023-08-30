@@ -3,7 +3,7 @@
     <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren) && !item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-          <el-icon><document /></el-icon>
+          <Icon :icon=onlyOneChild.meta.icon></Icon>
           <template #title>{{ onlyOneChild.meta.title  }}</template>
         </el-menu-item>
       </app-link>
@@ -11,13 +11,13 @@
     <template v-else>
       <el-sub-menu ref="subMenu" :index="resolvePath(item.path)">
         <template #title>
-          <el-icon><document /></el-icon>
+          <Icon :icon=item.meta.icon></Icon>
           <span>{{ item.meta.title  }}</span>
         </template>
         <!--      <el-menu-item-group  :index="resolvePath(item.path)" :class="{'submenu-title-noDropdown':!isNest}">-->
-        <app-link v-for="child in item.children" :to="resolvePath(child.path)" :key="child.path" >
+        <app-link v-for="child in item.children" :key="child.path" :to="resolvePath(child.path)" >
           <el-menu-item :index="resolvePath(child.path)"  :class="{'submenu-title-noDropdown':!isNest}">
-            <template #title>{{  child.meta.title  }}</template>
+            <Item :icon="child.meta.icon" :title = "child.meta.title"/>
           </el-menu-item>
         </app-link>
         <!--      </el-menu-item-group>-->
@@ -30,11 +30,12 @@
 import path from 'path'
 import { isExternal } from '@/utils/validate'
 import AppLink from './Link.vue'
+import Item from './Item.vue'
 import FixiOSBug from './FixiOSBug'
 
 export default {
   name: 'SidebarItem',
-  components: { AppLink },
+  components: { AppLink, Item },
   mixins: [FixiOSBug],
   props: {
     // route object
