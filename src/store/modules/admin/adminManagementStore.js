@@ -9,7 +9,7 @@ const initData = {
     userId: null,
     userName: null,
     phoneNumber: null,
-    userStatus: 'ALL'
+    userStatus: ''
   }
 }
 
@@ -23,7 +23,7 @@ export const adminManagementStore = defineStore('adminManagementStore', {
       userId: null,
       userName: null,
       phoneNumber: null,
-      userStatus: 'ALL'
+      userStatus: ''
     },
     register: {
       userId: null,
@@ -80,9 +80,10 @@ export const adminManagementStore = defineStore('adminManagementStore', {
     },
     async userIdCheck() {
       const { userId } = this.register
-      const res = await ADMIN_API.userIdCheck({ userId })
+      const data = await ADMIN_API.userIdCheck({ userId })
 
-      this.register.alReadyCheck = !res.data.result
+      console.log(data)
+      this.register.alReadyCheck = !data
 
       return this.register.alReadyCheck
     },
@@ -100,7 +101,6 @@ export const adminManagementStore = defineStore('adminManagementStore', {
         this.$alert('등록 되었습니다.', '확인', {})
         this.initRegisterForm()
       }).catch(() => {
-        console.log(this)
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })
     },

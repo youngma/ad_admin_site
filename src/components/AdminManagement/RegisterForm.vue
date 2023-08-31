@@ -215,16 +215,16 @@ function validate(...types) {
   }
 }
 
-function check(t) {
+async function check(t) {
   const { alReadyCheck } = this.register
   if (alReadyCheck) {
     return false
-  }
-
-  this.validate('userId')
-  if (validation.value.valid) {
-    const retMsg = this.store.userIdCheck() ? '사용 가능한 아이디 입니다.' : '이미 등록된 아이디 입니다.'
-    ElMessageBox.alert(retMsg, '확인', {}, appContext)
+  } else {
+    this.validate('userId')
+    if (validation.value.valid) {
+      const retMsg = await this.store.userIdCheck() ? '사용 가능한 아이디 입니다.' : '이미 등록된 아이디 입니다.'
+      ElMessageBox.alert(retMsg, '확인', {}, appContext)
+    }
   }
 }
 

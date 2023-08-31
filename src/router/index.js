@@ -198,14 +198,8 @@ export const asyncRoutes = [
         path: 'detail',
         component: () => import('@/views/advertiser-management/AdvertiserDetail.vue'),
         name: 'AdvertiserDetail',
-        meta: { title: '광고주 상세', icon: 'ri:database-fill' }
+        meta: { title: '광고주 상세', icon: 'ri:database-fill', init: true }
       }
-      // {
-      //   path: 'register',
-      //   component: () => import('@/views/advertiser-management/AdminRegister.vue'),
-      //   name: 'AdvertiserUserSearch',
-      //   meta: { title: '광고주 사용자 관리', icon: 'list' }
-      // }
     ]
   },
   //

@@ -12,6 +12,7 @@ declare module '@vue/runtime-core' {
     Breadcrumb: typeof import('./components/Breadcrumb/index.vue')['default']
     CodeJar: typeof import('./components/CodeJar/index.vue')['default']
     DataTable: typeof import('./components/AdminManagement/DataTable.vue')['default']
+    ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAutoResizer: typeof import('element-plus/es')['ElAutoResizer']
     ElBadge: typeof import('element-plus/es')['ElBadge']
@@ -47,6 +48,8 @@ declare module '@vue/runtime-core' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTableV2: typeof import('element-plus/es')['ElTableV2']
+    ElTabPane: typeof import('element-plus/es')['ElTabPane']
+    ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ErrorLog: typeof import('./components/ErrorLog/index.vue')['default']
@@ -71,6 +74,10 @@ declare module '@vue/runtime-core' {
     SizeSelect: typeof import('./components/SizeSelect/index.vue')['default']
     ThemePicker: typeof import('./components/ThemePicker/index.vue')['default']
     TheWelcome: typeof import('./components/TheWelcome.vue')['default']
+    UserDataTable: typeof import('./components/AdvertiserManagement/User/UserDataTable.vue')['default']
+    UserModifyModal: typeof import('./components/AdvertiserManagement/User/UserModifyModal.vue')['default']
+    UserRegisterModal: typeof import('./components/AdvertiserManagement/User/UserRegisterModal.vue')['default']
+    UserSearchForm: typeof import('./components/AdvertiserManagement/User/UserSearchForm.vue')['default']
     WelcomeItem: typeof import('./components/WelcomeItem.vue')['default']
   }
 }
