@@ -1,42 +1,42 @@
 <template>
   <div class="" type="">
-    <UserSearchForm/>
-    <UserDataTable/>
+    <AccountSearchForm/>
+    <AccountDataTable/>
     <el-row class="mt_15" justify="end">
       <el-col class="t_r comm_form_box" tag="span">
         <el-button type="success" class="comm_form_btn" @click="modalOpen()">등록</el-button>
       </el-col>
     </el-row>
-    <UserRegisterModal v-if="userRegisterModal" />
+    <AccountRegisterModal v-if="accountRegisterModal" />
   </div>
 </template>
 
 <script lang="js">
-import UserSearchForm from '@/components/AdvertiserManagement/User/UserSearchForm.vue'
-import UserDataTable from '@/components/AdvertiserManagement/User/UserDataTable.vue'
-import UserRegisterModal from '@/components/AdvertiserManagement/User/UserRegisterModal.vue'
+import AccountSearchForm from '@/components/AdvertiserManagement/Account/AccountSearchForm.vue'
+import AccountDataTable from '@/components/AdvertiserManagement/Account/AccountDataTable.vue'
+import AccountRegisterModal from '@/components/AdvertiserManagement/Account/AccountRegisterModal.vue'
 import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
 export default {
   components: {
-    UserSearchForm, UserDataTable, UserRegisterModal
+    AccountSearchForm, AccountDataTable, AccountRegisterModal
   },
   props: {
   },
   setup(props) {
     const store = advertiserStore()
-    const { selected, userRegisterModal, userModifyModal } = storeToRefs(store)
+    const { accountRegisterModal } = storeToRefs(store)
     onMounted(async() => {
     })
     return {
-      store, selected, userRegisterModal, userModifyModal
+      store, accountRegisterModal
     }
   },
   methods: {
     modalOpen() {
-      this.store.userModalOpen('register')
+      this.store.accountModalOpen('register')
     }
   }
 

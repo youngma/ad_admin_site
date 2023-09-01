@@ -10,6 +10,9 @@ export const commonStore = defineStore('commonStore', {
   getters: {
     UserStatus: (state) => {
       return state.codes['UserStatus']
+    },
+    Bank: (state) => {
+      return state.codes['Bank']
     }
   },
   actions: {

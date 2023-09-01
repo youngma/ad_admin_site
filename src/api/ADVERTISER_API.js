@@ -79,3 +79,50 @@ export function userDisable(data) {
     data
   })
 }
+
+export function searchByAccount(query) {
+  return request({
+    url: '/admin/v1/advertiser/accounts',
+    method: 'get',
+    params: query
+  })
+}
+
+export function accountNumberCheck(query) {
+  return request({
+    url: '/admin/v1/advertiser/account/check',
+    method: 'get',
+    params: query
+  })
+}
+
+export function accountUnused(data) {
+  return request({
+    url: '/admin/v1/advertiser/account/unused',
+    method: 'PUT',
+    data
+  })
+}
+
+export function accountUsed(data) {
+  return request({
+    url: '/admin/v1/advertiser/account/used',
+    method: 'PUT',
+    data
+  })
+}
+
+export function accountRegister(data) {
+  return request({
+    url: '/admin/v1/advertiser/account/register',
+    method: 'POST',
+    data
+  })
+}
+export function accountDelete(data) {
+  return request({
+    url: '/admin/v1/advertiser/account/delete',
+    method: 'DELETE',
+    data
+  })
+}

@@ -6,7 +6,10 @@
         <AdvertiserUsers v-if="advertiser"/>
         <el-alert v-else title="광고주를 선택해 주세요." type="info" />
       </el-tab-pane>
-      <el-tab-pane label="계좌">계좌</el-tab-pane>
+      <el-tab-pane label="계좌">
+        <AdvertiserAccounts v-if="advertiser"/>
+        <el-alert v-else title="광고주를 선택해 주세요." type="info" />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -17,6 +20,7 @@ import { watch, onMounted } from 'vue'
 import SearchForm2 from '@/components/AdvertiserManagement/SearchForm2.vue'
 
 import AdvertiserUsers from '@/views/advertiser-management/tabs/AdvertiserUsers.vue'
+import AdvertiserAccounts from '@/views/advertiser-management/tabs/AdvertiserAccounts.vue'
 
 import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 import { storeToRefs } from 'pinia'
@@ -36,6 +40,7 @@ watch(selected, async(newValue, oldVale) => {
     // store.init()
   } else {
     store.tabInitUser()
+    store.tabInitAccount()
   }
 })
 

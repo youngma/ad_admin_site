@@ -9,6 +9,9 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AccountDataTable: typeof import('./components/AdvertiserManagement/Account/AccountDataTable.vue')['default']
+    AccountRegisterModal: typeof import('./components/AdvertiserManagement/Account/AccountRegisterModal.vue')['default']
+    AccountSearchForm: typeof import('./components/AdvertiserManagement/Account/AccountSearchForm.vue')['default']
     Breadcrumb: typeof import('./components/Breadcrumb/index.vue')['default']
     CodeJar: typeof import('./components/CodeJar/index.vue')['default']
     DataTable: typeof import('./components/AdminManagement/DataTable.vue')['default']

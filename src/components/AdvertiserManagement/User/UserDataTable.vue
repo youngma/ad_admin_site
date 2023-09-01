@@ -67,7 +67,7 @@ const store = advertiserStore()
 const { userList, userSearchParams, userTotal, userModifyModal } = storeToRefs(store)
 
 function pageChange(number) {
-  this.store.search({ page: number })
+  this.store.searchByUsers({ page: number })
 }
 
 function enabled(row) {

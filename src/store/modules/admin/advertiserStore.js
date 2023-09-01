@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia'
 import * as ADVERTISER_API from '@/api/ADVERTISER_API'
 import _ from 'lodash'
-import * as ADMIN_API from '@/api/ADMIN_API.js'
-import { userEnable } from '@/api/ADVERTISER_API'
 
 const initData = {
   searchParams: {
@@ -40,6 +38,26 @@ export const advertiserStore = defineStore('advertiserStore', {
         userPassword: null,
         phoneNumber: null
       }
+    },
+    accounts: {
+      searchParams: {
+        page: 1,
+        size: 20,
+        bankCode: '',
+        bankAccount: null,
+        accountHolder: null,
+        accountUse: ''
+      },
+      list: [],
+      selectedAccount: null,
+      total: 0,
+      registerModal: false,
+      register: {
+        bankCode: '',
+        bankAccount: null,
+        accountHolder: null,
+        alReadyCheck: false
+      }
     }
   }),
   getters: {
@@ -52,12 +70,20 @@ export const advertiserStore = defineStore('advertiserStore', {
     advertiser: (state) => state.advertisers.filter((t) => {
       return state.selected.includes(t.advertiserSeq)
     })[0],
+
     userSearchParams: (state) => state.users.searchParams,
     userList: (state) => state.users.list,
     userTotal: (state) => state.users.total,
     userRegisterModal: (state) => state.users.registerModal,
     selectedUser: (state) => state.users.selectedUser,
-    userModifyModal: (state) => state.users.modifyModal
+    userModifyModal: (state) => state.users.modifyModal,
+
+    accountSearchParams: (state) => state.accounts.searchParams,
+    accountList: (state) => state.accounts.list,
+    accountTotal: (state) => state.accounts.total,
+    accountRegisterModal: (state) => state.accounts.registerModal,
+    selectedAccount: (state) => state.accounts.selectedAccount,
+    accountModifyModal: (state) => state.accounts.modifyModal
   },
   actions: {
     init() {
@@ -66,7 +92,6 @@ export const advertiserStore = defineStore('advertiserStore', {
       }
       this.selected = []
       this.advertisers = []
-
     },
     async reload() {
       const result = await ADVERTISER_API.search(this.searchParams)
@@ -98,6 +123,20 @@ export const advertiserStore = defineStore('advertiserStore', {
       this.users.registerModal = false
       this.users.modifyModal = false
     },
+    tabInitAccount() {
+      this.accounts.searchParams = {
+        page: 1,
+        size: 20,
+        bankCode: '',
+        bankAccount: null,
+        accountHolder: null,
+        accountUse: ''
+      }
+      this.accounts.list = []
+      this.accounts.selectedUser = null
+      this.accounts.registerModal = false
+      this.accounts.modifyModal = false
+    },
     generateParams(source) {
       return Object.assign({
         advertiserSeq: this.advertiser.advertiserSeq
@@ -119,20 +158,48 @@ export const advertiserStore = defineStore('advertiserStore', {
       }
       await this.reloadByUsers()
     },
-    initRegisterForm() {
-      this.users.register = {
-        userId: null,
-        alReadyCheck: false,
-        userName: null,
-        userPassword: null,
-        phoneNumber: null
+    async reloadByAccounts() {
+      const params = this.generateParams(this.accounts.searchParams)
+
+      const result = await ADVERTISER_API.searchByAccount(params)
+      const { content, totalElements } = result
+
+      this.accounts.list = content
+      this.accounts.total = totalElements
+    },
+    async searchByAccounts({ page, size }) {
+      this.accounts.searchParams.page = page
+      if (!size && size > 0) {
+        this.accounts.searchParams.size = size
+      }
+      await this.reloadByAccounts()
+    },
+    initRegisterForm(target) {
+      if (target === 'user') {
+        this.users.register = {
+          userId: null,
+          alReadyCheck: false,
+          userName: null,
+          userPassword: null,
+          phoneNumber: null
+        }
+        this.users.registerModal = false
       }
 
-      this.users.registerModal = false
+      if (target === 'account') {
+        this.accounts.register = {
+          seq: null,
+          bankCode: '',
+          bankAccount: null,
+          accountHolder: null,
+          alReadyCheck: false
+        }
+        this.accounts.registerModal = false
+      }
     },
     userModalOpen(target) {
       if (target === 'register') {
-        this.initRegisterForm()
+        this.initRegisterForm('user')
         this.users.registerModal = true
       } else if (target === 'modify') {
         this.users.modifyModal = true
@@ -154,7 +221,7 @@ export const advertiserStore = defineStore('advertiserStore', {
 
       ADVERTISER_API.userRegister(newUser).then(() => {
         this.$alert('등록 되었습니다.', '확인', {})
-        this.initRegisterForm()
+        this.initRegisterForm('user')
         this.reloadByUsers().then(() => {
         })
       }).catch(() => {
@@ -199,8 +266,68 @@ export const advertiserStore = defineStore('advertiserStore', {
           user.updatedAt = updatedAt
         }
       })
-    }
+    },
+    async accountCheck() {
+      const { bankCode, bankAccount } = this.accounts.register
 
+      const result = await ADVERTISER_API.accountNumberCheck(this.generateParams({ bankCode, bankAccount }))
+
+      this.accounts.register.alReadyCheck = !result
+      return this.accounts.register.alReadyCheck
+    },
+    async accountUsed(seq) {
+      const params = this.generateParams({ seq })
+      const result = await ADVERTISER_API.accountUsed(params)
+      this.accountModifyCallBack(result)
+    },
+    async accountUnused(seq) {
+      const params = this.generateParams({ seq })
+      const result = await ADVERTISER_API.accountUnused(params)
+      this.accountModifyCallBack(result)
+    },
+    accountModifyCallBack(modifyUsers) {
+      const modifyAccountsMap = _.keyBy([modifyUsers], function(o) {
+        const { seq } = o
+        return seq
+      })
+
+      this.accounts.list.forEach((account) => {
+        const { seq } = account
+        if (modifyAccountsMap[seq]) {
+          const { accountUse, updatedAt } = modifyAccountsMap[seq]
+          account.accountUse = accountUse
+          account.updatedAt = updatedAt
+        }
+      })
+    },
+    async accountRegister() {
+      const newAccount = this.generateParams(this.accounts.register)
+      ADVERTISER_API.accountRegister(newAccount).then(() => {
+        this.$alert('등록 되었습니다.', '확인', {})
+        this.initRegisterForm('account')
+        this.reloadByAccounts().then(() => {
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
+    },
+    async accountDelete(row) {
+      const { seq } = row
+      const account = this.generateParams({ seq })
+      ADVERTISER_API.accountDelete(account).then(() => {
+        this.$alert('삭제 되었습니다.', '확인', {})
+        this.reloadByAccounts().then(() => {
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
+    },
+    accountModalOpen(target) {
+      if (target === 'register') {
+        this.initRegisterForm('account')
+        this.accounts.registerModal = true
+      }
+    }
   },
   persist: {
     enabled: true,
