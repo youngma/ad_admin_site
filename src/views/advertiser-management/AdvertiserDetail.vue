@@ -1,6 +1,7 @@
 <template>
   <div class="components-container" type="">
-    <AdvertiserSearchForm2 />
+    selected: {{ selected }}
+    <AdvertiserSearchForm2 :selected="selected" :advertisers="advertisers" @search-update="searchUpdate" @on-change="onChange"/>
     <el-tabs type="border-card">
       <el-tab-pane label="사용자">
         <AdvertiserUsers v-if="advertiser"/>
@@ -30,7 +31,7 @@ defineOptions({
 })
 
 const store = advertiserStore()
-const { selected, advertiser } = storeToRefs(store)
+const { selected, advertisers, advertiser } = storeToRefs(store)
 
 onMounted(async() => {
 })
@@ -43,6 +44,16 @@ watch(selected, async(newValue, oldVale) => {
     store.tabInitAccount()
   }
 })
+
+function searchUpdate({ content, current }) {
+  advertisers.value = content
+  selected.value = current
+}
+
+function onChange(value) {
+  console.log(value)
+  selected.value = value
+}
 
 // watch: {
 //   // whenever question changes, this function will run

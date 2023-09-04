@@ -17,7 +17,6 @@ export const advertiserStore = defineStore('advertiserStore', {
     },
     advertisers: [],
     selected: [],
-    loading: false,
     users: {
       searchParams: {
         page: 1,
@@ -61,16 +60,15 @@ export const advertiserStore = defineStore('advertiserStore', {
     }
   }),
   getters: {
-    options: (state) => state.advertisers.map((item) => {
-      return {
-        label: item.businessName,
-        value: item.advertiserSeq
-      }
-    }),
+    // options: (state) => state.advertisers.map((item) => {
+    //   return {
+    //     label: item.businessName,
+    //     value: item.advertiserSeq
+    //   }
+    // }),
     advertiser: (state) => state.advertisers.filter((t) => {
       return state.selected.includes(t.advertiserSeq)
     })[0],
-
     userSearchParams: (state) => state.users.searchParams,
     userList: (state) => state.users.list,
     userTotal: (state) => state.users.total,
@@ -93,22 +91,22 @@ export const advertiserStore = defineStore('advertiserStore', {
       this.selected = []
       this.advertisers = []
     },
-    async reload() {
-      const result = await ADVERTISER_API.search(this.searchParams)
-      const { content, totalElements } = result
-      this.advertisers = content
-      this.total = totalElements
-    },
-    async search(query) {
-      this.loading = true
-      this.searchParams.businessName = query
-      this.searchParams.page = 1
-      this.searchParams.size = 50
-
-      await this.reload()
-
-      this.loading = false
-    },
+    // async reload() {
+    //   const result = await ADVERTISER_API.search(this.searchParams)
+    //   const { content, totalElements } = result
+    //   this.advertisers = content
+    //   this.total = totalElements
+    // },
+    // async search(query) {
+    //   this.loading = true
+    //   this.searchParams.businessName = query
+    //   this.searchParams.page = 1
+    //   this.searchParams.size = 50
+    //
+    //   await this.reload()
+    //
+    //   this.loading = false
+    // },
     tabInitUser() {
       this.users.searchParams = {
         page: 1,

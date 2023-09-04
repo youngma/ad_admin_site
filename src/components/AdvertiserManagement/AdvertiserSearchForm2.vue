@@ -1,7 +1,7 @@
 <template>
   <div class="comm_comp">
     <el-row>
-      <el-col class="comm_form_box comm_text_tit">광고주 상세</el-col>
+      <el-col class="comm_form_box comm_text_tit">{{ title || '광고주 상세' }}</el-col>
     </el-row>
     <div class="frame_comp">
       <el-row :gutter="10">
@@ -10,9 +10,9 @@
         </el-col>
         <el-col :span="8">
           <el-select-v2
-            v-model="selected"
+            v-model="current"
             style="width: 240px"
-            multiple
+            :multiple="multiple"
             :multiple-limit=1
             filterable
             remote
@@ -21,6 +21,8 @@
             :options="options"
             :loading="loading"
             placeholder="Please enter a keyword"
+            @remove-tag="onRemoveTag(e)"
+            @change="onChange"
           />
         </el-col>
       </el-row>
@@ -64,24 +66,92 @@
 
 <script setup>
 
-import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
-import { storeToRefs } from 'pinia'
+import { ref, computed, defineProps, defineEmits } from 'vue'
 import { businessNumberFormatter, phoneFormatter } from '@/utils/customElTableFormatter.js'
+import * as ADVERTISER_API from '@/api/ADVERTISER_API'
+
+const { multiple, selected, advertisers } = defineProps({
+  title: {
+    type: String,
+    default: '광고주 상세',
+    required: false
+  },
+  multiple: {
+    type: Boolean,
+    default: true,
+    required: false
+  },
+  selected: {
+    type: Array,
+    required: true
+  },
+  advertisers: {
+    type: Array,
+    required: true
+  }
+})
+
+const emit = defineEmits(['search-update', 'on-change'])
 
 defineOptions({
   name: 'AdvertiserSearchFrom2'
 })
 
-const store = advertiserStore()
+const loading = ref(false)
 
+const current = multiple ? ref(selected) : ref(selected[0])
+const currentAdvertisers = ref(advertisers)
 
-console.log(store)
+const options = computed(() => currentAdvertisers.value.map((item) => {
+  return {
+    label: item.businessName,
+    value: item.advertiserSeq
+  }
+}))
 
-const { selected, loading, options, advertiser } = storeToRefs(store)
+const advertiser = computed(() => {
+  if (multiple) {
+    return currentAdvertisers.value.filter((t) => {
+      return current.value.includes(t.advertiserSeq)
+    })[0]
+  } else {
+    return currentAdvertisers.value.filter((t) => {
 
-function searchByName(query) {
-  console.log(this.store)
-  this.store.search(query)
+      let cmp = current.value
+      if (Array.isArray(current.value)) {
+        cmp = current.value[9]
+      }
+
+      return cmp === (t.advertiserSeq)
+    })[0]
+  }
+})
+
+// const { selected, loading, options, advertiser } = storeToRefs(store)
+
+async function searchByName(query) {
+  this.loading = true
+
+  const result = await ADVERTISER_API.search({
+    businessName: query,
+    page: 1,
+    size: 50
+  })
+  const { content } = result
+  currentAdvertisers.value = content
+
+  emit('search-update', { content, current: current.value })
+  this.loading = false
+}
+
+function onRemoveTag(value) {
+  currentAdvertisers.value = []
+  console.log('removeTag', value)
+  emit('search-update', { content: [], current: current.value })
+}
+
+function onChange(value) {
+  emit('on-change', value)
 }
 
 </script>
