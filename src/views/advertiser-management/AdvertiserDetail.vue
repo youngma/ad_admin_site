@@ -1,6 +1,6 @@
 <template>
   <div class="components-container" type="">
-    <SearchForm2 />
+    <AdvertiserSearchForm2 />
     <el-tabs type="border-card">
       <el-tab-pane label="사용자">
         <AdvertiserUsers v-if="advertiser"/>
@@ -17,7 +17,7 @@
 <script setup>
 
 import { watch, onMounted } from 'vue'
-import SearchForm2 from '@/components/AdvertiserManagement/SearchForm2.vue'
+import AdvertiserSearchForm2 from '@/components/AdvertiserManagement/AdvertiserSearchForm2.vue'
 
 import AdvertiserUsers from '@/views/advertiser-management/tabs/AdvertiserUsers.vue'
 import AdvertiserAccounts from '@/views/advertiser-management/tabs/AdvertiserAccounts.vue'

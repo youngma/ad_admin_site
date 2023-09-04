@@ -1,19 +1,19 @@
 <template>
   <div class="components-container" type="">
-    <SearchForm/>
-    <DataTable/>
+    <AdminSearchForm/>
+    <AdminDataTable/>
   </div>
 </template>
 
 <script lang="js">
-import SearchForm from '@/components/AdminManagement/SearchForm.vue'
-import DataTable from '@/components/AdminManagement/DataTable.vue'
+import AdminSearchForm from '@/components/AdminManagement/AdminSearchForm.vue'
+import AdminDataTable from '@/components/AdminManagement/AdminDataTable.vue'
 import { onMounted } from 'vue'
 import { adminManagementStore } from '@/store/modules/admin/adminManagementStore.js'
 
 export default {
   components: {
-    SearchForm, DataTable
+    AdminSearchForm, AdminDataTable
   },
   props: {
   },

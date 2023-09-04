@@ -1,12 +1,12 @@
 <template>
   <div class="components-container" type="">
-    <RegisterForm/>
+    <AdvertiserRegisterForm/>
   </div>
 </template>
 
 <script setup>
 
-import RegisterForm from '@/components/AdvertiserManagement/RegisterForm.vue'
+import AdvertiserRegisterForm from '@/components/AdvertiserManagement/AdvertiserRegisterForm.vue'
 import { onMounted } from 'vue'
 import { advertiserManagementStore } from '@/store/modules/admin/advertiserManagementStore.js'
 

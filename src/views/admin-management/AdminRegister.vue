@@ -1,16 +1,16 @@
 <template>
   <div class="components-container" type="">
-    <RegisterForm/>
+    <AdminRegisterForm/>
   </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
-import RegisterForm from '@/components/AdminManagement/RegisterForm.vue'
+import AdminRegisterForm from '@/components/AdminManagement/AdminRegisterForm.vue'
 import { adminManagementStore } from '@/store/modules/admin/adminManagementStore.js'
 
 defineOptions({
-  name: 'RegisterForm'
+  name: 'AdminRegister'
 })
 
 const store = adminManagementStore()

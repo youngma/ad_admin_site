@@ -1,14 +1,14 @@
 <template>
   <div class="components-container" type="">
-    <SearchForm/>
-    <DataTable/>
+    <AdvertiserSearchForm/>
+    <AdvertiserDataTable/>
   </div>
 </template>
 
 <script setup>
 
-import SearchForm from '@/components/AdvertiserManagement/SearchForm.vue'
-import DataTable from '@/components/AdvertiserManagement/DataTable.vue'
+import AdvertiserSearchForm from '@/components/AdvertiserManagement/AdvertiserSearchForm.vue'
+import AdvertiserDataTable from '@/components/AdvertiserManagement/AdvertiserDataTable.vue'
 import { onMounted } from 'vue'
 import { advertiserManagementStore } from '@/store/modules/admin/advertiserManagementStore.js'
 
