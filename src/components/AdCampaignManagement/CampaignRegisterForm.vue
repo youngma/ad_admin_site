@@ -1,8 +1,8 @@
 <template>
   <div class="comm_comp">
-    <el-row>
-      <el-col class="comm_form_box comm_text_tit">캠페인 등록</el-col>
-    </el-row>
+<!--    <el-row>-->
+<!--      <el-col class="comm_form_box comm_text_tit">캠페인 등록</el-col>-->
+<!--    </el-row>-->
     <div class="comm_comp_table">
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
@@ -177,7 +177,7 @@
             <el-col :span="20">
               <el-input
                         v-model="register.dayParticipationLimit"
-                        :formatter="(value) => numberFormatter(value)"
+                        :formatter="(value) => moneyFormatter(value)"
                         :class="{ 'is-error': !validation.dayParticipationLimit.check }"
                         class="text-end" placeholder="일 참여 제한 수 입력 해주세요."  >
                         <template #append>건</template>
@@ -234,6 +234,8 @@
                 end-placeholder="광고 종료 일자"
                 :disabled-date="disabledDate"
                 :default-time="defaultAdDate"
+                format="YYYY/MM/DD"
+                value-format="YYYY-MM-DD"
               />
             </el-col>
           </el-row>
@@ -616,7 +618,11 @@ function validate(...types) {
   }
 }
 const onUploadAfter = (files) => {
-  console.log(files)
+  if (files.value.length > 0) {
+    const { newFileName } = files.value[0]
+    register.value.image = newFileName
+  }
+  console.log(register.value)
 }
 
 function save() {
@@ -625,9 +631,8 @@ function save() {
     'targetUrl', 'totalBudget', 'adPrice', 'dayParticipationLimit', 'adDate',
     'goodsCode', 'paymentTerms', 'holdingTime'
   )
-
   if (validation.value.valid) {
-    // this.store.adminRegister()
+    this.store.campaignRegister()
   }
 }
 

@@ -177,7 +177,7 @@ export const asyncRoutes = [
     // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
     meta: {
       title: '광고주 관리',
-      icon: 'ri:advertisement-fill'
+      icon: 'fa6-solid:building-circle-arrow-right'
     },
     name: 'AdvertiserManagement',
     redirect: '/advertiser-management/search',
@@ -199,6 +199,38 @@ export const asyncRoutes = [
         component: () => import('@/views/advertiser-management/AdvertiserDetail.vue'),
         name: 'AdvertiserDetail',
         meta: { title: '광고주 상세', icon: 'ri:database-fill', init: true }
+      }
+    ]
+  },
+  {
+    path: '/campaign-management',
+    component: Layout,
+    // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
+    meta: {
+      title: '캠페인 관리',
+      icon: 'bi:badge-ad-fill'
+    },
+    name: 'AdCampaignManagement',
+    redirect: '/campaign-management/search',
+    children: [
+      {
+        path: 'search',
+        component: () => import('@/views/advertiser-management/AdvertiserManagement.vue'),
+        name: 'AdCampaignSearch',
+        meta: { title: '캠페인 조회', icon: 'ri:menu-search-fill' }
+      },
+      {
+        path: 'register',
+        component: () => import('@/views/campaign-management/campaignRegister.vue'),
+        name: 'AdCampaignRegister',
+        meta: { title: '캠페인 등록', icon: 'ri:add-box-fill' }
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/campaign-management/campaignRegister.vue'),
+        name: 'AdCampaignDetail',
+        meta: { title: '캠페인 상세', icon: 'cib:campaign-monitor', init: true },
+        hidden: true
       }
     ]
   },

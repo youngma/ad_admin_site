@@ -13,6 +13,15 @@ export const commonStore = defineStore('commonStore', {
     },
     Bank: (state) => {
       return state.codes['Bank']
+    },
+    PaymentTerms: (state) => {
+      return state.codes['PaymentTerms']
+    },
+    CampaignType: (state) => {
+      return state.codes['CampaignType']
+    },
+    CampaignStatus: (state) => {
+      return state.codes['CampaignStatus']
     }
   },
   actions: {
@@ -20,7 +29,6 @@ export const commonStore = defineStore('commonStore', {
       this.codes = await COMMON_API.loadCode()
     },
     toMap(codeName) {
-      console.log(this.codes)
       return _.mapValues(_.keyBy(this.codes[codeName], 'key'), 'value')
     }
   },
