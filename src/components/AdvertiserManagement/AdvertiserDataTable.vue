@@ -51,7 +51,7 @@ import { advertiserManagementStore } from '@/store/modules/admin/advertiserManag
 import { phoneFormatter, businessNumberFormatter } from '@/utils/customElTableFormatter'
 import { storeToRefs } from 'pinia'
 
-import ModifyModal from '@/components/AdvertiserManagement/ModifyModal.vue'
+import ModifyModal from '@/components/AdvertiserManagement/AdvertiserModifyModal.vue'
 
 defineOptions({
   name: 'AdvertiserDataTable'

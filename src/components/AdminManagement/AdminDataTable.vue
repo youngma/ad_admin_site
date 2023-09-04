@@ -53,7 +53,7 @@ import { adminManagementStore } from '@/store/modules/admin/adminManagementStore
 import { phoneFormatter } from '@/utils/customElTableFormatter'
 import { storeToRefs } from 'pinia'
 
-import ModifyModal from '@/components/AdminManagement/ModifyModal.vue'
+import ModifyModal from '@/components/AdminManagement/AdminModifyModal.vue'
 
 defineOptions({
   name: 'AdminDataTable'
