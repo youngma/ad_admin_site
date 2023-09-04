@@ -1,18 +1,33 @@
 import { defineStore } from 'pinia'
 import * as CAMPAIGN_API from '@/api/CAMPAIGN_API'
 import _ from 'lodash'
-
 import { startDatePostFix, endDatePostFix, numberFormatter } from '@/utils/customElTableFormatter.js'
 
-const initData = {
-  searchParams: {
-    businessName: null
-  }
-}
 export const campaignStore = defineStore('campaignStore', {
   state: () => ({
     advertisers: [],
     selected: [],
+
+    searchFormAdvertisers: [],
+    searchFormSelected: [],
+
+    campaigns: [],
+    total: 0,
+
+    campaignSearchParams: {
+      // advertiserSeqList: [],
+      campaignName: null,
+      targetUrl: null,
+      goodsCode: null,
+      adDate: [],
+      adStartDate: null,
+      adEndDate: null,
+      campaignType: '',
+      paymentTerms: '',
+      campaignStatus: '',
+      page: 1,
+      size: 20
+    },
     register: {
       campaignType: null,
       campaignName: null,
@@ -60,6 +75,21 @@ export const campaignStore = defineStore('campaignStore', {
           holdingTime: 0
         }
       }
+      if (type === 'search') {
+        this.campaignSearchParams = {
+          campaignName: null,
+          targetUrl: null,
+          goodsCode: null,
+          adDate: [],
+          adStartDate: null,
+          adEndDate: null,
+          campaignType: '',
+          paymentTerms: '',
+          campaignStatus: '',
+          page: 1,
+          size: 20
+        }
+      }
     },
     generateParams(source) {
       return Object.assign({
@@ -84,6 +114,34 @@ export const campaignStore = defineStore('campaignStore', {
       }).catch(() => {
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })
+    },
+    async reload() {
+      console.log(3, this.campaignSearchParams.size)
+
+      const searchParams = Object.assign({
+        advertiserSeq: this.searchFormSelected.join(',')
+      }, this.campaignSearchParams)
+
+      console.log(4, this.campaignSearchParams.size)
+
+      console.log(5, searchParams.size)
+
+      const result = await CAMPAIGN_API.search(searchParams)
+      const { content, totalElements } = result
+      this.campaigns = content
+      this.total = totalElements
+    },
+    async search({ page, size }) {
+      console.log(1, this.campaignSearchParams.size)
+
+      this.campaignSearchParams.page = page
+      if (size && size > 0) {
+        console.log(12, this.campaignSearchParams.size)
+        this.campaignSearchParams.size = size
+      }
+      console.log(2, this.campaignSearchParams.size)
+
+      await this.reload()
     }
   },
   persist: {

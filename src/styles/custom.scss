@@ -233,6 +233,12 @@ $color_emph: #ff3e3d;
   }
 }
 
+.select-width-full {
+  .el-select-v2{
+    width: 90% !important;
+  }
+}
+
 .el-input__wrapper {
   //padding: 5px 11px !important;
   //margin-top: 5px;
@@ -246,7 +252,6 @@ $color_emph: #ff3e3d;
     box-shadow: 0 0 0 1px var(--el-color-danger) inset !important;
   }
 }
-
 
 .page-box {
   margin-top: 1rem;
@@ -266,6 +271,9 @@ $color_emph: #ff3e3d;
 }
 .m_15{
   margin: 15px;
+}
+.mt_5 {
+  margin-top: 5px;
 }
 .mt_15 {
   margin-top: 15px;

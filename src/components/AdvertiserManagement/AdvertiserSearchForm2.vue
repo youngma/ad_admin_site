@@ -8,12 +8,13 @@
         <el-col :span="4">
           <strong class="comm_tit_box">광고주 사업자 명</strong>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="20">
           <el-select-v2
             v-model="current"
             style="width: 240px"
             :multiple="multiple"
-            :multiple-limit=1
+            :multiple-limit=multipleLimit
+            :fit-input-width="true"
             filterable
             remote
             :remote-method="(query) => searchByName(query)"
@@ -21,13 +22,13 @@
             :options="options"
             :loading="loading"
             placeholder="Please enter a keyword"
-            @remove-tag="onRemoveTag(e)"
+            @remove-tag="onRemoveTag"
             @change="onChange"
           />
         </el-col>
       </el-row>
     </div>
-    <div v-if="advertiser" class="comm_comp_table mt_15">
+    <div v-if="advertiser && multipleLimit === 1" class="comm_comp_table mt_15">
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
           <strong class="comm_tit_box">사업자 번호</strong>
@@ -70,10 +71,15 @@ import { ref, computed, defineProps, defineEmits } from 'vue'
 import { businessNumberFormatter, phoneFormatter } from '@/utils/customElTableFormatter.js'
 import * as ADVERTISER_API from '@/api/ADVERTISER_API'
 
-const { multiple, selected, advertisers } = defineProps({
+const { multiple, selected, advertisers, multipleLimit } = defineProps({
   title: {
     type: String,
     default: '광고주 상세',
+    required: false
+  },
+  'multipleLimit': {
+    type: Number,
+    default: 1,
     required: false
   },
   multiple: {
@@ -116,7 +122,6 @@ const advertiser = computed(() => {
     })[0]
   } else {
     return currentAdvertisers.value.filter((t) => {
-
       let cmp = current.value
       if (Array.isArray(current.value)) {
         cmp = current.value[9]
@@ -145,13 +150,18 @@ async function searchByName(query) {
 }
 
 function onRemoveTag(value) {
-  currentAdvertisers.value = []
-  console.log('removeTag', value)
+  console.log('onRemoveTag', value)
+  current.value = current.value.filter(t => t !== value)
   emit('search-update', { content: [], current: current.value })
 }
 
 function onChange(value) {
-  emit('on-change', value)
+  console.log('onChange', value)
+  if (value) {
+    emit('on-change', value)
+  } else {
+    emit('on-change', null)
+  }
 }
 
 </script>

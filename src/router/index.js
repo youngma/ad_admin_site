@@ -215,19 +215,19 @@ export const asyncRoutes = [
     children: [
       {
         path: 'search',
-        component: () => import('@/views/advertiser-management/AdvertiserManagement.vue'),
+        component: () => import('@/views/campaign-management/CampaignManagement.vue'),
         name: 'AdCampaignSearch',
         meta: { title: '캠페인 조회', icon: 'ri:menu-search-fill' }
       },
       {
         path: 'register',
-        component: () => import('@/views/campaign-management/campaignRegister.vue'),
+        component: () => import('@/views/campaign-management/CampaignRegister.vue'),
         name: 'AdCampaignRegister',
         meta: { title: '캠페인 등록', icon: 'ri:add-box-fill' }
       },
       {
         path: 'detail',
-        component: () => import('@/views/campaign-management/campaignRegister.vue'),
+        component: () => import('@/views/campaign-management/CampaignRegister.vue'),
         name: 'AdCampaignDetail',
         meta: { title: '캠페인 상세', icon: 'cib:campaign-monitor', init: true },
         hidden: true

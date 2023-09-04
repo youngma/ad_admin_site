@@ -150,7 +150,9 @@ export const advertiserStore = defineStore('advertiserStore', {
       this.users.total = totalElements
     },
     async searchByUsers({ page, size }) {
+
       this.users.searchParams.page = page
+
       if (!size && size > 0) {
         this.users.searchParams.size = size
       }

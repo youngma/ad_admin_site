@@ -7,7 +7,6 @@ export function search(query) {
     params: query
   })
 }
-
 export function register(data) {
   return request({
     url: '/admin/v1/campaign/register',
