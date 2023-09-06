@@ -85,43 +85,43 @@
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="10">
-          <el-col :span="6" class="col_tit">
-            <strong class="comm_tit_box">사업자 등록증</strong>
-          </el-col>
-          <el-col :span="16" class="col_desc">
-            <el-row :gutter="10">
-              <el-col
-                :span="10"
-                :class="{ 'is-error': !validation.businessRegistrationFile.check }"
-              >
-                <el-upload
-                  v-model:file-list="uploadFiles"
-                  class="upload-demo"
-                  :action="dialogImageUrl"
-                  :headers="headers"
-                  :on-exceed="handleExceed"
-                  :before-upload="(raw) => handleBeforeUpload(raw)"
-                  :on-success="(data, uploadFile) => handleSuccess(data, uploadFile)"
-                  :on-remove="() => handleRemove()"
-                  :on-preview="(file) => handlePreview(file)"
-                  :multiple="false"
-                  :limit=1
-                >
-                  <el-button type="success">사업자 등록증 추가</el-button>
-                  <template #tip>
-                    <div class="el-upload__tip">
-                      2MB 이하의 PDF 파일만 등록 가능 합니다.
-                    </div>
-                  </template>
-                </el-upload>
-              </el-col>
-            </el-row>
-            <div v-show="!validation.businessRegistrationFile.check" class="invalid-feedback">
-              {{validation.businessRegistrationFile.message}}
-            </div>
-          </el-col>
-        </el-row>
+<!--        <el-row :gutter="10">-->
+<!--          <el-col :span="6" class="col_tit">-->
+<!--            <strong class="comm_tit_box">사업자 등록증</strong>-->
+<!--          </el-col>-->
+<!--          <el-col :span="16" class="col_desc">-->
+<!--            <el-row :gutter="10">-->
+<!--              <el-col-->
+<!--                :span="10"-->
+<!--                :class="{ 'is-error': !validation.businessRegistrationFile.check }"-->
+<!--              >-->
+<!--                <el-upload-->
+<!--                  v-model:file-list="uploadFiles"-->
+<!--                  class="upload-demo"-->
+<!--                  :action="dialogImageUrl"-->
+<!--                  :headers="headers"-->
+<!--                  :on-exceed="handleExceed"-->
+<!--                  :before-upload="(raw) => handleBeforeUpload(raw)"-->
+<!--                  :on-success="(data, uploadFile) => handleSuccess(data, uploadFile)"-->
+<!--                  :on-remove="() => handleRemove()"-->
+<!--                  :on-preview="(file) => handlePreview(file)"-->
+<!--                  :multiple="false"-->
+<!--                  :limit=1-->
+<!--                >-->
+<!--                  <el-button type="success">사업자 등록증 추가</el-button>-->
+<!--                  <template #tip>-->
+<!--                    <div class="el-upload__tip">-->
+<!--                      2MB 이하의 PDF 파일만 등록 가능 합니다.-->
+<!--                    </div>-->
+<!--                  </template>-->
+<!--                </el-upload>-->
+<!--              </el-col>-->
+<!--            </el-row>-->
+<!--            <div v-show="!validation.businessRegistrationFile.check" class="invalid-feedback">-->
+<!--              {{validation.businessRegistrationFile.message}}-->
+<!--            </div>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
         <el-row :gutter="10">
           <el-col :span="6" class="col_tit">
             <strong class="comm_tit_box">세금 계산서 이메일</strong>
@@ -342,6 +342,7 @@ function handleSuccess(data, uploadFile) {
   if (result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
     this.selected.file = {
+      newFile: true,
       fileType: type,
       originName: originFileName,
       fileName: [target, newFileName].join('/')

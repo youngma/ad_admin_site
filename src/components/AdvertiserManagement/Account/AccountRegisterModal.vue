@@ -76,6 +76,43 @@
             </div>
           </el-col>
         </el-row>
+        <el-row :gutter="10">
+          <el-col :span="6" class="col_tit">
+            <strong class="comm_tit_box">통장 사본</strong>
+          </el-col>
+          <el-col :span="16" class="col_desc">
+            <el-row :gutter="10">
+              <el-col
+                :span="10"
+                :class="{ 'is-error': !validation.accountFile.check }"
+              >
+                <el-upload
+                  v-model:file-list="accounts.uploadFiles"
+                  class="upload-demo"
+                  :action="dialogImageUrl"
+                  :headers="headers"
+                  :on-exceed="handleExceed"
+                  :before-upload="(raw) => handleBeforeUpload(raw)"
+                  :on-success="(data, uploadFile) => handleSuccess(data, uploadFile)"
+                  :on-remove="() => handleRemove()"
+                  :on-preview="(file) => handlePreview(file)"
+                  :multiple=false
+                  :limit=1
+                >
+                  <el-button type="success">통장 사본</el-button>
+                  <template #tip>
+                    <div class="el-upload__tip">
+                      2MB 이하의 PDF / PNG / JPEG 파일만 등록 가능 합니다.
+                    </div>
+                  </template>
+                </el-upload>
+              </el-col>
+            </el-row>
+            <div v-show="!validation.accountFile.check" class="invalid-feedback">
+              {{validation.accountFile.message}}
+            </div>
+          </el-col>
+        </el-row>
       </div>
       <el-row justify="end">
         <el-col class="t_r comm_form_box" tag="span">
@@ -92,6 +129,7 @@ import { commonStore } from '@/store/modules/admin/commonStore.js'
 import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance } from 'vue'
 import { ElMessageBox } from 'element-plus'
+import { getToken } from '@/utils/auth.js'
 
 defineOptions({
   name: 'AdvertiserUserRegisterForm'
@@ -116,6 +154,10 @@ const validation = ref({
   alReadyCheck: {
     check: true,
     message: ''
+  },
+  accountFile: {
+    check: true,
+    message: ''
   }
 })
 
@@ -125,8 +167,11 @@ const common = commonStore()
 const { accounts } = storeToRefs(store)
 const { Bank } = storeToRefs(common)
 
+const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/account/files')
+const headers = ref({ Authorization: getToken() })
+
 function validate(...types) {
-  const { bankCode, bankAccount, accountHolder, alReadyCheck } = this.accounts.register
+  const { bankCode, bankAccount, accountHolder, alReadyCheck, file } = this.accounts.register
   validation.value.valid = true
 
   for (const type of types) {
@@ -192,9 +237,54 @@ function validate(...types) {
           break
         }
         break
+
+      case 'accountFile' :
+
+        validation.value.accountFile.check = true
+        validation.value.accountFile.message = ''
+
+        if (!file) {
+          validation.value.accountFile.check = false
+          validation.value.accountFile.message = '사업자등록증을 추가 해주세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
     }
+
     console.log(validation)
   }
+}
+
+const handleExceed = () => {
+  this.store.handleExceed()
+}
+function handleBeforeUpload(rawFile) {
+  return this.store.handleBeforeUpload(rawFile)
+}
+
+function handleSuccess(data, uploadFile) {
+  const { result, type } = this.store.uploadSuccess(data, uploadFile)
+
+  if (result.length > 0) {
+    const { originFileName, newFileName, target } = result[0]
+    accounts.value.register.file = {
+      newFile: true,
+      fileType: type,
+      originName: originFileName,
+      fileName: [target, newFileName].join('/')
+    }
+  }
+}
+
+function handlePreview(uploadFile) {
+  this.store.handlePreview(uploadFile)
+}
+function handleRemove() {
+  accounts.value.file = null
 }
 async function check() {
   const { alReadyCheck } = this.accounts.register
@@ -204,6 +294,7 @@ async function check() {
   }
 
   this.validate('bankCode', 'bankAccount')
+
   if (validation.value.valid) {
     const check = await this.store.accountCheck()
 

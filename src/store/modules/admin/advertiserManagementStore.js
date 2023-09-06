@@ -37,11 +37,7 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       email: null,
       taxBillEmail: null,
       alReadyCheck: false,
-      file: {
-        fileType: null,
-        originName: null,
-        fileName: null
-      }
+      file: null
     },
     selected: null,
     modifyPopup: false
@@ -170,7 +166,7 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
     },
     handleExceed() {
       ElMessage.warning(
-        '이미지는 1개만 업로드 가능 합니다.'
+        '파일은 1개만 업로드 가능 합니다.'
       )
     }
   },

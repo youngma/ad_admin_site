@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import * as ADVERTISER_API from '@/api/ADVERTISER_API'
 import _ from 'lodash'
+import { ElMessage } from "element-plus";
 
 const initData = {
   searchParams: {
@@ -45,8 +46,9 @@ export const advertiserStore = defineStore('advertiserStore', {
         bankCode: '',
         bankAccount: null,
         accountHolder: null,
-        accountUse: ''
+        accountUse: '',
       },
+      uploadFiles: [],
       list: [],
       selectedAccount: null,
       total: 0,
@@ -55,7 +57,8 @@ export const advertiserStore = defineStore('advertiserStore', {
         bankCode: '',
         bankAccount: null,
         accountHolder: null,
-        alReadyCheck: false
+        alReadyCheck: false,
+        file: null
       }
     }
   }),
@@ -150,7 +153,6 @@ export const advertiserStore = defineStore('advertiserStore', {
       this.users.total = totalElements
     },
     async searchByUsers({ page, size }) {
-
       this.users.searchParams.page = page
 
       if (!size && size > 0) {
@@ -192,7 +194,8 @@ export const advertiserStore = defineStore('advertiserStore', {
           bankCode: '',
           bankAccount: null,
           accountHolder: null,
-          alReadyCheck: false
+          alReadyCheck: false,
+          file: null
         }
         this.accounts.registerModal = false
       }
@@ -327,6 +330,42 @@ export const advertiserStore = defineStore('advertiserStore', {
         this.initRegisterForm('account')
         this.accounts.registerModal = true
       }
+    },
+    uploadSuccess(data, uploadFile) {
+      const { raw } = uploadFile
+      const { type } = raw
+      const { result } = data
+
+      this.uploadFiles = result.map(file => {
+        const { originFileName, newFileName, target } = file
+        return {
+          name: originFileName,
+          type,
+          url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+        }
+      })
+
+      return { result, type }
+    },
+    handlePreview(uploadFile) {
+      window.open(uploadFile.url)
+    },
+    handleBeforeUpload(rawFile) {
+      console.log(2, rawFile)
+      const { type, size } = rawFile
+      if (['application/pdf', 'application/png', 'application/jpg'].includes(type) ) {
+        ElMessage.error('PDF, PNG, JPEG 파일만 등록 가능 합니다.')
+        return false
+      } else if (size / 1024 / 1024 > 2) {
+        ElMessage.error('파일 사이즈는 2MB 를 초과 할 수 없습니다.')
+        return false
+      }
+      return true
+    },
+    handleExceed() {
+      ElMessage.warning(
+        '파일은 1개만 업로드 가능 합니다.'
+      )
     }
   },
   persist: {

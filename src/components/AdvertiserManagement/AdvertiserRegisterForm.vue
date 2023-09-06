@@ -401,6 +401,8 @@ function handleSuccess(data, uploadFile) {
   if (result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
     register.value.file = {
+      newFile: true
+
       fileType: type,
       originName: originFileName,
       fileName: [target, newFileName].join('/')
