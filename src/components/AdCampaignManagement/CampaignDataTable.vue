@@ -19,7 +19,7 @@
       </template>
     </el-table-column>
     <el-table-column  prop="paymentTermsName" label="지급 방법" width="150" header-align="center" align="center" />
-    <el-table-column  prop="campaignStatus" label="캠페인 상태" width="150" header-align="center" align="center" />
+    <el-table-column  prop="campaignStatusNm" label="캠페인 상태" width="150" header-align="center" align="center" />
 
   </el-table>
 

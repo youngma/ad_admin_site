@@ -12,11 +12,11 @@
           <el-input v-model="campaignSearchParams.campaignName" placeholder="Please input" />
         </el-col>
         <el-col :span="4">
-          <strong class="comm_tit_box">상품 코드</strong>
+          <strong class="comm_tit_box">캠페인 코드</strong>
         </el-col>
         <el-col :span="8">
           <el-input
-            v-model="campaignSearchParams.goodsCode"
+            v-model="campaignSearchParams.campaignCode"
             placeholder="Please input" />
         </el-col>
       </el-row>
@@ -68,7 +68,7 @@
               v-for="code of CampaignType"
               :key="code.key"
               :label="code.value"
-              :value="code.value"
+              :value="code.key"
             />
           </el-select>
 
@@ -84,14 +84,21 @@
               v-for="code of PaymentTerms"
               :key="code.key"
               :label="code.value"
-              :value="code.value"
+              :value="code.key"
             />
           </el-select>
         </el-col>
       </el-row>
 
       <el-row :gutter="10">
-
+        <el-col :span="4">
+          <strong class="comm_tit_box">상품 코드</strong>
+        </el-col>
+        <el-col :span="8">
+          <el-input
+            v-model="campaignSearchParams.goodsCode"
+            placeholder="Please input" />
+        </el-col>
         <el-col :span="4">
           <strong class="comm_tit_box">캠페인 상태</strong>
         </el-col>
@@ -102,15 +109,11 @@
               v-for="code of CampaignStatus"
               :key="code.key"
               :label="code.value"
-              :value="code.value"
+              :value="code.key"
             />
           </el-select>
         </el-col>
-        <el-col :span="4">
-          <strong class="comm_tit_box"></strong>
-        </el-col>
-        <el-col :span="8">
-        </el-col>
+
       </el-row>
 
     </div>
@@ -129,13 +132,10 @@
 
 <script setup>
 
-import { businessNumberFormatter, phoneFormatter } from '@/utils/customElTableFormatter.js'
 import { campaignStore } from '@/store/modules/admin/campaignStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
-import moment from 'moment'
 
 defineOptions({
   name: 'CampaignSearchForm'
@@ -144,7 +144,7 @@ defineOptions({
 const store = campaignStore()
 const common = commonStore()
 
-const { campaignSearchParams } = storeToRefs(store)
+const { campaignSearchParams, searchFormSelected } = storeToRefs(store)
 const { CampaignType, CampaignStatus, PaymentTerms } = storeToRefs(common)
 
 // const defaultAdDate = ref([moment().add(10, 'days').toDate(), Date.now()])

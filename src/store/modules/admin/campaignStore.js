@@ -18,6 +18,7 @@ export const campaignStore = defineStore('campaignStore', {
       // advertiserSeqList: [],
       campaignName: null,
       targetUrl: null,
+      campaignCode: null,
       goodsCode: null,
       adDate: [],
       adStartDate: null,
@@ -79,6 +80,7 @@ export const campaignStore = defineStore('campaignStore', {
         this.campaignSearchParams = {
           campaignName: null,
           targetUrl: null,
+          campaignCode: null,
           goodsCode: null,
           adDate: [],
           adStartDate: null,
@@ -116,15 +118,9 @@ export const campaignStore = defineStore('campaignStore', {
       })
     },
     async reload() {
-      console.log(3, this.campaignSearchParams.size)
-
       const searchParams = Object.assign({
         advertiserSeq: this.searchFormSelected.join(',')
       }, this.campaignSearchParams)
-
-      console.log(4, this.campaignSearchParams.size)
-
-      console.log(5, searchParams.size)
 
       const result = await CAMPAIGN_API.search(searchParams)
       const { content, totalElements } = result
@@ -132,14 +128,11 @@ export const campaignStore = defineStore('campaignStore', {
       this.total = totalElements
     },
     async search({ page, size }) {
-      console.log(1, this.campaignSearchParams.size)
 
       this.campaignSearchParams.page = page
       if (size && size > 0) {
-        console.log(12, this.campaignSearchParams.size)
         this.campaignSearchParams.size = size
       }
-      console.log(2, this.campaignSearchParams.size)
 
       await this.reload()
     }
