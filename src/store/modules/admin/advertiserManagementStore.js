@@ -3,6 +3,7 @@ import * as ADVERTISER_API from '@/api/ADVERTISER_API'
 import _ from 'lodash'
 import * as ADMIN_API from '@/api/ADMIN_API.js'
 import { deepClone } from '@/utils/index.js'
+import { ElMessage } from 'element-plus'
 
 const initData = {
   searchParams: {
@@ -27,16 +28,20 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       phoneNumber: null,
       email: null
     },
-    fileList: [],
+    uploadFiles: [],
     register: {
       businessName: null,
       businessNumber: null,
       advertiserName: null,
       phoneNumber: null,
       email: null,
+      taxBillEmail: null,
       alReadyCheck: false,
-      businessRegistrationOriginFileName: null,
-      businessRegistrationFile: null
+      file: {
+        fileType: null,
+        originName: null,
+        fileName: null
+      }
     },
     selected: null,
     modifyPopup: false
@@ -72,13 +77,14 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       await this.reload()
     },
     initRegisterForm() {
-      this.fileList = []
+      this.uploadFile = []
       this.register = {
         businessName: null,
         businessNumber: null,
         advertiserName: null,
         phoneNumber: null,
         email: null,
+        taxBillEmail: null,
         alReadyCheck: false,
         // businessRegistrationOriginFileName: null,
         // businessRegistrationFile: null
@@ -108,11 +114,21 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
     },
     selectedAdvertiser(row) {
       this.selected = deepClone(row)
+      const { file } = this.selected
+
+      this.uploadFiles = [
+        {
+          name: file ? file.originName : null,
+          type: file ? file.fileType : null,
+          url: file ? [import.meta.env.VITE_FIEL_SERVER, 'files', file.fileName].join('/') : null
+        }
+      ]
+
       this.modifyPopup = true
     },
     modifyAdvertiser() {
-      const { advertiserSeq, businessName, advertiserName, phoneNumber, email } = this.selected
-      ADVERTISER_API.modify({ advertiserSeq, businessName, advertiserName, phoneNumber, email }).then(() => {
+      const { advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail } = this.selected
+      ADVERTISER_API.modify({ advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail }).then(() => {
         this.$alert('수정 되었습니다.', '확인', {})
         this.reload().then(() => {
           this.modifyPopup = false
@@ -120,6 +136,42 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       }).catch(() => {
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })
+    },
+    uploadSuccess(data, uploadFile) {
+      const { raw } = uploadFile
+      const { type } = raw
+      const { result } = data
+
+      this.uploadFiles = result.map(file => {
+        const { originFileName, newFileName, target } = file
+        return {
+          name: originFileName,
+          type,
+          url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+        }
+      })
+
+      return { result, type }
+    },
+    handlePreview(uploadFile) {
+      window.open(uploadFile.url)
+    },
+    handleBeforeUpload(rawFile) {
+      console.log(2, rawFile)
+      const { type, size } = rawFile
+      if (type !== 'application/pdf') {
+        ElMessage.error('PDF 파일만 등록 가능 합니다.')
+        return false
+      } else if (size / 1024 / 1024 > 2) {
+        ElMessage.error('파일 사이즈는 2MB 를 초과 할 수 없습니다.')
+        return false
+      }
+      return true
+    },
+    handleExceed() {
+      ElMessage.warning(
+        '이미지는 1개만 업로드 가능 합니다.'
+      )
     }
   },
   persist: {

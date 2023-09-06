@@ -1,9 +1,9 @@
 <template>
-  <el-dialog v-if="selected" v-model="modifyPopup" title="광고주 수정" width="800" >
+  <el-dialog v-if="selected" v-model="modifyPopup" title="광고주 수정" width="900" >
     <div class="comm_comp">
       <div class="comm_comp_table">
         <el-row :gutter="10">
-          <el-col :span="4" class="col_tit">
+          <el-col :span="6" class="col_tit">
             <strong class="comm_tit_box">광고주 사업자 명</strong>
           </el-col>
           <el-col :span="16" class="col_desc">
@@ -32,7 +32,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="4" class="col_tit">
+          <el-col :span="6" class="col_tit">
             <strong class="comm_tit_box">대표자 명</strong>
           </el-col>
           <el-col :span="16" class="col_desc">
@@ -50,7 +50,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="4" class="col_tit">
+          <el-col :span="6" class="col_tit">
             <strong class="comm_tit_box">전화 번호</strong>
           </el-col>
           <el-col :span="16" class="col_desc">
@@ -68,7 +68,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="10">
-          <el-col :span="4" class="col_tit">
+          <el-col :span="6" class="col_tit">
             <strong class="comm_tit_box">이메일</strong>
           </el-col>
           <el-col :span="16" class="col_desc">
@@ -82,6 +82,61 @@
             </el-row>
             <div v-show="!validation.email.check" class="invalid-feedback">
               {{validation.email.message}}
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="6" class="col_tit">
+            <strong class="comm_tit_box">사업자 등록증</strong>
+          </el-col>
+          <el-col :span="16" class="col_desc">
+            <el-row :gutter="10">
+              <el-col
+                :span="10"
+                :class="{ 'is-error': !validation.businessRegistrationFile.check }"
+              >
+                <el-upload
+                  v-model:file-list="uploadFiles"
+                  class="upload-demo"
+                  :action="dialogImageUrl"
+                  :headers="headers"
+                  :on-exceed="handleExceed"
+                  :before-upload="(raw) => handleBeforeUpload(raw)"
+                  :on-success="(data, uploadFile) => handleSuccess(data, uploadFile)"
+                  :on-remove="() => handleRemove()"
+                  :on-preview="(file) => handlePreview(file)"
+                  :multiple="false"
+                  :limit=1
+                >
+                  <el-button type="success">사업자 등록증 추가</el-button>
+                  <template #tip>
+                    <div class="el-upload__tip">
+                      2MB 이하의 PDF 파일만 등록 가능 합니다.
+                    </div>
+                  </template>
+                </el-upload>
+              </el-col>
+            </el-row>
+            <div v-show="!validation.businessRegistrationFile.check" class="invalid-feedback">
+              {{validation.businessRegistrationFile.message}}
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="6" class="col_tit">
+            <strong class="comm_tit_box">세금 계산서 이메일</strong>
+          </el-col>
+          <el-col :span="16" class="col_desc">
+            <el-row :gutter="10">
+              <el-col :span="20">
+                <el-input
+                  v-model="selected.taxBillEmail"
+                  :class="{ 'is-error': !validation.taxBillEmail.check }"
+                  class="" placeholder="이메일를 입력 해주세요." />
+              </el-col>
+            </el-row>
+            <div v-show="!validation.taxBillEmail.check" class="invalid-feedback">
+              {{validation.taxBillEmail.message}}
             </div>
           </el-col>
         </el-row>
@@ -101,6 +156,7 @@ import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { validBusinessNumber, validEmail, validPhone } from '@/utils/validate.js'
+import { getToken } from '@/utils/auth.js'
 
 defineOptions({
   name: 'AdvertiserModifyModal'
@@ -125,16 +181,27 @@ const validation = ref({
   email: {
     check: true,
     message: ''
+  },
+  taxBillEmail: {
+    check: true,
+    message: ''
+  },
+  businessRegistrationFile: {
+    check: true,
+    message: ''
   }
 })
 
 const store = advertiserManagementStore()
-const { selected, modifyPopup } = storeToRefs(store)
+const { uploadFiles, selected, modifyPopup } = storeToRefs(store)
+
+const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/business/files')
+const headers = ref({ Authorization: getToken() })
 
 function validate(...types) {
-  const { advertiserSeq, businessName, advertiserName, phoneNumber, email } = this.selected
+  const { advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail, file } = this.selected
 
-  console.log(advertiserSeq, businessName, advertiserName, phoneNumber, email)
+  console.log(advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail, file)
   validation.value.valid = true
 
   for (const type of types) {
@@ -146,7 +213,6 @@ function validate(...types) {
         if (businessName === null || businessName === '') {
           validation.value.businessName.check = false
           validation.value.businessName.message = '사업자명을 입력 하세요.'
-          validation.value.businessName = false
 
           break
         }
@@ -218,12 +284,82 @@ function validate(...types) {
         }
 
         break
+
+      case 'taxBillEmail' :
+
+        validation.value.taxBillEmail.check = true
+        validation.value.taxBillEmail.message = ''
+
+        if (email === null || email === '') {
+          validation.value.taxBillEmail.check = false
+          validation.value.taxBillEmail.message = '세금계산서 발행 이메일 주소를 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        if (!validEmail(taxBillEmail)) {
+          validation.value.taxBillEmail.check = false
+          validation.value.taxBillEmail.message = '세금계산서 발행 이메일 주소를 확인 해주세요.'
+          this.selected.taxBillEmail = null
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
+      case 'businessRegistrationFile' :
+
+        validation.value.businessRegistrationFile.check = true
+        validation.value.businessRegistrationFile.message = ''
+
+        console.log(file)
+        if (!file) {
+          validation.value.businessRegistrationFile.check = false
+          validation.value.businessRegistrationFile.message = '사업자등록증을 추가 해주세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
     }
   }
 }
 
+const handleExceed = () => {
+  this.store.handleExceed()
+}
+function handleBeforeUpload(rawFile) {
+  return this.store.handleBeforeUpload(rawFile)
+}
+
+function handleSuccess(data, uploadFile) {
+  const { result, type } = this.store.uploadSuccess(data, uploadFile)
+  if (result.length > 0) {
+    const { originFileName, newFileName, target } = result[0]
+    this.selected.file = {
+      fileType: type,
+      originName: originFileName,
+      fileName: [target, newFileName].join('/')
+    }
+  }
+}
+
+function handlePreview(uploadFile) {
+  this.store.handlePreview(uploadFile)
+}
+function handleRemove() {
+  this.selected.file = null
+}
+
 function modify() {
-  this.validate('businessName', 'advertiserName', 'phoneNumber', 'email')
+  this.validate('businessName', 'advertiserName', 'phoneNumber', 'email', 'taxBillEmail', 'businessRegistrationFile')
+
+  console.log(validation)
   if (validation.value.valid) {
     this.store.modifyAdvertiser()
   }

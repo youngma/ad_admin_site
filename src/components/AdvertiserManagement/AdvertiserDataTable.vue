@@ -66,7 +66,6 @@ function pageChange(number) {
 }
 
 function open(row) {
-  console.log(this.store)
   this.store.selectedAdvertiser(row)
 }
 

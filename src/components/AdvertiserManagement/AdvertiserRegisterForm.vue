@@ -120,16 +120,16 @@
               :class="{ 'is-error': !validation.businessRegistrationFile.check }"
             >
               <el-upload
-                v-model:file-list="fileList"
+                v-model:file-list="uploadFiles"
                 class="upload-demo"
                 :action="dialogImageUrl"
                 :headers="headers"
                 :on-exceed="handleExceed"
-                :before-upload="handleBeforeUpload"
-                :on-success="handleSuccess"
-                :on-remove="handleRemove"
-                :on-preview="handlePreview"
-                :multiple="false"
+                :before-upload="(raw) => handleBeforeUpload(raw)"
+                :on-success="(data, uploadFile) => handleSuccess(data, uploadFile)"
+                :on-remove="() => handleRemove()"
+                :on-preview="(file) => handlePreview(file)"
+                :multiple=false
                 :limit=1
               >
                 <el-button type="success">사업자 등록증 추가</el-button>
@@ -146,6 +146,24 @@
           </div>
         </el-col>
       </el-row>
+      <el-row :gutter="10">
+        <el-col :span="4" class="col_tit">
+          <strong class="comm_tit_box">세금 계산서 발행 이메일</strong>
+        </el-col>
+        <el-col :span="16" class="col_desc">
+          <el-row :gutter="10">
+            <el-col :span="10">
+              <el-input
+                v-model="register.taxBillEmail"
+                :class="{ 'is-error': !validation.taxBillEmail.check }"
+                class="" placeholder="이메일를 입력 해주세요." />
+            </el-col>
+          </el-row>
+          <div v-show="!validation.taxBillEmail.check" class="invalid-feedback">
+            {{validation.taxBillEmail.message}}
+          </div>
+        </el-col>
+      </el-row>
     </div>
     <el-row justify="end">
       <el-col class="t_r comm_form_box" tag="span">
@@ -158,9 +176,9 @@
 <script setup>
 import { advertiserManagementStore } from '@/store/modules/admin/advertiserManagementStore.js'
 import { storeToRefs } from 'pinia'
-import { ref, getCurrentInstance } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { validEmail, validPhone, validBusinessNumber } from '@/utils/validate.js'
+import { getCurrentInstance, ref } from 'vue'
+import { ElMessageBox } from 'element-plus'
+import { validBusinessNumber, validEmail, validPhone } from '@/utils/validate.js'
 import { getToken } from '@/utils/auth.js'
 
 defineOptions({
@@ -191,6 +209,10 @@ const validation = ref({
     check: true,
     message: ''
   },
+  taxBillEmail: {
+    check: true,
+    message: ''
+  },
   businessRegistrationFile: {
     check: true,
     message: ''
@@ -198,15 +220,15 @@ const validation = ref({
 })
 
 const store = advertiserManagementStore()
-const { fileList, register } = storeToRefs(store)
+const { uploadFiles, register } = storeToRefs(store)
 
 const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/business/files')
 const headers = ref({ Authorization: getToken() })
 
 function validate(...types) {
-  const { businessName, businessNumber, advertiserName, phoneNumber, email, alReadyCheck, file } = this.register
+  const { businessName, businessNumber, advertiserName, phoneNumber, email, taxBillEmail, alReadyCheck, file } = this.register
 
-  console.log(businessName, businessNumber, advertiserName, phoneNumber, email, alReadyCheck, file)
+  console.log(businessName, businessNumber, advertiserName, phoneNumber, email, taxBillEmail, alReadyCheck, file)
   validation.value.valid = true
 
   for (const type of types) {
@@ -321,6 +343,31 @@ function validate(...types) {
 
         break
 
+      case 'taxBillEmail' :
+
+        validation.value.taxBillEmail.check = true
+        validation.value.taxBillEmail.message = ''
+
+        if (email === null || email === '') {
+          validation.value.taxBillEmail.check = false
+          validation.value.taxBillEmail.message = '세금계산서 발행 이메일 주소를 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        if (!validEmail(taxBillEmail)) {
+          validation.value.taxBillEmail.check = false
+          validation.value.taxBillEmail.message = '세금계산서 발행 이메일 주소를 확인 해주세요.'
+          this.register.taxBillEmail = null
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
       case 'businessRegistrationFile' :
 
         validation.value.businessRegistrationFile.check = true
@@ -340,51 +387,32 @@ function validate(...types) {
   }
 }
 
-const handleExceed = (files, uploadFiles) => {
-  ElMessage.warning(
-    '이미지는 1개만 업로드 가능 합니다.'
-  )
+const handleExceed = () => {
+  this.store.handleExceed()
 }
-const handleBeforeUpload = (rawFile) => {
-  const { type, size } = rawFile
-  if (type !== 'application/pdf') {
-    ElMessage.error('PDF 파일만 등록 가능 합니다.')
-    return false
-  } else if (size / 1024 / 1024 > 2) {
-    ElMessage.error('파일 사이즈는 2MB 를 초과 할 수 없습니다.')
-    return false
-  }
-  return true
+function handleBeforeUpload(rawFile) {
+  return this.store.handleBeforeUpload(rawFile)
 }
 
-const handleSuccess = (data, uploadFile) => {
-  console.log(uploadFile)
+function handleSuccess(data, uploadFile) {
+  const { result, type } = this.store.uploadSuccess(data, uploadFile)
 
-  const { raw } = uploadFile
-  const { type } = raw
-  const { result } = data
-  fileList.value = result.map(file => {
-    const { originFileName, newFileName, target } = file
-    return {
-      name: originFileName,
-      url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
-    }
-  })
-
+  console.log(result, type)
   if (result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
-    register.value.file.fileType = type
-    register.value.file.originName = originFileName
-    register.value.file.fileName = [target, newFileName].join('/')
+    register.value.file = {
+      fileType: type,
+      originName: originFileName,
+      fileName: [target, newFileName].join('/')
+    }
   }
 }
 
 function handlePreview(uploadFile) {
-  window.open(uploadFile.url)
+  this.store.handlePreview(uploadFile)
 }
-
 function handleRemove() {
-  register.value.businessRegistrationFile = null
+  register.value.file = null
 }
 
 async function check(t) {
@@ -401,7 +429,7 @@ async function check(t) {
 }
 
 function save() {
-  this.validate('alReadyCheck', 'businessName', 'businessNumber', 'advertiserName', 'phoneNumber', 'email', 'businessRegistrationFile')
+  this.validate('alReadyCheck', 'businessName', 'businessNumber', 'advertiserName', 'phoneNumber', 'email', 'taxBillEmail', 'businessRegistrationFile')
   if (validation.value.valid) {
     this.store.advertiserRegister()
   }
