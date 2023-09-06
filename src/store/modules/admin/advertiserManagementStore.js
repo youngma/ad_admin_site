@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import * as ADVERTISER_API from '@/api/ADVERTISER_API'
 import _ from 'lodash'
 import * as ADMIN_API from '@/api/ADMIN_API.js'
-import {deepClone} from "@/utils/index.js";
+import { deepClone } from '@/utils/index.js'
 
 const initData = {
   searchParams: {
@@ -27,13 +27,16 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       phoneNumber: null,
       email: null
     },
+    fileList: [],
     register: {
       businessName: null,
       businessNumber: null,
       advertiserName: null,
       phoneNumber: null,
       email: null,
-      alReadyCheck: false
+      alReadyCheck: false,
+      businessRegistrationOriginFileName: null,
+      businessRegistrationFile: null
     },
     selected: null,
     modifyPopup: false
@@ -69,19 +72,28 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       await this.reload()
     },
     initRegisterForm() {
+      this.fileList = []
       this.register = {
         businessName: null,
         businessNumber: null,
+        advertiserName: null,
         phoneNumber: null,
         email: null,
-        alReadyCheck: false
+        alReadyCheck: false,
+        // businessRegistrationOriginFileName: null,
+        // businessRegistrationFile: null
+        file: {
+          fileType: null,
+          originName: null,
+          fileName: null
+        }
       }
     },
     async businessNumberCheck() {
       const { businessNumber } = this.register
-      const res = await ADVERTISER_API.businessNumberCheck({ businessNumber })
+      const result = await ADVERTISER_API.businessNumberCheck({ businessNumber })
 
-      this.register.alReadyCheck = !res.data.result
+      this.register.alReadyCheck = !result
 
       return this.register.alReadyCheck
     },

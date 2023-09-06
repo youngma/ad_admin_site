@@ -44,7 +44,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 const emit = defineEmits(['upload-after'])
 
-const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/files')
+const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/campaign/files')
 const headers = ref({ Authorization: getToken() })
 const dialogVisible = ref(false)
 const fileList = ref([])

@@ -109,6 +109,43 @@
           </div>
         </el-col>
       </el-row>
+      <el-row :gutter="10">
+        <el-col :span="4" class="col_tit">
+          <strong class="comm_tit_box">사업자 등록증</strong>
+        </el-col>
+        <el-col :span="16" class="col_desc">
+          <el-row :gutter="10">
+            <el-col
+              :span="10"
+              :class="{ 'is-error': !validation.businessRegistrationFile.check }"
+            >
+              <el-upload
+                v-model:file-list="fileList"
+                class="upload-demo"
+                :action="dialogImageUrl"
+                :headers="headers"
+                :on-exceed="handleExceed"
+                :before-upload="handleBeforeUpload"
+                :on-success="handleSuccess"
+                :on-remove="handleRemove"
+                :on-preview="handlePreview"
+                :multiple="false"
+                :limit=1
+              >
+                <el-button type="success">사업자 등록증 추가</el-button>
+                <template #tip>
+                  <div class="el-upload__tip">
+                    2MB 이하의 PDF 파일만 등록 가능 합니다.
+                  </div>
+                </template>
+              </el-upload>
+            </el-col>
+          </el-row>
+          <div v-show="!validation.businessRegistrationFile.check" class="invalid-feedback">
+            {{validation.businessRegistrationFile.message}}
+          </div>
+        </el-col>
+      </el-row>
     </div>
     <el-row justify="end">
       <el-col class="t_r comm_form_box" tag="span">
@@ -122,8 +159,9 @@
 import { advertiserManagementStore } from '@/store/modules/admin/advertiserManagementStore.js'
 import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance } from 'vue'
-import { ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { validEmail, validPhone, validBusinessNumber } from '@/utils/validate.js'
+import { getToken } from '@/utils/auth.js'
 
 defineOptions({
   name: 'AdvertiserRegisterForm'
@@ -152,16 +190,23 @@ const validation = ref({
   email: {
     check: true,
     message: ''
+  },
+  businessRegistrationFile: {
+    check: true,
+    message: ''
   }
 })
 
 const store = advertiserManagementStore()
-const { register } = storeToRefs(store)
+const { fileList, register } = storeToRefs(store)
+
+const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/business/files')
+const headers = ref({ Authorization: getToken() })
 
 function validate(...types) {
-  const { businessName, businessNumber, advertiserName, phoneNumber, email, alReadyCheck } = this.register
+  const { businessName, businessNumber, advertiserName, phoneNumber, email, alReadyCheck, file } = this.register
 
-  console.log(businessName, businessNumber, advertiserName, phoneNumber, email, alReadyCheck)
+  console.log(businessName, businessNumber, advertiserName, phoneNumber, email, alReadyCheck, file)
   validation.value.valid = true
 
   for (const type of types) {
@@ -183,8 +228,7 @@ function validate(...types) {
         if (businessName === null || businessName === '') {
           validation.value.businessName.check = false
           validation.value.businessName.message = '사업자명을 입력 하세요.'
-          validation.value.businessName = false
-
+          validation.value.valid = false
           break
         }
 
@@ -198,7 +242,6 @@ function validate(...types) {
         if (businessNumber === null || businessNumber === '') {
           validation.value.businessNumber.check = false
           validation.value.businessNumber.message = '사업자 번호를 입력 하세요.'
-
           validation.value.valid = false
 
           break
@@ -207,17 +250,14 @@ function validate(...types) {
         if (!validBusinessNumber(businessNumber)) {
           validation.value.businessNumber.check = false
           validation.value.businessNumber.message = '사업자번호 형식을 확인 해주세요.'
-          this.register.businessNumber = null
           validation.value.valid = false
 
           break
         }
 
-
-
         break
 
-      case 'userName' :
+      case 'advertiserName' :
 
         validation.value.advertiserName.check = true
         validation.value.advertiserName.message = ''
@@ -225,7 +265,6 @@ function validate(...types) {
         if (advertiserName === null || advertiserName === '') {
           validation.value.advertiserName.check = false
           validation.value.advertiserName.message = '대표자 명을 입력 하세요.'
-
           validation.value.valid = false
 
           break
@@ -241,7 +280,6 @@ function validate(...types) {
         if (phoneNumber === null || phoneNumber === '') {
           validation.value.phoneNumber.check = false
           validation.value.phoneNumber.message = '전화번호를 입력 하세요.'
-
           validation.value.valid = false
 
           break
@@ -282,11 +320,74 @@ function validate(...types) {
         }
 
         break
+
+      case 'businessRegistrationFile' :
+
+        validation.value.businessRegistrationFile.check = true
+        validation.value.businessRegistrationFile.message = ''
+
+        if (!file) {
+          validation.value.businessRegistrationFile.check = false
+          validation.value.businessRegistrationFile.message = '사업자등록증을 추가 해주세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
     }
   }
 }
 
-function check(t) {
+const handleExceed = (files, uploadFiles) => {
+  ElMessage.warning(
+    '이미지는 1개만 업로드 가능 합니다.'
+  )
+}
+const handleBeforeUpload = (rawFile) => {
+  const { type, size } = rawFile
+  if (type !== 'application/pdf') {
+    ElMessage.error('PDF 파일만 등록 가능 합니다.')
+    return false
+  } else if (size / 1024 / 1024 > 2) {
+    ElMessage.error('파일 사이즈는 2MB 를 초과 할 수 없습니다.')
+    return false
+  }
+  return true
+}
+
+const handleSuccess = (data, uploadFile) => {
+  console.log(uploadFile)
+
+  const { raw } = uploadFile
+  const { type } = raw
+  const { result } = data
+  fileList.value = result.map(file => {
+    const { originFileName, newFileName, target } = file
+    return {
+      name: originFileName,
+      url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+    }
+  })
+
+  if (result.length > 0) {
+    const { originFileName, newFileName, target } = result[0]
+    register.value.file.fileType = type
+    register.value.file.originName = originFileName
+    register.value.file.fileName = [target, newFileName].join('/')
+  }
+}
+
+function handlePreview(uploadFile) {
+  window.open(uploadFile.url)
+}
+
+function handleRemove() {
+  register.value.businessRegistrationFile = null
+}
+
+async function check(t) {
   const { alReadyCheck } = this.register
   if (alReadyCheck) {
     return false
@@ -294,13 +395,13 @@ function check(t) {
 
   this.validate('businessNumber')
   if (validation.value.valid) {
-    const retMsg = this.store.businessNumberCheck() ? '사용 가능한 사업자번호 입니다.' : '이미 등록된 사업자번호 입니다.'
-    ElMessageBox.alert(retMsg, '확인', {}, appContext)
+    const retMsg = await this.store.businessNumberCheck() ? '사용 가능한 사업자 번호 입니다.' : '이미 등록된 사업자번호 입니다.'
+    await ElMessageBox.alert(retMsg, '확인', {}, appContext)
   }
 }
 
 function save() {
-  this.validate('alReadyCheck', 'businessName', 'businessNumber', 'advertiserName', 'phoneNumber', 'email')
+  this.validate('alReadyCheck', 'businessName', 'businessNumber', 'advertiserName', 'phoneNumber', 'email', 'businessRegistrationFile')
   if (validation.value.valid) {
     this.store.advertiserRegister()
   }
