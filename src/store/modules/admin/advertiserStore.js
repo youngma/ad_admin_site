@@ -197,6 +197,7 @@ export const advertiserStore = defineStore('advertiserStore', {
           alReadyCheck: false,
           file: null
         }
+        this.accounts.uploadFiles = []
         this.accounts.registerModal = false
       }
     },
@@ -336,7 +337,7 @@ export const advertiserStore = defineStore('advertiserStore', {
       const { type } = raw
       const { result } = data
 
-      this.uploadFiles = result.map(file => {
+      this.accounts.uploadFiles = result.map(file => {
         const { originFileName, newFileName, target } = file
         return {
           name: originFileName,

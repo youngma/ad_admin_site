@@ -397,12 +397,10 @@ function handleBeforeUpload(rawFile) {
 function handleSuccess(data, uploadFile) {
   const { result, type } = this.store.uploadSuccess(data, uploadFile)
 
-  console.log(result, type)
   if (result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
     register.value.file = {
-      newFile: true
-
+      newFile: true,
       fileType: type,
       originName: originFileName,
       fileName: [target, newFileName].join('/')
@@ -411,6 +409,7 @@ function handleSuccess(data, uploadFile) {
 }
 
 function handlePreview(uploadFile) {
+  console.log(111, uploadFile)
   this.store.handlePreview(uploadFile)
 }
 function handleRemove() {

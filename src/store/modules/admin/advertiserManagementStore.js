@@ -73,7 +73,7 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       await this.reload()
     },
     initRegisterForm() {
-      this.uploadFile = []
+      this.uploadFiles = []
       this.register = {
         businessName: null,
         businessNumber: null,

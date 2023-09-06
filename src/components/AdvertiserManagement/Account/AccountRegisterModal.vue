@@ -281,6 +281,7 @@ function handleSuccess(data, uploadFile) {
 }
 
 function handlePreview(uploadFile) {
+  console.log(111, uploadFile)
   this.store.handlePreview(uploadFile)
 }
 function handleRemove() {

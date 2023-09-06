@@ -5,7 +5,11 @@
     style="width: 100%"
   >
     <el-table-column  prop="bankCodename" label="은행" width="150" header-align="center" align="center" />
-    <el-table-column  prop="bankAccount" label="계좌번호" width="150" header-align="center" align="center" />
+    <el-table-column  prop="bankAccount" label="계좌 번호" width="150" header-align="center" align="center" >
+      <template #default="scope">
+        <el-button type="primary" @click="open(scope.row)"> {{scope.row.bankAccount}} </el-button>
+      </template>
+    </el-table-column>
     <el-table-column  prop="accountHolder" label="예금주" width="150" header-align="center" align="center" />
     <el-table-column  prop="accountUse" label="사용 여부" width="150" header-align="center" align="center" >
       <template #default="scope">
@@ -76,6 +80,10 @@ function unused(row) {
 
 function remove(row) {
   this.store.accountDelete(row)
+}
+
+function open(row) {
+  window.open([import.meta.env.VITE_FIEL_SERVER, 'files', row.file.fileName].join('/'))
 }
 
 </script>
