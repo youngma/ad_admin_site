@@ -124,7 +124,7 @@
 </template>
 
 <script setup>
-import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
+import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance } from 'vue'
@@ -132,7 +132,7 @@ import { ElMessageBox } from 'element-plus'
 import { getToken } from '@/utils/auth.js'
 
 defineOptions({
-  name: 'AdvertiserAccountRegisterForm'
+  name: 'PartnerAccountRegisterForm'
 })
 
 const { appContext } = getCurrentInstance()
@@ -161,7 +161,7 @@ const validation = ref({
   }
 })
 
-const store = advertiserStore()
+const store = partnerStore()
 const common = commonStore()
 
 const { accounts } = storeToRefs(store)

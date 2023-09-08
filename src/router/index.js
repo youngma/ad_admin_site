@@ -172,6 +172,37 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/partner-management',
+    component: Layout,
+    // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
+    meta: {
+      title: '매체사 관리',
+      icon: 'fluent:building-desktop-20-filled'
+    },
+    name: 'PartnerManagement',
+    redirect: '/partner-management/search',
+    children: [
+      {
+        path: 'search',
+        component: () => import('@/views/partner-management/PartnerManagement.vue'),
+        name: 'PartnerSearch',
+        meta: { title: '매체사 조회', icon: 'ri:menu-search-fill' }
+      },
+      {
+        path: 'register',
+        component: () => import('@/views/partner-management/PartnerRegister.vue'),
+        name: 'PartnerRegister',
+        meta: { title: '매체사 등록', icon: 'ri:add-box-fill' }
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/partner-management/PartnerDetail.vue'),
+        name: 'PartnerDetail',
+        meta: { title: '매체사 상세', icon: 'ri:database-fill', init: true }
+      }
+    ]
+  },
+  {
     path: '/advertiser-management',
     component: Layout,
     // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),

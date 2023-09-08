@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import * as ADVERTISER_API from '@/api/ADVERTISER_API'
+import * as PARTNER_API from '@/api/PARTNER_API.js'
 import _ from 'lodash'
-import { ElMessage } from "element-plus";
+import { ElMessage } from 'element-plus'
 
 const initData = {
   searchParams: {
@@ -9,14 +9,14 @@ const initData = {
   }
 }
 
-export const advertiserStore = defineStore('advertiserStore', {
+export const partnerStore = defineStore('partnerStore', {
   state: () => ({
     searchParams: {
       businessName: null,
       page: 1,
       size: 50
     },
-    advertisers: [],
+    partners: [],
     selected: [],
     users: {
       searchParams: {
@@ -46,7 +46,7 @@ export const advertiserStore = defineStore('advertiserStore', {
         bankCode: '',
         bankAccount: null,
         accountHolder: null,
-        accountUse: '',
+        accountUse: ''
       },
       uploadFiles: [],
       list: [],
@@ -69,8 +69,8 @@ export const advertiserStore = defineStore('advertiserStore', {
     //     value: item.advertiserSeq
     //   }
     // }),
-    advertiser: (state) => state.advertisers.filter((t) => {
-      return state.selected.includes(t.advertiserSeq)
+    partner: (state) => state.partners.filter((t) => {
+      return state.selected.includes(t.partnerSeq)
     })[0],
     userSearchParams: (state) => state.users.searchParams,
     userList: (state) => state.users.list,
@@ -92,10 +92,10 @@ export const advertiserStore = defineStore('advertiserStore', {
         businessName: null
       }
       this.selected = []
-      this.advertisers = []
+      this.partners = []
     },
     // async reload() {
-    //   const result = await ADVERTISER_API.search(this.searchParams)
+    //   const result = await PARTNER_API.search(this.searchParams)
     //   const { content, totalElements } = result
     //   this.advertisers = content
     //   this.total = totalElements
@@ -140,13 +140,13 @@ export const advertiserStore = defineStore('advertiserStore', {
     },
     generateParams(source) {
       return Object.assign({
-        advertiserSeq: this.advertiser.advertiserSeq
+        partnerSeq: this.partner.partnerSeq
       }, source)
     },
     async reloadByUsers() {
       const params = this.generateParams(this.users.searchParams)
 
-      const result = await ADVERTISER_API.searchByUser(params)
+      const result = await PARTNER_API.searchByUser(params)
       const { content, totalElements } = result
 
       this.users.list = content
@@ -163,7 +163,7 @@ export const advertiserStore = defineStore('advertiserStore', {
     async reloadByAccounts() {
       const params = this.generateParams(this.accounts.searchParams)
 
-      const result = await ADVERTISER_API.searchByAccount(params)
+      const result = await PARTNER_API.searchByAccount(params)
       const { content, totalElements } = result
 
       this.accounts.list = content
@@ -212,7 +212,8 @@ export const advertiserStore = defineStore('advertiserStore', {
     async userIdCheck() {
       const { userId } = this.users.register
 
-      const result = await ADVERTISER_API.userIdCheck(this.generateParams(userId))
+      console.log(userId)
+      const result = await PARTNER_API.userIdCheck(this.generateParams({ userId }))
 
       this.users.register.alReadyCheck = !result
       return this.users.register.alReadyCheck
@@ -223,7 +224,7 @@ export const advertiserStore = defineStore('advertiserStore', {
     userRegister() {
       const newUser = this.generateParams(this.users.register)
 
-      ADVERTISER_API.userRegister(newUser).then(() => {
+      PARTNER_API.userRegister(newUser).then(() => {
         this.$alert('등록 되었습니다.', '확인', {})
         this.initRegisterForm('user')
         this.reloadByUsers().then(() => {
@@ -236,7 +237,7 @@ export const advertiserStore = defineStore('advertiserStore', {
       const { userSeq, userName, phoneNumber } = this.users.selectedUser
       const params = this.generateParams({ userSeq, userName, phoneNumber })
 
-      ADVERTISER_API.userModify(params).then(() => {
+      PARTNER_API.userModify(params).then(() => {
         this.$alert('수정 되었습니다.', '확인', {})
         this.users.modifyModal = false
         this.reloadByUsers().then(() => {
@@ -247,12 +248,12 @@ export const advertiserStore = defineStore('advertiserStore', {
     },
     async userEnable(...userSeq) {
       const params = this.generateParams({ userSeqList: userSeq })
-      const result = await ADVERTISER_API.userEnable(params)
+      const result = await PARTNER_API.userEnable(params)
       this.UserModifyCallBack(result)
     },
     async userDisable(...userSeq) {
       const params = this.generateParams({ userSeqList: userSeq })
-      const result = await ADVERTISER_API.userDisable(params)
+      const result = await PARTNER_API.userDisable(params)
       this.UserModifyCallBack(result)
     },
     UserModifyCallBack(modifyUsers) {
@@ -274,19 +275,19 @@ export const advertiserStore = defineStore('advertiserStore', {
     async accountCheck() {
       const { bankCode, bankAccount } = this.accounts.register
 
-      const result = await ADVERTISER_API.accountNumberCheck(this.generateParams({ bankCode, bankAccount }))
+      const result = await PARTNER_API.accountNumberCheck(this.generateParams({ bankCode, bankAccount }))
 
       this.accounts.register.alReadyCheck = !result
       return this.accounts.register.alReadyCheck
     },
     async accountUsed(seq) {
       const params = this.generateParams({ seq })
-      const result = await ADVERTISER_API.accountUsed(params)
+      const result = await PARTNER_API.accountUsed(params)
       this.accountModifyCallBack(result)
     },
     async accountUnused(seq) {
       const params = this.generateParams({ seq })
-      const result = await ADVERTISER_API.accountUnused(params)
+      const result = await PARTNER_API.accountUnused(params)
       this.accountModifyCallBack(result)
     },
     accountModifyCallBack(modifyUsers) {
@@ -306,7 +307,7 @@ export const advertiserStore = defineStore('advertiserStore', {
     },
     async accountRegister() {
       const newAccount = this.generateParams(this.accounts.register)
-      ADVERTISER_API.accountRegister(newAccount).then(() => {
+      PARTNER_API.accountRegister(newAccount).then(() => {
         this.$alert('등록 되었습니다.', '확인', {})
         this.initRegisterForm('account')
         this.reloadByAccounts().then(() => {
@@ -318,7 +319,7 @@ export const advertiserStore = defineStore('advertiserStore', {
     async accountDelete(row) {
       const { seq } = row
       const account = this.generateParams({ seq })
-      ADVERTISER_API.accountDelete(account).then(() => {
+      PARTNER_API.accountDelete(account).then(() => {
         this.$alert('삭제 되었습니다.', '확인', {})
         this.reloadByAccounts().then(() => {
         })
@@ -354,7 +355,7 @@ export const advertiserStore = defineStore('advertiserStore', {
     handleBeforeUpload(rawFile) {
       console.log(2, rawFile)
       const { type, size } = rawFile
-      if (!['application/pdf', 'application/png', 'application/jpg'].includes(type) ) {
+      if (!['application/pdf', 'application/png', 'application/jpg'].includes(type)) {
         ElMessage.error('PDF, PNG, JPEG 파일만 등록 가능 합니다.')
         return false
       } else if (size / 1024 / 1024 > 2) {
@@ -373,7 +374,7 @@ export const advertiserStore = defineStore('advertiserStore', {
     enabled: true,
     strategies: [
       {
-        key: 'advertiser',
+        key: 'partner',
         storage: localStorage
       }
     ]

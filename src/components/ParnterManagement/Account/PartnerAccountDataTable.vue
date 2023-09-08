@@ -51,17 +51,17 @@
 
 <script setup>
 
-import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
+import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { phoneFormatter } from '@/utils/customElTableFormatter'
 import { storeToRefs } from 'pinia'
 
 // import ModifyModal from '@/components/AdminManagement/AdvertiserModifyModal.vue'
 
 defineOptions({
-  name: 'AdvertiserAccountDataTable'
+  name: 'PartnerAccountDataTable'
 })
 
-const store = advertiserStore()
+const store = partnerStore()
 const { accountList, accountSearchParams, accountTotal, accountModifyModal } = storeToRefs(store)
 
 function pageChange(number) {
