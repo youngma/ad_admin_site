@@ -10,6 +10,10 @@
         <PartnerAccounts v-if="partner"/>
         <el-alert v-else title="매체사 를 선택해 주세요." type="info" />
       </el-tab-pane>
+      <el-tab-pane label="광고 그룹">
+        <PartnerAdGroups v-if="partner"/>
+        <el-alert v-else title="매체사 를 선택해 주세요." type="info" />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -21,6 +25,7 @@ import PartnerSearchForm2 from '@/components/ParnterManagement/PartnerSearchForm
 
 import PartnerUsers from '@/views/partner-management/tabs/PartnerUsers.vue'
 import PartnerAccounts from '@/views/partner-management/tabs/PartnerAccounts.vue'
+import PartnerAdGroups from '@/views/partner-management/tabs/PartnerAdGroups.vue'
 
 import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { storeToRefs } from 'pinia'

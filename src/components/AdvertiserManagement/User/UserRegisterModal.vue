@@ -134,8 +134,6 @@ const { users } = storeToRefs(store)
 
 function validate(...types) {
   const { userId, userPassword, userName, phoneNumber, alReadyCheck } = this.users.register
-
-  console.log(userId, userPassword, userName, phoneNumber, alReadyCheck)
   validation.value.valid = true
 
   for (const type of types) {

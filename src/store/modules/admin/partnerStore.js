@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import * as PARTNER_API from '@/api/PARTNER_API.js'
 import _ from 'lodash'
 import { ElMessage } from 'element-plus'
+import { adGroupModify } from '@/api/PARTNER_API.js'
 
 const initData = {
   searchParams: {
@@ -60,6 +61,34 @@ export const partnerStore = defineStore('partnerStore', {
         alReadyCheck: false,
         file: null
       }
+    },
+    adGroups: {
+      searchParams: {
+        page: 1,
+        size: 20,
+        groupName: '',
+        groupCode: null,
+        adType: '',
+        groupStatus: ''
+      },
+      total: 0,
+      list: [],
+      registerModal: false,
+      selectedAdGroup: null,
+      register: {
+        adType: '',
+        groupName: null,
+        logoFile: null,
+        pointIconFile: null,
+        pointName: null,
+        callBackUrl: null,
+        commissionRate: 1,
+        rewordRate: 1
+      },
+      uploadLogoFile: [],
+      uploadPointIconFile: [],
+      statusModal: false,
+      modifyModal: false
     }
   }),
   getters: {
@@ -84,7 +113,14 @@ export const partnerStore = defineStore('partnerStore', {
     accountTotal: (state) => state.accounts.total,
     accountRegisterModal: (state) => state.accounts.registerModal,
     selectedAccount: (state) => state.accounts.selectedAccount,
-    accountModifyModal: (state) => state.accounts.modifyModal
+    accountModifyModal: (state) => state.accounts.modifyModal,
+
+    adGroupSearchParams: (state) => state.adGroups.searchParams,
+    adGroupList: (state) => state.adGroups.list,
+    adGroupTotal: (state) => state.adGroups.total,
+    adGroupRegisterModal: (state) => state.adGroups.registerModal,
+    adGroupModifyModal: (state) => state.adGroups.modifyModal
+
   },
   actions: {
     init() {
@@ -134,9 +170,23 @@ export const partnerStore = defineStore('partnerStore', {
         accountUse: ''
       }
       this.accounts.list = []
-      this.accounts.selectedUser = null
+      this.accounts.selectedAccount = null
       this.accounts.registerModal = false
       this.accounts.modifyModal = false
+    },
+    tabInitAdGroup() {
+      this.adGroups.searchParams = {
+        size: 20,
+        groupName: '',
+        groupCode: null,
+        adType: '',
+        groupStatus: ''
+      }
+      this.adGroups.list = []
+      this.adGroups.selectedAdGroup = null
+      this.adGroups.registerModal = false
+      this.adGroups.modifyModal = false
+      this.adGroups.statusModal = false
     },
     generateParams(source) {
       return Object.assign({
@@ -176,6 +226,22 @@ export const partnerStore = defineStore('partnerStore', {
       }
       await this.reloadByAccounts()
     },
+    async reloadByAdGroups() {
+      const params = this.generateParams(this.adGroups.searchParams)
+
+      const result = await PARTNER_API.searchByAdGroups(params)
+      const { content, totalElements } = result
+
+      this.adGroups.list = content
+      this.adGroups.total = totalElements
+    },
+    async searchByAdGroups({ page, size }) {
+      this.adGroups.searchParams.page = page
+      if (!size && size > 0) {
+        this.adGroups.searchParams.size = size
+      }
+      await this.reloadByAdGroups()
+    },
     initRegisterForm(target) {
       if (target === 'user') {
         this.users.register = {
@@ -199,6 +265,22 @@ export const partnerStore = defineStore('partnerStore', {
         }
         this.accounts.uploadFiles = []
         this.accounts.registerModal = false
+      }
+
+      if (target === 'adGroup') {
+        this.adGroups.register = {
+          adType: '',
+          groupName: null,
+          logoFile: null,
+          pointIconFile: null,
+          pointName: null,
+          callBackUrl: null,
+          commissionRate: 1,
+          rewordRate: 1
+        }
+        this.adGroups.uploadLogoFile = []
+        this.adGroups.uploadPointIconFile = []
+        this.adGroups.registerModal = false
       }
     },
     userModalOpen(target) {
@@ -333,41 +415,190 @@ export const partnerStore = defineStore('partnerStore', {
         this.accounts.registerModal = true
       }
     },
-    uploadSuccess(data, uploadFile) {
+    uploadSuccess(regType, data, uploadFile) {
       const { raw } = uploadFile
       const { type } = raw
       const { result } = data
 
-      this.accounts.uploadFiles = result.map(file => {
-        const { originFileName, newFileName, target } = file
-        return {
-          name: originFileName,
-          type,
-          url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
-        }
-      })
+      switch (regType) {
+        case 'account':
+          this.accounts.uploadFiles = result.map(file => {
+            const { originFileName, newFileName, target } = file
+            return {
+              name: originFileName,
+              type,
+              url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+            }
+          })
+          break
+
+        case 'logoFile':
+          this.adGroups.uploadLogoFile = result.map(file => {
+            const { originFileName, newFileName, target } = file
+            return {
+              name: originFileName,
+              type,
+              url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+            }
+          })
+          break
+
+        case 'pointIconFile':
+          this.adGroups.uploadPointIconFile = result.map(file => {
+            const { originFileName, newFileName, target } = file
+            return {
+              name: originFileName,
+              type,
+              url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+            }
+          })
+          break
+      }
 
       return { result, type }
     },
     handlePreview(uploadFile) {
       window.open(uploadFile.url)
     },
-    handleBeforeUpload(rawFile) {
-      console.log(2, rawFile)
+    handleBeforeUpload(regType, rawFile) {
+      console.log(regType)
       const { type, size } = rawFile
-      if (!['application/pdf', 'application/png', 'application/jpg'].includes(type)) {
-        ElMessage.error('PDF, PNG, JPEG 파일만 등록 가능 합니다.')
-        return false
-      } else if (size / 1024 / 1024 > 2) {
-        ElMessage.error('파일 사이즈는 2MB 를 초과 할 수 없습니다.')
-        return false
+
+      switch (regType) {
+        case 'account':
+          if (!['application/pdf', 'image/png', 'image/jpg'].includes(type)) {
+            ElMessage.error('PDF, PNG, JPEG 파일만 등록 가능 합니다.')
+            return false
+          } else if (size / 1024 / 1024 > 2) {
+            ElMessage.error('파일 사이즈는 2MB 를 초과 할 수 없습니다.')
+            return false
+          }
+
+          break
+
+        case 'adGroup':
+          console.log(rawFile)
+          if (!['image/png', 'image/jpg'].includes(type)) {
+            ElMessage.error('PNG, JPEG 파일만 등록 가능 합니다.')
+            return false
+          } else if (size / 1024 / 1024 > 1) {
+            ElMessage.error('파일 사이즈는 1MB 를 초과 할 수 없습니다.')
+            return false
+          }
+
+          break
       }
+
       return true
     },
-    handleExceed() {
-      ElMessage.warning(
-        '파일은 1개만 업로드 가능 합니다.'
-      )
+    handleExceed(type) {
+      alert(type)
+      switch (type) {
+        case 'account':
+        case 'adGroup':
+          ElMessage.warning(
+            '파일은 1개만 업로드 가능 합니다.'
+          )
+
+          break
+      }
+    },
+    async adGroupRegister() {
+      const newAdGroup = this.generateParams(this.adGroups.register)
+      PARTNER_API.adGroupRegister(newAdGroup).then(() => {
+        this.$alert('등록 되었습니다.', '확인', {})
+        this.initRegisterForm('adGroup')
+        this.reloadByAdGroups().then(() => {
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
+    },
+    adGroupModalOpen(target, row) {
+      if (target === 'register') {
+        this.initRegisterForm('adGroup')
+        this.adGroups.registerModal = true
+      } else if (target === 'modify') {
+        this.adGroups.modifyModal = true
+        this.adGroups.selectedAdGroup = row
+        const { pointIconFile, logoFile } = row
+
+        this.adGroups.uploadLogoFile = [pointIconFile].map(file => {
+          const { originName, fileType, fileName } = file
+          return {
+            name: originName,
+            type: fileType,
+            url: [import.meta.env.VITE_FIEL_SERVER, 'files', fileName].join('/')
+          }
+        })
+
+        this.adGroups.uploadPointIconFile = [logoFile].map(file => {
+          const { originName, fileType, fileName } = file
+          return {
+            name: originName,
+            type: fileType,
+            url: [import.meta.env.VITE_FIEL_SERVER, 'files', fileName].join('/')
+          }
+        })
+      } else if (target === 'status') {
+        this.adGroups.statusModal = true
+      }
+    },
+    adGroupApproval(groupSeq) {
+      const adGroupStatus = this.generateParams({
+        groupSeq,
+        message: ''
+      })
+
+      PARTNER_API.adGroupApproval(adGroupStatus).then(() => {
+        this.$alert('승인 되었습니다.', '확인', {})
+        this.reloadByAdGroups().then(() => {
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
+    },
+    adGroupHold(groupSeq, message) {
+      const adGroupStatus = this.generateParams({
+        groupSeq,
+        message
+      })
+
+      PARTNER_API.adGroupHold(adGroupStatus).then(() => {
+        this.$alert('승인 보류 되었습니다.', '확인', {})
+        this.reloadByAdGroups().then(() => {
+          this.adGroups.statusModal = false
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
+    },
+    adGroupReject(groupSeq, message) {
+      const adGroupStatus = this.generateParams({
+        groupSeq,
+        message
+      })
+
+      PARTNER_API.adGroupReject(adGroupStatus).then(() => {
+        this.$alert('승인 거절 되었습니다.', '확인', {})
+        this.reloadByAdGroups().then(() => {
+          this.adGroups.statusModal = false
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
+    },
+    adGroupModify() {
+      const adGroupModify = this.generateParams(this.adGroups.selectedAdGroup)
+
+      PARTNER_API.adGroupModify(adGroupModify).then(() => {
+        this.$alert('수정 되었습니다.', '확인', {})
+        this.reloadByAdGroups().then(() => {
+          this.adGroups.modifyModal = false
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
     }
   },
   persist: {

@@ -126,3 +126,52 @@ export function accountDelete(data) {
     data
   })
 }
+
+
+
+export function searchByAdGroups(query) {
+  return request({
+    url: '/admin/v1/partner/ad_groups/search',
+    method: 'get',
+    params: query
+  })
+}
+
+export function adGroupRegister(data) {
+  return request({
+    url: '/admin/v1/partner/ad_groups/register',
+    method: 'POST',
+    data
+  })
+}
+
+export function adGroupApproval(data) {
+  return request({
+    url: '/admin/v1/partner/ad_groups/approval',
+    method: 'PUT',
+    data
+  })
+}
+
+export function adGroupHold(data) {
+  return request({
+    url: '/admin/v1/partner/ad_groups/hold',
+    method: 'PUT',
+    data
+  })
+}
+
+export function adGroupReject(data) {
+  return request({
+    url: '/admin/v1/partner/ad_groups/reject',
+    method: 'PUT',
+    data
+  })
+}
+export function adGroupModify(data) {
+  return request({
+    url: '/admin/v1/partner/ad_groups/modify',
+    method: 'PUT',
+    data
+  })
+}

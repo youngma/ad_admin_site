@@ -22,6 +22,9 @@ export const commonStore = defineStore('commonStore', {
     },
     CampaignStatus: (state) => {
       return state.codes['CampaignStatus']
+    },
+    AdGroupStatus: (state) => {
+      return state.codes['AdGroupStatus']
     }
   },
   actions: {

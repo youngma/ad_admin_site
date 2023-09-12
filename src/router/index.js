@@ -203,6 +203,38 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/ad-group-management',
+    component: Layout,
+    // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
+    meta: {
+      title: '광고 그룹 관리',
+      icon: 'material-symbols:ad-group'
+    },
+    name: 'AdGroupManagement',
+    redirect: '/ad-group-management/search',
+    children: [
+      {
+        path: 'search',
+        component: () => import('@/views/campaign-management/CampaignManagement.vue'),
+        name: 'AdCampaignSearch',
+        meta: { title: '광고 그룹 조회', icon: 'ri:menu-search-fill' }
+      },
+      {
+        path: 'register',
+        component: () => import('@/views/campaign-management/CampaignRegister.vue'),
+        name: 'AdCampaignRegister',
+        meta: { title: '광고 그룹 등록', icon: 'ri:add-box-fill' }
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/campaign-management/CampaignRegister.vue'),
+        name: 'AdCampaignDetail',
+        meta: { title: '광고 그룹 상세', icon: 'cib:campaign-monitor', init: true },
+        hidden: true
+      }
+    ]
+  },
+  {
     path: '/advertiser-management',
     component: Layout,
     // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),

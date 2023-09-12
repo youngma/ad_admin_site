@@ -228,7 +228,6 @@ const headers = ref({ Authorization: getToken() })
 function validate(...types) {
   const { businessName, businessNumber, advertiserName, phoneNumber, email, taxBillEmail, alReadyCheck, file } = this.register
 
-  console.log(businessName, businessNumber, advertiserName, phoneNumber, email, taxBillEmail, alReadyCheck, file)
   validation.value.valid = true
 
   for (const type of types) {
@@ -409,7 +408,6 @@ function handleSuccess(data, uploadFile) {
 }
 
 function handlePreview(uploadFile) {
-  console.log(111, uploadFile)
   this.store.handlePreview(uploadFile)
 }
 function handleRemove() {
