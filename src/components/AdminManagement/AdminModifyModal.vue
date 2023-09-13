@@ -43,6 +43,7 @@
               <el-col :span="20">
                 <el-input
                   v-model="selectedUser.phoneNumber"
+                  :formatter="(value) => phoneFormatter(value)"
                   :class="{ 'is-error': !validation.phoneNumber.check }"
                   class="" placeholder="전화번호를 입력 해주세요." />
               </el-col>
@@ -67,6 +68,8 @@ import { adminManagementStore } from '@/store/modules/admin/adminManagementStore
 import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance } from 'vue'
 import { ElMessageBox } from 'element-plus'
+import { replaceWhiteSpace, validPhone, validSpace } from '@/utils/validate.js'
+import { phoneFormatter } from '@/utils/customElTableFormatter.js'
 
 defineOptions({
   name: 'AdminModifyModal'
@@ -111,6 +114,14 @@ function validate(...types) {
           break
         }
 
+        if (validSpace(userName)) {
+          validation.value.userName.check = false
+          validation.value.userName.message = '공백을 제거 해주세요.'
+          validation.value.valid = false
+          this.selectedUser.userName = replaceWhiteSpace(userName)
+          break
+        }
+
         break
 
       case 'phoneNumber' :
@@ -122,6 +133,14 @@ function validate(...types) {
           validation.value.phoneNumber.check = false
           validation.value.phoneNumber.message = '전화번호를 입력 하세요.'
           validation.value.valid = false
+          break
+        }
+
+        if (!validPhone(phoneNumber)) {
+          validation.value.phoneNumber.check = false
+          validation.value.phoneNumber.message = '전화번호 형식을 확인 해주세요.'
+          validation.value.valid = false
+
           break
         }
 

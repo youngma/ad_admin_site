@@ -45,7 +45,7 @@ export const adminManagementStore = defineStore('adminManagementStore', {
         userId: null,
         userName: null,
         phoneNumber: null,
-        userStatus: 'ALL'
+        userStatus: ''
       }
       this.selectedUser = null
       this.modifyPopup = false

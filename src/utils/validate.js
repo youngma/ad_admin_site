@@ -56,6 +56,22 @@ export function validAlphabets(str) {
 }
 
 /**
+ * @param {string} str
+ * @returns {Boolean}
+ */
+export function validAlphabetsNumber(str) {
+  const regExp = /[a-zA-Z0-9]/g
+  return regExp.test(str)
+}
+/**
+ * @param {string} str
+ * @returns {Boolean}
+ */
+export function validSpace(str) {
+  return str.search(/\s/) !== -1
+}
+
+/**
  * @param {string} email
  * @returns {Boolean}
  */
@@ -95,4 +111,12 @@ export function isArray(arg) {
     return Object.prototype.toString.call(arg) === '[object Array]'
   }
   return Array.isArray(arg)
+}
+
+
+export function replaceWhiteSpace(arg) {
+  return arg.replace(/\s+/g, '')
+}
+export function replaceNumber(arg) {
+  return arg.replace(/[^0-9]/g, '')
 }
