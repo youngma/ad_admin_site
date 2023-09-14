@@ -1,5 +1,6 @@
 <template>
   <el-upload
+    v-model:file-list="uploadFiles"
     style="margin-left: 5px !important;"
     :action="dialogImageUrl"
     :headers="headers"
@@ -11,7 +12,6 @@
     :before-remove="beforeRemove"
     :on-remove="handleRemove"
     :on-success="handleSuccess"
-    :files="fileList"
   >
     <el-icon><Plus /></el-icon>
 <!--    <template #file="{ file }">-->
@@ -36,25 +36,34 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, defineProps } from 'vue'
 import { getToken } from '@/utils/auth'
 
 import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const emit = defineEmits(['upload-after'])
+const { files } = defineProps({
+  files: {
+    type: Array,
+    default: [],
+    required: false
+  }
+})
+
+const uploadFiles = ref(files)
 
 const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/campaign/files')
 const headers = ref({ Authorization: getToken() })
 const dialogVisible = ref(false)
-const fileList = ref([])
+
 const handleRemove = (file) => {
-  fileList.value = fileList.value.filter((value, index, arr) => {
+  uploadFiles.value = uploadFiles.value.filter((value, index, arr) => {
     const { originFileName } = value
     return originFileName !== file.name
   })
 
-  emit('upload-after', fileList)
+  emit('upload-after', { uploadFiles })
 }
 
 const handlePictureCardPreview = (file) => {
@@ -82,13 +91,20 @@ const beforeRemove = (uploadFile, uploadFiles) => {
 }
 
 const handleSuccess = (data, uploadFile, uploadFiles) => {
-  // console.log(data)
   // console.log(uploadFile)
   // console.log(uploadFiles)
 
-  fileList.value = data.result
-  emit('upload-after', fileList)
+  const { result } = data
+  emit('upload-after', { result, uploadFiles })
 }
+
+function initUploader() {
+  uploadFiles.value = []
+}
+
+defineExpose({
+  initUploader
+})
 
 </script>
 

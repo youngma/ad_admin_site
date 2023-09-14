@@ -70,6 +70,10 @@ $color_emph: #ff3e3d;
     font-weight: 600;
     font-size: 1.5rem;
   }
+  .comm_text_tit2 {
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
   .comm_text_emph {
     @include comm_styled_text($color_emph);
   }

@@ -1,5 +1,6 @@
 <template>
   <div class="comm_comp">
+    {{ register }}
 <!--    <el-row>-->
 <!--      <el-col class="comm_form_box comm_text_tit">캠페인 등록</el-col>-->
 <!--    </el-row>-->
@@ -78,95 +79,25 @@
           </div>
         </el-col>
       </el-row>
-      <el-row :gutter="10">
-        <el-col :span="4" class="col_tit">
-          <strong class="comm_tit_box">참여 방법</strong>
-        </el-col>
-        <el-col :span="16" class="col_desc">
-          <el-row :gutter="10">
-            <el-col
-              :span="20"
-              :class="{ 'is-error': !validation.useHow.check }"
-            >
-              <el-input
-                v-model="register.useHow"
-                type="textarea"
-                :rows="4"
-                :autosize="{ minRows: 4, maxRows: 5 }"
-                class=""
-                placeholder="참여 방법을 입력 해주세요."
-              />
-            </el-col>
-
-          </el-row>
-          <div v-show="!validation.useHow.check" class="invalid-feedback">
-            {{validation.useHow.message}}
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="4" class="col_tit">
-          <strong class="comm_tit_box">랜딩 URL</strong>
-        </el-col>
-        <el-col :span="16" class="col_desc">
-          <el-row :gutter="10">
-            <el-col
-              :span="20"
-              :class="{ 'is-error': !validation.targetUrl.check }"
-            >
-              <el-input
-                v-model="register.targetUrl"
-                class=""
-                placeholder="랜딩 URL을 입력 해주세요."
-              />
-            </el-col>
-
-          </el-row>
-          <div v-show="!validation.targetUrl.check" class="invalid-feedback">
-            {{validation.targetUrl.message}}
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="4" class="col_tit">
-          <strong class="comm_tit_box">캠페인 이미지</strong>
-        </el-col>
-        <el-col :span="16" class="col_desc">
-          <el-row
-              :gutter="10"
-              :class="{ 'is-error': !validation.targetUrl.check }"
-          >
-            <CampaignImageUpload
-              @upload-after="onUploadAfter"
-            />
-
-          </el-row>
-          <div v-show="!validation.image.check" class="invalid-feedback">
-            {{validation.image.message}}
-          </div>
-        </el-col>
-      </el-row>
-
-      <!--      캠페인 정보 - 타입, 단가(자동입력), 총 예산, 일 참여 제한 수량, 광고 시작일, 광고 종료일-->
 
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
-          <strong class="comm_tit_box">총 예산</strong>
+          <strong class="comm_tit_box">총 참여 가능 수량</strong>
         </el-col>
-        <el-col :span="8" class="col_desc text-end">
+        <el-col :span="8" class="col_desc">
           <el-row :gutter="10">
             <el-col :span="20">
               <el-input
-                v-model="register.totalBudget"
+                v-model="register.totalParticipationLimit"
                 :formatter="(value) => moneyFormatter(value)"
-                :class="{ 'is-error': !validation.totalBudget.check }"
-                class="text-end" placeholder="총 예산 금액 입력 해주세요." >
-                <template #append>원</template>
+                :class="{ 'is-error': !validation.totalParticipationLimit.check }"
+                class="text-end" placeholder="일 참여 제한 수 입력 해주세요."  >
+                <template #append>건</template>
               </el-input>
             </el-col>
           </el-row>
-          <div v-show="!validation.totalBudget.check" class="invalid-feedback">
-            {{validation.totalBudget.message}}
+          <div v-show="!validation.totalParticipationLimit.check" class="invalid-feedback">
+            {{validation.totalParticipationLimit.message}}
           </div>
         </el-col>
         <el-col :span="4" class="col_tit">
@@ -176,11 +107,11 @@
           <el-row :gutter="10">
             <el-col :span="20">
               <el-input
-                        v-model="register.dayParticipationLimit"
-                        :formatter="(value) => moneyFormatter(value)"
-                        :class="{ 'is-error': !validation.dayParticipationLimit.check }"
-                        class="text-end" placeholder="일 참여 제한 수 입력 해주세요."  >
-                        <template #append>건</template>
+                v-model="register.dayParticipationLimit"
+                :formatter="(value) => moneyFormatter(value)"
+                :class="{ 'is-error': !validation.dayParticipationLimit.check }"
+                class="text-end" placeholder="일 참여 제한 수 입력 해주세요."  >
+                <template #append>건</template>
               </el-input>
             </el-col>
           </el-row>
@@ -189,33 +120,7 @@
           </div>
         </el-col>
       </el-row>
-      <el-row :gutter="10">
-        <el-col :span="4" class="col_tit">
-          <strong class="comm_tit_box">광고 단가</strong>
-        </el-col>
-        <el-col :span="8" class="col_desc">
-          <el-row :gutter="10">
-            <el-col :span="20">
-              <el-input
-                v-model="register.adPrice"
-                :formatter="(value) => moneyFormatter(value)"
-                :class="{ 'is-error': !validation.adPrice.check }"
-                class="text-end" placeholder="광고 단가를 입력 해주세요." >
-                <template #append>원</template>
-              </el-input>
-            </el-col>
-          </el-row>
-          <div v-show="!validation.adPrice.check" class="invalid-feedback">
-            {{validation.adPrice.message}}
-          </div>
-        </el-col>
-        <el-col :span="4" class="col_tit">
-        </el-col>
-        <el-col :span="8" class="col_desc">
-          <el-row :gutter="10">
-          </el-row>
-        </el-col>
-      </el-row>
+
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
           <strong class="comm_tit_box">광고 기간</strong>
@@ -223,8 +128,8 @@
         <el-col :span="8" class="col_desc">
           <el-row :gutter="10">
             <el-col
-:span="20"
-                    :class="{ 'is-error': !validation.adPrice.check }"
+              :span="20"
+              :class="{ 'is-error': !validation.adPrice.check }"
             >
               <el-date-picker
                 v-model="register.adDate"
@@ -250,61 +155,210 @@
         </el-col>
       </el-row>
 
-      <!--      캠페인 상세 2 - 상품코드 (상단 검색에 노출되는 코드), 지급 조건 설정 (시간 / 스크롤 이동), 시간 선택-->
+      <div class="comm_comp mt_15">
 
-      <el-row :gutter="10">
-        <el-col :span="4" class="col_tit">
-          <strong class="comm_tit_box">상품 코드</strong>
-        </el-col>
-        <el-col :span="8" class="col_desc">
+        <el-row>
+          <el-col class="comm_form_box comm_text_tit2">스마트 스토어 광고 추가 입력</el-col>
+        </el-row>
+
+        <div class="comm_comp_table">
+
           <el-row :gutter="10">
-            <el-col :span="20">
-              <el-input
-                v-model="register.goodsCode"
-                :class="{ 'is-error': !validation.goodsCode.check }"
-                class="" placeholder="상품 코드를 입력 해주세요." />
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">참여 방법</strong>
             </el-col>
-          </el-row>
-          <div v-show="!validation.goodsCode.check" class="invalid-feedback">
-            {{validation.goodsCode.message}}
-          </div>
-        </el-col>
-
-        <el-col :span="4" class="col_tit">
-          <strong class="comm_tit_box">지급 조건</strong>
-        </el-col>
-        <el-col :span="8" class="col_desc">
-          <el-row :gutter="10">
-            <el-col :span="10">
-              <el-select
-                v-model="register.paymentTerms"
-                class="m-2"
-                :class="{ 'is-error': !validation.paymentTerms.check }"
-                placeholder="Select"
-                size="large" @change="paymentTermsChange">
-                  <el-option
-                    v-for="code of PaymentTerms"
-                    :key="code.key"
-                    :label="code.value"
-                    :value="code.key"
+            <el-col :span="16" class="col_desc">
+              <el-row :gutter="10">
+                <el-col
+                  :span="20"
+                  :class="{ 'is-error': !validation.useHow.check }"
+                >
+                  <el-input
+                    v-model="register.smartStore.useHow"
+                    type="textarea"
+                    :rows="4"
+                    :autosize="{ minRows: 4, maxRows: 5 }"
+                    class=""
+                    placeholder="참여 방법을 입력 해주세요."
                   />
-              </el-select>
-            </el-col>
-            <el-col v-if="register.paymentTerms === 'TIME'" :span="10">
-              <el-input
-                v-model="register.holdingTime"
-                :formatter="(value) => numberFormatter(value)"
-                :class="{ 'is-error': !validation.paymentTerms.check }"
-                class="text-end" placeholder="시간을 설정 해주세요." >
-                <template #append>초</template>
-              </el-input>
+                </el-col>
+
+              </el-row>
+              <div v-show="!validation.useHow.check" class="invalid-feedback">
+                {{validation.useHow.message}}
+              </div>
             </el-col>
           </el-row>
-          <div v-show="!validation.paymentTerms.check" class="invalid-feedback">
-            {{validation.paymentTerms.message}}
-          </div>
-        </el-col>
-      </el-row>
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">PC 랜딩 URL</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row :gutter="10">
+                <el-col
+                  :span="20"
+                  :class="{ 'is-error': !validation.targetUrlPc.check }"
+                >
+                  <el-input
+                    v-model="register.smartStore.targetUrlPc"
+                    class=""
+                    placeholder="모바일 랜딩 URL을 입력 해주세요."
+                  />
+                </el-col>
+
+              </el-row>
+              <div v-show="!validation.targetUrlPc.check" class="invalid-feedback">
+                {{validation.targetUrlPc.message}}
+              </div>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">모바일 랜딩 URL</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row :gutter="10">
+                <el-col
+                  :span="20"
+                  :class="{ 'is-error': !validation.targetUrlMobile.check }"
+                >
+                  <el-input
+                    v-model="register.smartStore.targetUrlMobile"
+                    class=""
+                    placeholder="모바일 랜딩 URL을 입력 해주세요."
+                  />
+                </el-col>
+
+              </el-row>
+              <div v-show="!validation.targetUrlMobile.check" class="invalid-feedback">
+                {{validation.targetUrlMobile.message}}
+              </div>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">캠페인 이미지</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row
+                :gutter="10"
+                :class="{ 'is-error': !validation.image.check }"
+              >
+                <CampaignImageUpload
+                  ref="smart_store_file_upload"
+                  :files="register.uploads.smartStore"
+                  @upload-after="onUploadAfter"
+                />
+
+              </el-row>
+              <div v-show="!validation.image.check" class="invalid-feedback">
+                {{validation.image.message}}
+              </div>
+            </el-col>
+          </el-row>
+
+          <!--      캠페인 정보 - 타입, 단가(자동입력), 총 예산, 일 참여 제한 수량, 광고 시작일, 광고 종료일-->
+
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">총 예산</strong>
+            </el-col>
+            <el-col :span="8" class="col_desc text-end">
+              <el-row :gutter="10">
+                <el-col :span="20">
+                  <el-input
+                    v-model="register.smartStore.totalBudget"
+                    :formatter="(value) => moneyFormatter(value)"
+                    :class="{ 'is-error': !validation.totalBudget.check }"
+                    class="text-end" placeholder="총 예산 금액 입력 해주세요." >
+                    <template #append>원</template>
+                  </el-input>
+                </el-col>
+              </el-row>
+              <div v-show="!validation.totalBudget.check" class="invalid-feedback">
+                {{validation.totalBudget.message}}
+              </div>
+            </el-col>
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">광고 단가</strong>
+            </el-col>
+            <el-col :span="8" class="col_desc">
+              <el-row :gutter="10">
+                <el-col :span="20">
+                  <el-input
+                    v-model="register.smartStore.adPrice"
+                    :formatter="(value) => moneyFormatter(value)"
+                    :class="{ 'is-error': !validation.adPrice.check }"
+                    class="text-end" placeholder="광고 단가를 입력 해주세요." >
+                    <template #append>원</template>
+                  </el-input>
+                </el-col>
+              </el-row>
+              <div v-show="!validation.adPrice.check" class="invalid-feedback">
+                {{validation.adPrice.message}}
+              </div>
+            </el-col>
+          </el-row>
+
+          <!--      캠페인 상세 2 - 상품코드 (상단 검색에 노출되는 코드), 지급 조건 설정 (시간 / 스크롤 이동), 시간 선택-->
+
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">상품 코드</strong>
+            </el-col>
+            <el-col :span="8" class="col_desc">
+              <el-row :gutter="10">
+                <el-col :span="20">
+                  <el-input
+                    v-model="register.smartStore.goodsCode"
+                    :class="{ 'is-error': !validation.goodsCode.check }"
+                    class="" placeholder="상품 코드를 입력 해주세요." />
+                </el-col>
+              </el-row>
+              <div v-show="!validation.goodsCode.check" class="invalid-feedback">
+                {{validation.goodsCode.message}}
+              </div>
+            </el-col>
+
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">지급 조건</strong>
+            </el-col>
+            <el-col :span="8" class="col_desc">
+              <el-row :gutter="10">
+                <el-col :span="10">
+                  <el-select
+                    v-model="register.smartStore.paymentTerms"
+                    class="m-2"
+                    :class="{ 'is-error': !validation.paymentTerms.check }"
+                    placeholder="Select"
+                    size="large" @change="paymentTermsChange">
+                    <el-option
+                      v-for="code of PaymentTerms"
+                      :key="code.key"
+                      :label="code.value"
+                      :value="code.key"
+                    />
+                  </el-select>
+                </el-col>
+                <el-col v-if="register.smartStore.paymentTerms === 'TIME'" :span="10">
+                  <el-input
+                    v-model="register.smartStore.holdingTime"
+                    :formatter="(value) => numberFormatter(value)"
+                    :class="{ 'is-error': !validation.paymentTerms.check }"
+                    class="text-end" placeholder="시간을 설정 해주세요." >
+                    <template #append>초</template>
+                  </el-input>
+                </el-col>
+              </el-row>
+              <div v-show="!validation.paymentTerms.check" class="invalid-feedback">
+                {{validation.paymentTerms.message}}
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
+
     </div>
     <el-row justify="end">
       <el-col class="t_r comm_form_box" tag="span">
@@ -324,10 +378,13 @@ import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance, watch } from 'vue'
 import { numberFormatter, moneyFormatter } from '@/utils/customElTableFormatter.js'
 import { validURL } from '@/utils/validate.js'
+import { ElMessageBox } from 'element-plus'
 
 defineOptions({
   name: 'CampaignRegisterForm'
 })
+
+const smart_store_file_upload = ref(null)
 
 const { appContext } = getCurrentInstance()
 
@@ -341,11 +398,28 @@ const validation = ref({
     check: true,
     message: ''
   },
+  dayParticipationLimit: {
+    check: true,
+    message: ''
+  },
+  totalParticipationLimit: {
+    check: true,
+    message: ''
+  },
+  adDate: {
+    check: true,
+    message: ''
+  },
+
   useHow: {
     check: true,
     message: ''
   },
-  targetUrl: {
+  targetUrlPc: {
+    check: true,
+    message: ''
+  },
+  targetUrlMobile: {
     check: true,
     message: ''
   },
@@ -362,14 +436,6 @@ const validation = ref({
     message: ''
   },
   image: {
-    check: true,
-    message: ''
-  },
-  dayParticipationLimit: {
-    check: true,
-    message: ''
-  },
-  adDate: {
     check: true,
     message: ''
   },
@@ -397,8 +463,9 @@ const disabledDate = (time) => {
 }
 
 function validate(...types) {
-  const { campaignName, campaignType, campaignDesc, useHow, image, targetUrl, totalBudget, dayParticipationLimit, adPrice, adDate, goodsCode, paymentTerms, holdingTime } = this.register
+  const { campaignName, campaignType, campaignDesc, dayParticipationLimit, adDate, smartStore } = this.register
 
+  const { useHow, image, targetUrlPc, targetUrlMobile, totalBudget, adPrice, goodsCode, paymentTerms, holdingTime } = smartStore
   validation.value.valid = true
 
   for (const type of types) {
@@ -451,72 +518,14 @@ function validate(...types) {
 
         break
 
-      case 'useHow' :
+      case 'totalParticipationLimit' :
 
-        validation.value.useHow.check = true
-        validation.value.useHow.message = ''
+        validation.value.totalParticipationLimit.check = true
+        validation.value.totalParticipationLimit.message = ''
 
-        if (useHow === null || useHow === '') {
-          validation.value.useHow.check = false
-          validation.value.useHow.message = '참여 방법 을 입력 하세요.'
-
-          validation.value.valid = false
-
-          break
-        }
-
-        break
-      case 'image' :
-
-        validation.value.image.check = true
-        validation.value.image.message = ''
-
-        if (image === null || image === '') {
-          validation.value.image.check = false
-          validation.value.image.message = '이미지 를 등록 하세요.'
-
-          validation.value.valid = false
-
-          break
-        }
-
-        break
-
-      case 'targetUrl' :
-
-        validation.value.targetUrl.check = true
-        validation.value.targetUrl.message = ''
-
-        if (targetUrl === null || targetUrl === '') {
-          validation.value.targetUrl.check = false
-          validation.value.targetUrl.message = '타켓 URL 을 입력 하세요.'
-
-          validation.value.valid = false
-
-          break
-        }
-
-        // var regex = new RegExp('^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?')
-        // var without_regex = new RegExp('^([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?')
-
-        if (!validURL(targetUrl)) {
-          validation.value.targetUrl.check = false
-          validation.value.targetUrl.message = 'URL 형색을 확인 해주세요..'
-
-          validation.value.valid = false
-          break
-        }
-
-        break
-
-      case 'totalBudget' :
-
-        validation.value.totalBudget.check = true
-        validation.value.totalBudget.message = ''
-
-        if (totalBudget <= 0) {
-          validation.value.totalBudget.check = false
-          validation.value.totalBudget.message = '총 예산 금액은 0원 이상 만 가능 입니다.'
+        if (dayParticipationLimit <= 0) {
+          validation.value.totalParticipationLimit.check = false
+          validation.value.totalParticipationLimit.message = '총 참여 가능 수량 을 1건 이상 만 가능 합니다.'
 
           validation.value.valid = false
 
@@ -533,6 +542,108 @@ function validate(...types) {
         if (dayParticipationLimit <= 0) {
           validation.value.dayParticipationLimit.check = false
           validation.value.dayParticipationLimit.message = '일 참여 제한 수량 을 1건 이상 만 가능 합니다.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
+      case 'targetUrlPc' :
+
+        validation.value.targetUrlPc.check = true
+        validation.value.targetUrlPc.message = ''
+
+        if (targetUrlPc === null || targetUrlPc === '') {
+          validation.value.targetUrlPc.check = false
+          validation.value.targetUrlPc.message = '타켓 URL 을 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        // var regex = new RegExp('^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?')
+        // var without_regex = new RegExp('^([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?')
+
+        if (!validURL(targetUrlPc)) {
+          validation.value.targetUrlPc.check = false
+          validation.value.targetUrlPc.message = 'URL 형색을 확인 해주세요..'
+
+          validation.value.valid = false
+          break
+        }
+
+        break
+
+      case 'targetUrlMobile' :
+
+        validation.value.targetUrlMobile.check = true
+        validation.value.targetUrlMobile.message = ''
+
+        if (targetUrlMobile === null || targetUrlMobile === '') {
+          validation.value.targetUrlMobile.check = false
+          validation.value.targetUrlMobile.message = '타켓 URL 을 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        // var regex = new RegExp('^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?')
+        // var without_regex = new RegExp('^([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?')
+
+        if (!validURL(targetUrlMobile)) {
+          validation.value.targetUrlMobile.check = false
+          validation.value.targetUrlMobile.message = 'URL 형색을 확인 해주세요..'
+
+          validation.value.valid = false
+          break
+        }
+
+        break
+
+      case 'useHow' :
+
+        validation.value.useHow.check = true
+        validation.value.useHow.message = ''
+
+        if (useHow === null || useHow === '') {
+          validation.value.useHow.check = false
+          validation.value.useHow.message = '참여 방법 을 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
+      case 'image' :
+
+        validation.value.image.check = true
+        validation.value.image.message = ''
+
+        if (image === null || image === '') {
+          validation.value.image.check = false
+          validation.value.image.message = '이미지 를 등록 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
+      case 'totalBudget' :
+
+        validation.value.totalBudget.check = true
+        validation.value.totalBudget.message = ''
+
+        if (totalBudget <= 0) {
+          validation.value.totalBudget.check = false
+          validation.value.totalBudget.message = '총 예산 금액은 0원 이상 만 가능 입니다.'
 
           validation.value.valid = false
 
@@ -617,22 +728,53 @@ function validate(...types) {
     }
   }
 }
-const onUploadAfter = (files) => {
-  if (files.value.length > 0) {
-    const { newFileName } = files.value[0]
-    register.value.image = newFileName
+const onUploadAfter = (resp) => {
+  const { result, uploadFiles } = resp
+  if (result && result.length > 0) {
+    const { originFileName, newFileName, target } = result[0]
+
+    register.value.uploads.smartStore = uploadFiles.map(file => {
+      const { name, raw } = file
+      const { type } = raw
+
+      register.value.smartStore.image = {
+        newFile: true,
+        fileType: type,
+        originName: originFileName,
+        fileName: [target, newFileName].join('/')
+      }
+
+      return {
+        name: name,
+        type,
+        url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+      }
+    })
+  } else {
+    register.value.uploads.smartStore = []
   }
-  console.log(register.value)
 }
 
 function save() {
   this.validate(
-    'campaignType', 'campaignName', 'campaignDesc', 'useHow', 'image',
-    'targetUrl', 'totalBudget', 'adPrice', 'dayParticipationLimit', 'adDate',
+    'campaignType', 'campaignName', 'campaignDesc', 'totalParticipationLimit', 'dayParticipationLimit', 'adDate',
+    'useHow', 'image', 'targetUrlPc', 'targetUrlMobile', 'totalBudget', 'adPrice',
     'goodsCode', 'paymentTerms', 'holdingTime'
   )
+
   if (validation.value.valid) {
-    this.store.campaignRegister()
+    this.store.campaignRegister().then(() => {
+      ElMessageBox.alert('등록 되었습니다.', '확인', {})
+      // this.store.init('register')
+      console.log(smart_store_file_upload.value)
+      // try {
+      smart_store_file_upload.value.initUploader()
+      // } catch (e) {
+      // }
+    }).catch((e) => {
+      console.error(e)
+      ElMessageBox.alert('처리 중 오류가 발생 했습니다.', '확인', {})
+    })
   }
 }
 

@@ -168,6 +168,8 @@ export function adGroupReject(data) {
     data
   })
 }
+
+
 export function adGroupModify(data) {
   return request({
     url: '/admin/v1/partner/ad_groups/modify',

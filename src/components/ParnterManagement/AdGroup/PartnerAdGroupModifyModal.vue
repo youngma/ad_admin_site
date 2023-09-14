@@ -1,7 +1,6 @@
 <template>
   <el-dialog v-model="adGroups.modifyModal" title="광고 그룹 수정" width="700">
 
-    {{adGroups.selectedAdGroup}}
     <div class="comm_comp">
       <div class="comm_comp_table">
         <el-row :gutter="10">

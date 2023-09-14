@@ -74,32 +74,6 @@
 
         </el-col>
         <el-col :span="4">
-          <strong class="comm_tit_box">지급 방법</strong>
-        </el-col>
-        <el-col :span="8">
-<!--          <el-input v-model="campaignSearchParams.paymentTerms" placeholder="Please input" />-->
-          <el-select v-model="campaignSearchParams.paymentTerms" class="m-2" placeholder="Select" size="large">
-            <el-option key="" label="전체" value=""/>
-            <el-option
-              v-for="code of PaymentTerms"
-              :key="code.key"
-              :label="code.value"
-              :value="code.key"
-            />
-          </el-select>
-        </el-col>
-      </el-row>
-
-      <el-row :gutter="10">
-        <el-col :span="4">
-          <strong class="comm_tit_box">상품 코드</strong>
-        </el-col>
-        <el-col :span="8">
-          <el-input
-            v-model="campaignSearchParams.goodsCode"
-            placeholder="Please input" />
-        </el-col>
-        <el-col :span="4">
           <strong class="comm_tit_box">캠페인 상태</strong>
         </el-col>
         <el-col :span="8">
@@ -113,8 +87,8 @@
             />
           </el-select>
         </el-col>
-
       </el-row>
+
 
     </div>
     <el-row justify="end">
@@ -144,7 +118,7 @@ defineOptions({
 const store = campaignStore()
 const common = commonStore()
 
-const { campaignSearchParams, searchFormSelected } = storeToRefs(store)
+const { campaignSearchParams } = storeToRefs(store)
 const { CampaignType, CampaignStatus, PaymentTerms } = storeToRefs(common)
 
 // const defaultAdDate = ref([moment().add(10, 'days').toDate(), Date.now()])

@@ -15,7 +15,7 @@
           :src="[filePath, 'files', scope.row.logoFile.fileName].join('/')"
           :alt="scope.row.logoFile.originName"
           @click="open([filePath, 'files', scope.row.logoFile.fileName].join('/'))"
-        />
+        />filePath
         <br/>
         <span> {{scope.row.logoFile.originName}} </span>
       </template>
@@ -181,14 +181,14 @@ function approval(row) {
   this.store.adGroupApproval(groupSeq)
 }
 
-function unused(row) {
-  const { seq } = row
-  this.store.accountUnused(seq)
-}
-
-function remove(row) {
-  this.store.accountDelete(row)
-}
+// function unused(row) {
+//   const { seq } = row
+//   this.store.accountUnused(seq)
+// }
+//
+// function remove(row) {
+//   this.store.accountDelete(row)
+// }
 
 function open(url) {
   window.open(url)
