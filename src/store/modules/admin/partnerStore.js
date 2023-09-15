@@ -294,7 +294,6 @@ export const partnerStore = defineStore('partnerStore', {
     async userIdCheck() {
       const { userId } = this.users.register
 
-      console.log(userId)
       const result = await PARTNER_API.userIdCheck(this.generateParams({ userId }))
 
       this.users.register.alReadyCheck = !result
@@ -477,7 +476,6 @@ export const partnerStore = defineStore('partnerStore', {
           break
 
         case 'adGroup':
-          console.log(rawFile)
           if (!['image/png', 'image/jpg'].includes(type)) {
             ElMessage.error('PNG, JPEG 파일만 등록 가능 합니다.')
             return false

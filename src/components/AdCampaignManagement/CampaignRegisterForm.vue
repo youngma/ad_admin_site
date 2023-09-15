@@ -1,6 +1,5 @@
 <template>
   <div class="comm_comp">
-    {{ register }}
 <!--    <el-row>-->
 <!--      <el-col class="comm_form_box comm_text_tit">캠페인 등록</el-col>-->
 <!--    </el-row>-->
@@ -371,11 +370,13 @@
 <script setup>
 import CampaignImageUpload from '@/components/AdCampaignManagement/CampaignImageUpload.vue'
 
+import { useRoute, useRouter } from 'vue-router'
+
 import { campaignStore } from '@/store/modules/admin/campaignStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 
 import { storeToRefs } from 'pinia'
-import { ref, getCurrentInstance, watch } from 'vue'
+import { ref, getCurrentInstance, watch, onMounted } from 'vue'
 import { numberFormatter, moneyFormatter } from '@/utils/customElTableFormatter.js'
 import { validURL } from '@/utils/validate.js'
 import { ElMessageBox } from 'element-plus'
@@ -455,6 +456,8 @@ const validation = ref({
 
 const store = campaignStore()
 const common = commonStore()
+const route = useRoute()
+const router = useRouter()
 const { register, defaultAdDate } = storeToRefs(store)
 const { CampaignType, PaymentTerms } = storeToRefs(common)
 
@@ -673,7 +676,6 @@ function validate(...types) {
         validation.value.adDate.check = true
         validation.value.adDate.message = ''
 
-        console.log(adDate)
         if (adDate.size === 0) {
           validation.value.adDate.check = false
           validation.value.adDate.message = '광고 기간을 설정 해주세요.'
@@ -766,11 +768,13 @@ function save() {
     this.store.campaignRegister().then(() => {
       ElMessageBox.alert('등록 되었습니다.', '확인', {})
       // this.store.init('register')
-      console.log(smart_store_file_upload.value)
       // try {
       smart_store_file_upload.value.initUploader()
       // } catch (e) {
       // }
+      const { referrer } = route.query
+
+      router.push({ path: referrer || route.params.referrer })
     }).catch((e) => {
       console.error(e)
       ElMessageBox.alert('처리 중 오류가 발생 했습니다.', '확인', {})

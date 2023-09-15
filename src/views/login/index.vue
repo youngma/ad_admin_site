@@ -79,6 +79,7 @@ import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin.vue'
 
 import { authStore } from '@/store/modules/core/auth.js'
+import { permissionStore } from '@/store/modules/core/permission.js'
 import { inject } from 'vue'
 import { Hide, Lock, User, View } from '@element-plus/icons-vue'
 
@@ -87,9 +88,10 @@ export default {
   components: { View, Hide, Lock, User, SocialSign },
   setup: () => {
     const _authStore = authStore()
+    const permission = permissionStore()
     const router = inject('$router')
     return {
-      autoStore: _authStore,
+      autoStore: _authStore, permission,
       router
     }
   },
@@ -171,8 +173,11 @@ export default {
           this.loading = true
           this.autoStore.login(this.loginForm)
             .then((d) => {
-              console.log(d)
               this.autoStore.getInfo().then((info) => {
+
+                const { userRole } = info
+                this.permission.generateRoutes(this.router, [userRole])
+
                 this.router.push({ path: this.redirect || '/', query: this.otherQuery })
                 this.loading = false
               })

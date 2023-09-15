@@ -675,7 +675,6 @@ function validate(...types) {
         validation.value.adDate.check = true
         validation.value.adDate.message = ''
 
-        console.log(adDate)
         if (adDate.size === 0) {
           validation.value.adDate.check = false
           validation.value.adDate.message = '광고 기간을 설정 해주세요.'
@@ -768,7 +767,6 @@ function save() {
     this.store.modifyAfCampaign().then(() => {
       ElMessageBox.alert('수정 되었습니다.', '확인', {})
       // this.store.init('selectedCampaign')
-      console.log(smart_store_file_upload.value)
       // try {
       smart_store_file_upload.value.initUploader()
       // } catch (e) {

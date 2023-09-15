@@ -45,8 +45,6 @@ pinia.use(({ store }) => {
   store.$confirm = newApp.config.globalProperties.$confirm
 })
 
-console.log(newApp.config.globalProperties)
-// if (useRouter.currentRoute.value.path ==);
 
 await permission.generateRoutes(router)
 

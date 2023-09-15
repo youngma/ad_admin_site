@@ -9,11 +9,12 @@
 
 <script setup>
 
+import AdvertiserSearchForm2 from '@/components/AdvertiserManagement/AdvertiserSearchForm2.vue'
 import CampaignRegisterForm from '@/components/AdCampaignManagement/CampaignRegisterForm.vue'
 
 import { campaignStore } from '@/store/modules/admin/campaignStore.js'
+
 import { onMounted } from 'vue'
-import AdvertiserSearchForm2 from '@/components/AdvertiserManagement/AdvertiserSearchForm2.vue'
 import { storeToRefs } from 'pinia'
 
 defineOptions({
@@ -29,7 +30,7 @@ onMounted(async() => {
 
 function searchUpdate({ content, current }) {
   advertisers.value = content
-  selected.value = [current]
+  selected.value = content.length === 0 ? [] : current
 }
 
 function onChange(value) {

@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import * as ADVERTISER_API from '@/api/ADVERTISER_API'
+import * as CAMPAIGN_API from '@/api/CAMPAIGN_API.js'
 import _ from 'lodash'
-import { ElMessage } from "element-plus";
+import { ElMessage } from 'element-plus'
 
 const initData = {
   searchParams: {
@@ -46,7 +47,7 @@ export const advertiserStore = defineStore('advertiserStore', {
         bankCode: '',
         bankAccount: null,
         accountHolder: null,
-        accountUse: '',
+        accountUse: ''
       },
       uploadFiles: [],
       list: [],
@@ -60,6 +61,23 @@ export const advertiserStore = defineStore('advertiserStore', {
         alReadyCheck: false,
         file: null
       }
+    },
+    campaigns: {
+      searchParams: {
+        page: 1,
+        size: 20,
+        campaignName: null,
+        campaignType: '',
+        campaignCode: null,
+        adStartDate: null,
+        adEndDate: null,
+        targetUrl: null,
+        campaignStatus: ''
+      },
+      list: [],
+      selectedCampaign: null,
+      total: 0,
+      registerModal: false
     }
   }),
   getters: {
@@ -84,7 +102,12 @@ export const advertiserStore = defineStore('advertiserStore', {
     accountTotal: (state) => state.accounts.total,
     accountRegisterModal: (state) => state.accounts.registerModal,
     selectedAccount: (state) => state.accounts.selectedAccount,
-    accountModifyModal: (state) => state.accounts.modifyModal
+    accountModifyModal: (state) => state.accounts.modifyModal,
+
+    campaignSearchParams: (state) => state.campaigns.searchParams,
+    campaignList: (state) => state.campaigns.list,
+    campaignTotal: (state) => state.campaigns.total,
+    campaignRegisterModal: (state) => state.campaigns.registerModal
   },
   actions: {
     init() {
@@ -138,6 +161,24 @@ export const advertiserStore = defineStore('advertiserStore', {
       this.accounts.registerModal = false
       this.accounts.modifyModal = false
     },
+    tabInitCampaign() {
+      this.campaigns.searchParams = {
+        page: 1,
+        size: 20,
+        campaignName: null,
+        campaignType: '',
+        campaignCode: null,
+        adStartDate: null,
+        adEndDate: null,
+        targetUrl: null,
+        campaignStatus: ''
+      }
+      this.campaigns.list = [],
+      this.campaigns.selectedCampaign = null,
+      this.campaigns.total = 0,
+      this.campaigns.registerModal = false
+    },
+
     generateParams(source) {
       return Object.assign({
         advertiserSeq: this.advertiser.advertiserSeq
@@ -176,6 +217,23 @@ export const advertiserStore = defineStore('advertiserStore', {
       }
       await this.reloadByAccounts()
     },
+    async reloadByCampaigns() {
+      const params = this.generateParams(this.campaigns.searchParams)
+
+      const result = await CAMPAIGN_API.search(params)
+      const { content, totalElements } = result
+
+      this.campaigns.list = content
+      this.campaigns.total = totalElements
+    },
+    async searchByCampaigns({ page, size }) {
+      this.campaigns.searchParams.page = page
+      if (!size && size > 0) {
+        this.campaigns.searchParams.size = size
+      }
+      await this.reloadByCampaigns()
+    },
+
     initRegisterForm(target) {
       if (target === 'user') {
         this.users.register = {
@@ -199,6 +257,12 @@ export const advertiserStore = defineStore('advertiserStore', {
         }
         this.accounts.uploadFiles = []
         this.accounts.registerModal = false
+      }
+
+      if (target === 'campaign') {
+        this.campaign.register = null
+        this.campaign.uploadFiles = []
+        this.campaign.registerModal = false
       }
     },
     userModalOpen(target) {
@@ -352,9 +416,8 @@ export const advertiserStore = defineStore('advertiserStore', {
       window.open(uploadFile.url)
     },
     handleBeforeUpload(rawFile) {
-      console.log(2, rawFile)
       const { type, size } = rawFile
-      if (!['application/pdf', 'application/png', 'application/jpg'].includes(type) ) {
+      if (!['application/pdf', 'application/png', 'application/jpg'].includes(type)) {
         ElMessage.error('PDF, PNG, JPEG 파일만 등록 가능 합니다.')
         return false
       } else if (size / 1024 / 1024 > 2) {
@@ -367,6 +430,12 @@ export const advertiserStore = defineStore('advertiserStore', {
       ElMessage.warning(
         '파일은 1개만 업로드 가능 합니다.'
       )
+    },
+    campaignModalOpen(target) {
+      if (target === 'register') {
+        this.initRegisterForm('campaign')
+        this.campaigns.registerModal = true
+      }
     }
   },
   persist: {

@@ -123,6 +123,7 @@ const advertiser = computed(() => {
   } else {
     return currentAdvertisers.value.filter((t) => {
       let cmp = current.value
+
       if (Array.isArray(current.value)) {
         cmp = current.value[9]
       }

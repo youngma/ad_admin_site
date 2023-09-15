@@ -286,7 +286,7 @@ export const asyncRoutes = [
         path: 'register',
         component: () => import('@/views/campaign-management/CampaignRegister.vue'),
         name: 'AdCampaignRegister',
-        meta: { title: '캠페인 등록', icon: 'ri:add-box-fill' }
+        meta: { title: '캠페인 등록', icon: 'ri:add-box-fill', params: { referrer: '/campaign-management/search' }}
       },
       {
         path: 'detail',

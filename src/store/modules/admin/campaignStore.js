@@ -123,6 +123,10 @@ export const campaignStore = defineStore('campaignStore', {
         }
       }
     },
+    setAdvertisers({ advertisers, selected }) {
+      this.advertisers = advertisers
+      this.selected = selected
+    },
     generateParams(source) {
       return Object.assign({
         advertiserSeq: this.advertiser.advertiserSeq

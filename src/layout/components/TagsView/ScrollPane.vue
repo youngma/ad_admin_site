@@ -67,9 +67,6 @@ export default {
         const prevTag = tagList[currentIndex - 1]
         const nextTag = tagList[currentIndex + 1]
 
-        console.log(3, currentIndex)
-        console.log(4, prevTag)
-        console.log(5, nextTag)
 
         // the tag's offsetLeft after of nextTag
         const afterNextTagOffsetLeft = nextTag.$el.nextSibling.offsetLeft + nextTag.$el.nextSibling.offsetWidth + tagAndTagSpacing

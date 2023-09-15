@@ -72,6 +72,9 @@ export const authStore = defineStore(
     const logout = () => {
       return new Promise((resolve, reject) => {
         userAPI.logout(status.token).then(() => {
+          localStorage.clear()
+          // this.tagsViewStore.delAllViews(null)
+
           resetToken().then(r => {
             resetRouter()
             resolve()
@@ -79,7 +82,6 @@ export const authStore = defineStore(
 
           // reset visited views and cached views
           // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
-          tagsViewStore.delAllViews(null)
         }).catch(error => {
           reject(error)
         })

@@ -93,7 +93,6 @@ function validate(...types) {
         break
     }
 
-    console.log(validation.value)
   }
 }
 

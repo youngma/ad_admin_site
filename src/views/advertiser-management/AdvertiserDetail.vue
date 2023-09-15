@@ -1,5 +1,7 @@
 <template>
   <div class="components-container" type="">
+    selected: {{ advertisers }}
+    selected: {{ advertiser }}
     selected: {{ selected }}
     <AdvertiserSearchForm2 :selected="selected" :advertisers="advertisers" @search-update="searchUpdate" @on-change="onChange"/>
     <el-tabs type="border-card">
@@ -9,6 +11,10 @@
       </el-tab-pane>
       <el-tab-pane label="계좌">
         <AdvertiserAccounts v-if="advertiser"/>
+        <el-alert v-else title="광고주를 선택해 주세요." type="info" />
+      </el-tab-pane>
+      <el-tab-pane label="캠페인">
+        <AdvertiserCampaign v-if="advertiser"/>
         <el-alert v-else title="광고주를 선택해 주세요." type="info" />
       </el-tab-pane>
     </el-tabs>
@@ -22,6 +28,7 @@ import AdvertiserSearchForm2 from '@/components/AdvertiserManagement/AdvertiserS
 
 import AdvertiserUsers from '@/views/advertiser-management/tabs/AdvertiserUsers.vue'
 import AdvertiserAccounts from '@/views/advertiser-management/tabs/AdvertiserAccounts.vue'
+import AdvertiserCampaign from '@/views/advertiser-management/tabs/AdvertiserCampaign.vue'
 
 import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 import { storeToRefs } from 'pinia'
@@ -42,12 +49,13 @@ watch(selected, async(newValue, oldVale) => {
   } else {
     store.tabInitUser()
     store.tabInitAccount()
+    store.tabInitCampaign()
   }
 })
 
 function searchUpdate({ content, current }) {
   advertisers.value = content
-  selected.value = current
+  selected.value = content.length === 0 ? [] : current
 }
 
 function onChange(value) {

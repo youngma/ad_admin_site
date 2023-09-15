@@ -104,7 +104,6 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
         this.$alert('등록 되었습니다.', '확인', {})
         this.initRegisterForm()
       }).catch(() => {
-        console.log(this)
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })
     },
@@ -153,7 +152,6 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       window.open(uploadFile.url)
     },
     handleBeforeUpload(rawFile) {
-      console.log(2, rawFile)
       const { type, size } = rawFile
       if (type !== 'application/pdf') {
         ElMessage.error('PDF 파일만 등록 가능 합니다.')
