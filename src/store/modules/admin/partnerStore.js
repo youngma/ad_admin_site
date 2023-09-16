@@ -100,7 +100,6 @@ export const partnerStore = defineStore('partnerStore', {
     //   }
     // }),
     partner: (state) => state.partners.filter((t) => {
-      console.log(t, state.selected)
       return state.selected.includes(t.partnerSeq)
     })[0],
     userSearchParams: (state) => state.users.searchParams,

@@ -1,6 +1,6 @@
 <template>
   <div class="components-container" type="">
-    <PartnerSearchForm2 :selected="selected" :partners="partners" @search-update="searchUpdate" @on-change="onSearchUpdate"/>
+    <PartnerSearchForm2 :selected="selected" :partners="partners" @search-update="searchUpdate" @on-change="(value) => onSearchChange(value)"/>
 
     <el-tabs v-model="tabIndex" type="border-card" @tab-change="(name) => onTabsChange(name)">
       <el-tab-pane label="사용자" name="user">
@@ -53,16 +53,23 @@ watch(selected, async(newValue, oldVale) => {
 function searchUpdate({ content, current }) {
   partners.value = content
   selected.value = current
-
-  console.log(content, current)
 }
 
-function onSearchUpdate(value) {
+function onSearchChange(value) {
   selected.value = value
+
+  if (this.partner) {
+    this.store.reloadByUsers()
+    this.store.reloadByAccounts()
+    this.store.reloadByAdGroups()
+  } else {
+    this.store.tabInitUser()
+    this.store.tabInitAccount()
+    this.store.tabInitAdGroup()
+  }
 }
 
 function onTabsChange(name) {
-  console.log(this.partner)
   if (this.partner) {
     switch (name) {
       case 'user': this.store.reloadByUsers()

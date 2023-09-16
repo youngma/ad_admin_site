@@ -5,13 +5,7 @@
     style="width: 100%"
   >
     <el-table-column fixed prop="userId" label="사용자 아이디" width="150" header-align="center" align="center" />
-    <el-table-column prop="userName" label="사용자 이름" header-align="center" >
-      <template #default="scope">
-<!--        <el-button @click="open(scope.row)">{{ scope.row.userName }}</el-button>-->
-        {{ scope.row.userName  }}
-      </template>
-    </el-table-column>
-<!--    <el-table-column prop="phoneNumber" label="전화 번호" :formatter="phoneFormatter" header-align="center" align="center">-->
+    <el-table-column prop="userName" label="사용자 이름"  width="150" header-align="center" />
     <el-table-column prop="phoneNumber" label="전화 번호" width="150" header-align="center" align="center">
       <template #default="scope">
         {{ phoneFormatter(scope.row.phoneNumber) }}

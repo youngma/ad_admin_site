@@ -149,13 +149,11 @@ async function searchByName(query) {
 }
 
 function onRemoveTag(value) {
-  console.log('onRemoveTag', value)
   current.value = current.value.filter(t => t !== value)
   // emit('search-update', { content: [], current: current.value })
 }
 
 function onChange(value) {
-  console.log('onChange', value)
   if (value) {
     emit('on-change', value)
   } else {
