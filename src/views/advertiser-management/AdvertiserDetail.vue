@@ -1,8 +1,5 @@
 <template>
   <div class="components-container" type="">
-    selected: {{ advertisers }}
-    selected: {{ advertiser }}
-    selected: {{ selected }}
     <AdvertiserSearchForm2 :selected="selected" :advertisers="advertisers" @search-update="searchUpdate" @on-change="onChange"/>
     <el-tabs type="border-card">
       <el-tab-pane label="사용자">

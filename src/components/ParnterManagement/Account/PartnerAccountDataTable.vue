@@ -4,13 +4,13 @@
     class="custom-table"
     style="width: 100%"
   >
-    <el-table-column  prop="bankCodename" label="은행" width="150" header-align="center" align="center" />
-    <el-table-column  prop="bankAccount" label="계좌 번호" width="150" header-align="center" align="center" >
+    <el-table-column  prop="bankCodeName" label="은행" width="150" header-align="center" align="center" />
+    <el-table-column  prop="bankAccount" label="계좌 번호" header-align="center" align="center" >
       <template #default="scope">
         <el-button type="primary" @click="open(scope.row)"> {{scope.row.bankAccount}} </el-button>
       </template>
     </el-table-column>
-    <el-table-column  prop="accountHolder" label="예금주" width="150" header-align="center" align="center" />
+    <el-table-column  prop="accountHolder" label="예금주"  header-align="center" align="center" />
     <el-table-column  prop="accountUse" label="사용 여부" width="150" header-align="center" align="center" >
       <template #default="scope">
         <span v-if="scope.row.accountUse"> 사용 </span>

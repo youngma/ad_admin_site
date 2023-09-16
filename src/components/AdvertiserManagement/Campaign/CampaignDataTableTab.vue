@@ -104,9 +104,11 @@ import CampaignStatusModal from '@/components/AdCampaignManagement/CampaignStatu
 
 import { campaignStore } from '@/store/modules/admin/campaignStore.js'
 import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
+import { computed, ref } from 'vue'
+
 import { moneyFormatter, phoneFormatter } from '@/utils/customElTableFormatter'
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 defineOptions({
   name: 'PartnerCampaignDataTable'
@@ -114,16 +116,15 @@ defineOptions({
 
 const filePath = computed(() => import.meta.env.VITE_FIEL_SERVER)
 
+const coampaignPinia = campaignStore()
 const store = advertiserStore()
-const _coampaignStore = campaignStore()
+const router = useRouter()
 
 const { campaignList, campaignTotal, campaignSearchParams, selectedCampaign } = storeToRefs(store)
 
 const statusAdvertiserSeq = ref(0)
 const statusCampaignSeq = ref(0)
 const campaignStatus = ref('')
-
-
 
 function pageChange(number) {
   this.store.search({ page: number })
@@ -136,15 +137,17 @@ function open(url) {
 function approval(row) {
   const { advertiser, seq } = row
   const { advertiserSeq } = advertiser
-  this._coampaignStore.campaignApproval(advertiserSeq, seq)
+  this.coampaignPinia.campaignApproval(advertiserSeq, seq)
 }
 
 function openModifyModal(row) {
   // this.store.adCampaignModalOpen('modify', row)
+  this.coampaignPinia.setCampaignDetail(row)
+  this.router.push({ name: 'AdCampaignDetail', query: { referrer: '/advertiser-management/detail' }})
 }
 
 function statusModalOpen(row, status) {
-  this._coampaignStore.adCampaignModalOpen('status', row)
+  this.coampaignPinia.adCampaignModalOpen('status', row)
 
   const { seq } = row
 

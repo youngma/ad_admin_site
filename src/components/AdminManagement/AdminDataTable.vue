@@ -16,12 +16,12 @@
         {{ phoneFormatter(scope.row.phoneNumber) }}
       </template>
     </el-table-column>
-    <el-table-column prop="userStatusNm" label="사용자 상태" header-align="center" align="center" />
+    <el-table-column prop="userStatusName" label="사용자 상태" header-align="center" align="center" />
     <el-table-column prop="insertedAt" label="등록일" width="210" align="center" header-align="center" />
     <el-table-column prop="updatedAt" label="등록일" width="210" align="center" header-align="center" />
     <el-table-column prop="userStatus" label="" width="150" header-align="center" align="center">
       <template #default="scope">
-          <el-button v-if="scope.row.userStatus !== 'Enable'" type="primary" tag="span" class="comm_form_btn" @click="enabled(scope.row)">활성화</el-button>
+          <el-button v-if="scope.row.userStatus !== 'ENABLED'" type="primary" tag="span" class="comm_form_btn" @click="enabled(scope.row)">활성화</el-button>
           <el-button v-else type="warning" tag="span" class="comm_form_btn" @click="disabled(scope.row)">비 활성화</el-button>
       </template>
     </el-table-column>
@@ -43,7 +43,7 @@
 <!--    <b-pagination hide-ellipsis v-model="listCondition.offset" :total-rows="listCondition.total" :per-page="listCondition.limit" @input="pageChange" />-->
   </div>
 
-  <ModifyModal v-if="selectedUser"/>
+  <ModifyModal v-if="selectedUser" @close="close()"/>
 
 </template>
 
@@ -52,6 +52,7 @@
 import { adminManagementStore } from '@/store/modules/admin/adminManagementStore.js'
 import { phoneFormatter } from '@/utils/customElTableFormatter'
 import { storeToRefs } from 'pinia'
+import { onMounted } from 'vue'
 
 import ModifyModal from '@/components/AdminManagement/AdminModifyModal.vue'
 
@@ -79,6 +80,10 @@ function disabled(row) {
 
 function open(row) {
   this.store.selected(row)
+}
+
+function close() {
+  this.store.selected(null)
 }
 
 </script>

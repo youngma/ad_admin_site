@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import * as ADMIN_API from '@/api/ADMIN_API'
 import _ from 'lodash'
+import { deepClone } from '@/utils/index.js'
 
 const initData = {
   searchParams: {
@@ -116,8 +117,14 @@ export const adminManagementStore = defineStore('adminManagementStore', {
       })
     },
     selected(row) {
-      this.selectedUser = row
-      this.modifyPopup = true
+
+      if (row) {
+        this.selectedUser = deepClone(row)
+        this.modifyPopup = true
+      } else {
+        this.selectedUser = null
+        this.modifyPopup = false
+      }
     },
     modifyCallBack(modifyUsers) {
       const modifyUsersMap = _.keyBy(modifyUsers, function(o) {

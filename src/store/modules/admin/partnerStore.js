@@ -291,6 +291,13 @@ export const partnerStore = defineStore('partnerStore', {
         this.users.modifyModal = true
       }
     },
+    userModalClose(target) {
+      if (target === 'register') {
+        this.users.registerModal = close
+      } else if (target === 'modify') {
+        this.users.modifyModal = close
+      }
+    },
     async userIdCheck() {
       const { userId } = this.users.register
 
@@ -346,9 +353,9 @@ export const partnerStore = defineStore('partnerStore', {
       this.users.list.forEach(function(user) {
         const { userSeq } = user
         if (modifyUsersMap[userSeq]) {
-          const { userStatus, userStatusNm, updatedAt } = modifyUsersMap[userSeq]
+          const { userStatus, userStatusName, updatedAt } = modifyUsersMap[userSeq]
           user.userStatus = userStatus
-          user.userStatusNm = userStatusNm
+          user.userStatusName = userStatusName
           user.updatedAt = updatedAt
         }
       })
@@ -460,7 +467,8 @@ export const partnerStore = defineStore('partnerStore', {
       window.open(uploadFile.url)
     },
     handleBeforeUpload(regType, rawFile) {
-      console.log(regType)
+
+      console.log(rawFile)
       const { type, size } = rawFile
 
       switch (regType) {

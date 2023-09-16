@@ -154,7 +154,8 @@ function validate(...types) {
 
           break
         }
-        if (validAlphabetsNumber(userId)) {
+
+        if (!validAlphabetsNumber(userId)) {
           validation.value.userId.check = false
           validation.value.userId.message = '관리자 아이디는 영문/숫자만 가능합니다.'
           validation.value.valid = false
@@ -274,7 +275,7 @@ async function check(t) {
     this.validate('userId')
     if (validation.value.valid) {
       const retMsg = await this.store.userIdCheck() ? '사용 가능한 아이디 입니다.' : '이미 등록된 아이디 입니다.'
-      ElMessageBox.alert(retMsg, '확인', {}, appContext)
+      await ElMessageBox.alert(retMsg, '확인', {}, appContext)
     }
   }
 }

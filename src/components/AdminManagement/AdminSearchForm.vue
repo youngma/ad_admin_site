@@ -39,7 +39,7 @@
               v-for="code of UserStatus"
               :key="code.key"
               :label="code.value"
-              :value="code.value"
+              :value="code.key"
             />
           </el-select>
         </el-col>

@@ -65,7 +65,7 @@
     </el-table-column>
     <el-table-column  label="" width="350" header-align="center" align="center" >
       <template #default="scope">
-        <el-button type="primary" tag="span" class="comm_form_btn" @click="openModifyModal(scope.row)">수정</el-button>
+        <el-button type="primary" tag="span" class="comm_form_btn" @click="goCampaignDetail(scope.row)">수정</el-button>
 
         <el-button v-if="scope.row.campaignStatus === 'Request'"  type="success" tag="span" class="comm_form_btn" @click="approval(scope.row)">승인</el-button>
         <el-button v-if="scope.row.campaignStatus === 'Request'"  type="success" tag="span" class="comm_form_btn" @click="statusModalOpen(scope.row, 'reject')">거절</el-button>
@@ -106,6 +106,7 @@ import { campaignStore } from '@/store/modules/admin/campaignStore.js'
 import { moneyFormatter, phoneFormatter } from '@/utils/customElTableFormatter'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 defineOptions({
   name: 'CampaignDataTable'
@@ -117,6 +118,7 @@ const statusAdvertiserSeq = ref(0)
 const statusCampaignSeq = ref(0)
 const campaignStatus = ref('')
 
+const router = useRouter()
 const store = campaignStore()
 
 const { campaigns, campaignSearchParams, total, selectedCampaign } = storeToRefs(store)
@@ -135,8 +137,9 @@ function approval(row) {
   this.store.campaignApproval(advertiserSeq, seq)
 }
 
-function openModifyModal(row) {
-  this.store.adCampaignModalOpen('modify', row)
+function goCampaignDetail(row) {
+  this.store.setCampaignDetail(row)
+  this.router.push({ name: 'AdCampaignDetail', query: { referrer: '/advertiser-management/search' }})
 }
 
 function statusModalOpen(row, status) {
@@ -189,7 +192,6 @@ function getStatusMessage(row) {
 
   return message
 }
-
 
 </script>
 

@@ -1,9 +1,10 @@
+
 <template>
-  <el-dialog v-model="modifyModal" title="광고 수정"  width="90%">
+  <div class="components-container">
     <div class="comm_comp">
-      <!--    <el-row>-->
-      <!--      <el-col class="comm_form_box comm_text_tit">캠페인 등록</el-col>-->
-      <!--    </el-row>-->
+          <el-row>
+            <el-col class="comm_form_box comm_text_tit">캠페인 상세</el-col>
+          </el-row>
       <div class="comm_comp_table">
         <el-row :gutter="10">
           <el-col :span="4" class="col_tit">
@@ -157,7 +158,6 @@
         </el-row>
 
         <div v-if="selectedCampaign.smartStore" class="comm_comp mt_15">
-            {{selectedCampaign.smartStore}}
           <el-row>
             <el-col class="comm_form_box comm_text_tit2">스마트 스토어 광고 추가 입력</el-col>
           </el-row>
@@ -367,7 +367,7 @@
         </el-col>
       </el-row>
     </div>
-  </el-dialog>
+  </div>
 </template>
 
 <script setup>

@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import * as CAMPAIGN_API from '@/api/CAMPAIGN_API'
-import _ from 'lodash'
+// import _ from 'lodash'
 import { startDatePostFix, endDatePostFix, numberFormatter, moneyFormatter } from '@/utils/customElTableFormatter.js'
 import { deepClone } from '@/utils/index.js'
-import * as PARTNER_API from '@/api/PARTNER_API.js'
-import { campaignApproval, campaignHold, campaignReject } from '@/api/CAMPAIGN_API'
+// import * as PARTNER_API from '@/api/PARTNER_API.js'
+// import { campaignApproval, campaignHold, campaignReject } from '@/api/CAMPAIGN_API'
 
 export const campaignStore = defineStore('campaignStore', {
   state: () => ({
@@ -170,8 +170,8 @@ export const campaignStore = defineStore('campaignStore', {
       }
       await this.reload()
     },
-    adCampaignModalOpen(type, row) {
-      if (type === 'modify') {
+    setCampaignDetail(row) {
+      if (row) {
         const { adStartDate, adEndDate, totalParticipationLimit, dayParticipationLimit, smartStore } = row
         const { seq, useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms, holdingTime, totalBudget, adPrice } = smartStore
 
@@ -202,13 +202,28 @@ export const campaignStore = defineStore('campaignStore', {
         })
 
         this.selectedCampaign = deepClone(adCampaign)
+      } else {
+        this.selectedCampaign = {
+          smartStore: null,
+          uploads: {
+            smartStore: []
+          }
+        }
+      }
+    },
+    adCampaignModalOpen(type, row) {
+      if (type === 'modify') {
+        this.setCampaignDetail(row)
         this.modifyModal = true
       } else if (type === 'status') {
         this.statusModal = true
       }
     },
     modifyAfCampaign() {
-      const { seq, adDate, totalParticipationLimit, dayParticipationLimit, smartStore, advertiser } = this.selectedCampaign
+
+      const selectedCampaign = deepClone(this.selectedCampaign);
+
+      const { seq, adDate, totalParticipationLimit, dayParticipationLimit, smartStore, advertiser } = selectedCampaign
       const { advertiserSeq } = advertiser
       const { useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms, holdingTime, totalBudget, adPrice } = smartStore
 
@@ -219,7 +234,7 @@ export const campaignStore = defineStore('campaignStore', {
         holdingTime: numberFormatter(holdingTime)
       })
 
-      const newCampaign = Object.assign(this.selectedCampaign, {
+      const newCampaign = Object.assign(selectedCampaign, {
         advertiserSeq,
         adStartDate: startDatePostFix(adDate[0]),
         adEndDate: endDatePostFix(adDate[1]),

@@ -4,6 +4,7 @@ import _ from 'lodash'
 import * as ADMIN_API from '@/api/ADMIN_API.js'
 import { deepClone } from '@/utils/index.js'
 import { ElMessage } from 'element-plus'
+import {replaceNumber} from "@/utils/customElTableFormatter.js";
 
 const initData = {
   searchParams: {
@@ -100,7 +101,17 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       return this.register.alReadyCheck
     },
     advertiserRegister() {
-      ADVERTISER_API.register(this.register).then(() => {
+
+      const advertiser = deepClone(this.register)
+      const { businessNumber, phoneNumber } = advertiser
+
+      Object.assign(advertiser, {
+        businessNumber: replaceNumber(businessNumber),
+        phoneNumber: replaceNumber(phoneNumber)
+      })
+
+
+      ADVERTISER_API.register(advertiser).then(() => {
         this.$alert('등록 되었습니다.', '확인', {})
         this.initRegisterForm()
       }).catch(() => {

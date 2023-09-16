@@ -3,6 +3,8 @@ import * as ADVERTISER_API from '@/api/ADVERTISER_API'
 import * as CAMPAIGN_API from '@/api/CAMPAIGN_API.js'
 import _ from 'lodash'
 import { ElMessage } from 'element-plus'
+import { deepClone } from '@/utils/index.js'
+import { phoneFormatter } from '@/utils/customElTableFormatter.js'
 
 const initData = {
   searchParams: {
@@ -276,13 +278,29 @@ export const advertiserStore = defineStore('advertiserStore', {
     async userIdCheck() {
       const { userId } = this.users.register
 
-      const result = await ADVERTISER_API.userIdCheck(this.generateParams(userId))
+      const result = await ADVERTISER_API.userIdCheck(this.generateParams({ userId }))
 
       this.users.register.alReadyCheck = !result
       return this.users.register.alReadyCheck
     },
     userSelected(row) {
-      this.users.selectedUser = Object.assign({}, row)
+      if (row) {
+        const { phoneNumber } = row
+        this.users.selectedUser = Object.assign(deepClone(row), {
+          phoneNumber: phoneFormatter(phoneNumber)
+        })
+        this.userModalOpen('modify')
+      } else {
+        this.userModalClose('modify')
+        this.users.selectedUser = null
+      }
+    },
+    userModalClose(target) {
+      if (target === 'register') {
+        this.users.registerModal = false
+      } else if (target === 'modify') {
+        this.users.modifyModal = false
+      }
     },
     userRegister() {
       const newUser = this.generateParams(this.users.register)

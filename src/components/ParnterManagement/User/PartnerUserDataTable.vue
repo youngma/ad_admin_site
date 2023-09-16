@@ -17,12 +17,12 @@
         {{ phoneFormatter(scope.row.phoneNumber) }}
       </template>
     </el-table-column>
-    <el-table-column prop="userStatusNm" label="사용자 상태" width="120" header-align="center" align="center" />
+    <el-table-column prop="userStatusName" label="사용자 상태" width="120" header-align="center" align="center" />
     <el-table-column prop="insertedAt" label="등록일" width="170" header-align="center" />
     <el-table-column prop="updatedAt" label="수정일" width="170" header-align="center" />
     <el-table-column prop="userStatus" label="" width="250" header-align="center" align="center">
       <template #default="scope">
-          <el-button v-if="scope.row.userStatus !== 'Enable'" type="success" tag="span" class="comm_form_btn" @click="enabled(scope.row)">활성화</el-button>
+          <el-button v-if="scope.row.userStatus !== 'ENABLED'" type="success" tag="span" class="comm_form_btn" @click="enabled(scope.row)">활성화</el-button>
           <el-button v-else type="warning" tag="span" class="comm_form_btn" @click="disabled(scope.row)">비활성화</el-button>
           <el-button type="primary" tag="span" class="comm_form_btn" @click="modify(scope.row)">수정</el-button>
 

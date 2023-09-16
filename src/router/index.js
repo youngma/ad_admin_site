@@ -290,7 +290,7 @@ export const asyncRoutes = [
       },
       {
         path: 'detail',
-        component: () => import('@/views/campaign-management/CampaignRegister.vue'),
+        component: () => import('@/views/campaign-management/CampaignDetail.vue'),
         name: 'AdCampaignDetail',
         meta: { title: '캠페인 상세', icon: 'cib:campaign-monitor', init: true },
         hidden: true

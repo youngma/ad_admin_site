@@ -263,11 +263,11 @@ const handleExceed = () => {
   this.store.handleExceed()
 }
 function handleBeforeUpload(rawFile) {
-  return this.store.handleBeforeUpload(rawFile)
+  return this.store.handleBeforeUpload('account', rawFile)
 }
 
 function handleSuccess(data, uploadFile) {
-  const { result, type } = this.store.uploadSuccess(data, uploadFile)
+  const { result, type } = this.store.uploadSuccess('account', data, uploadFile)
 
   if (result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
