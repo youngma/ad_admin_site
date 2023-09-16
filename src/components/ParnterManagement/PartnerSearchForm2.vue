@@ -18,7 +18,6 @@
             filterable
             remote
             :remote-method="(query) => searchByName(query)"
-            clearable
             :options="options"
             :loading="loading"
             placeholder="Please enter a keyword"
@@ -28,13 +27,13 @@
         </el-col>
       </el-row>
     </div>
-    <div v-if="advertiser && multipleLimit === 1" class="comm_comp_table mt_15">
+    <div v-if="partner && multipleLimit === 1" class="comm_comp_table mt_15">
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
           <strong class="comm_tit_box">사업자 번호</strong>
         </el-col>
         <el-col :span="8" class="col_desc" >
-          <p> {{ businessNumberFormatter( advertiser.businessNumber )}} </p>
+          <p> {{ businessNumberFormatter( partner.businessNumber )}} </p>
         </el-col>
         <el-col :span="4" class="col_tit">
           <strong class="comm_tit_box"></strong>
@@ -48,13 +47,13 @@
           <strong class="comm_tit_box">전화 번호</strong>
         </el-col>
         <el-col :span="8" class="col_desc">
-          <p> {{ phoneFormatter( advertiser.phoneNumber )}} </p>
+          <p> {{ phoneFormatter( partner.phoneNumber )}} </p>
         </el-col>
         <el-col :span="4" class="col_tit">
           <strong class="comm_tit_box">이메일</strong>
         </el-col>
         <el-col :span="8" class="col_desc">
-          <p>{{advertiser.email}} </p>
+          <p>{{partner.email}} </p>
         </el-col>
       </el-row>
     </div>
@@ -71,7 +70,7 @@ import { ref, computed, defineProps, defineEmits } from 'vue'
 import { businessNumberFormatter, phoneFormatter } from '@/utils/customElTableFormatter.js'
 import * as PARTNER_API from '@/api/PARTNER_API.js'
 
-const { multiple, selected, advertisers, multipleLimit } = defineProps({
+const { multiple, selected, partners, multipleLimit } = defineProps({
   title: {
     type: String,
     default: '매체사 상세',
@@ -91,7 +90,7 @@ const { multiple, selected, advertisers, multipleLimit } = defineProps({
     type: Array,
     required: true
   },
-  advertisers: {
+  partners: {
     type: Array,
     required: true
   }
@@ -106,7 +105,7 @@ defineOptions({
 const loading = ref(false)
 
 const current = multiple ? ref(selected) : ref(selected[0])
-const currentPartners = ref(advertisers)
+const currentPartners = ref(partners)
 
 const options = computed(() => currentPartners.value.map((item) => {
   return {
@@ -115,7 +114,7 @@ const options = computed(() => currentPartners.value.map((item) => {
   }
 }))
 
-const advertiser = computed(() => {
+const partner = computed(() => {
   if (multiple) {
     return currentPartners.value.filter((t) => {
       return current.value.includes(t.partnerSeq)
@@ -124,7 +123,7 @@ const advertiser = computed(() => {
     return currentPartners.value.filter((t) => {
       let cmp = current.value
       if (Array.isArray(current.value)) {
-        cmp = current.value[9]
+        cmp = current.value[0]
       }
 
       return cmp === (t.partnerSeq)
@@ -152,7 +151,7 @@ async function searchByName(query) {
 function onRemoveTag(value) {
   console.log('onRemoveTag', value)
   current.value = current.value.filter(t => t !== value)
-  emit('search-update', { content: [], current: current.value })
+  // emit('search-update', { content: [], current: current.value })
 }
 
 function onChange(value) {
