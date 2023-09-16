@@ -3,6 +3,7 @@ import * as PARNTER_API from '@/api/PARTNER_API.js'
 import _ from 'lodash'
 import { deepClone } from '@/utils/index.js'
 import { ElMessage } from 'element-plus'
+import { replaceNumber } from '@/utils/customElTableFormatter.js'
 
 const initData = {
   searchParams: {
@@ -90,14 +91,24 @@ export const partnerManagementStore = defineStore('partnerManagementStore', {
     },
     async businessNumberCheck() {
       const { businessNumber } = this.register
-      const result = await PARNTER_API.businessNumberCheck({ businessNumber })
+      const result = await PARNTER_API.businessNumberCheck({
+        businessNumber: replaceNumber(businessNumber)
+      })
 
       this.register.alReadyCheck = !result
 
       return this.register.alReadyCheck
     },
     registerPartner() {
-      PARNTER_API.register(this.register).then(() => {
+      const partner = deepClone(this.register)
+      const { businessNumber, phoneNumber } = partner
+
+      Object.assign(partner, {
+        businessNumber: replaceNumber(businessNumber),
+        phoneNumber: replaceNumber(phoneNumber)
+      })
+
+      PARNTER_API.register(partner).then(() => {
         this.$alert('등록 되었습니다.', '확인', {})
         this.initRegisterForm()
       }).catch(() => {
@@ -105,20 +116,32 @@ export const partnerManagementStore = defineStore('partnerManagementStore', {
       })
     },
     selectedPartner(row) {
-      this.selected = deepClone(row)
-      const { file } = this.selected
-      this.uploadFiles = [
-        {
-          name: file ? file.originName : null,
-          type: file ? file.fileType : null,
-          url: file ? [import.meta.env.VITE_FIEL_SERVER, 'files', file.fileName].join('/') : null
-        }
-      ]
-      this.modifyPopup = true
+      if (row) {
+        this.selected = deepClone(row)
+        const { file } = this.selected
+
+        this.uploadFiles = [
+          {
+            name: file ? file.originName : null,
+            type: file ? file.fileType : null,
+            url: file ? [import.meta.env.VITE_FIEL_SERVER, 'files', file.fileName].join('/') : null
+          }
+        ]
+        this.modifyPopup = true
+      } else {
+        this.selected = null
+        this.modifyPopup = false
+      }
     },
     modifyPartner() {
       const { partnerSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail } = this.selected
-      PARNTER_API.modify({ partnerSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail }).then(() => {
+      PARNTER_API.modify({
+        partnerSeq,
+        businessName,
+        advertiserName,
+        phoneNumber: replaceNumber(phoneNumber),
+        email,
+        taxBillEmail }).then(() => {
         this.$alert('수정 되었습니다.', '확인', {})
         this.reload().then(() => {
           this.modifyPopup = false

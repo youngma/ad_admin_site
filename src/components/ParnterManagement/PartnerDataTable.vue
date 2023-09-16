@@ -39,7 +39,7 @@
     />
 <!--    <b-pagination hide-ellipsis v-model="listCondition.offset" :total-rows="listCondition.total" :per-page="listCondition.limit" @input="pageChange" />-->
   </div>
-  <PartnerModifyModal/>
+  <PartnerModifyModal v-if="selected" @close="close()"/>
 </template>
 
 <script setup>
@@ -55,7 +55,7 @@ defineOptions({
 
 const store = partnerManagementStore()
 
-const { partners, searchParams, total } = storeToRefs(store)
+const { partners, searchParams, total, selected } = storeToRefs(store)
 
 function pageChange(number) {
   this.store.search({ page: number })
@@ -65,6 +65,9 @@ function open(row) {
   this.store.selectedPartner(row)
 }
 
+function close() {
+  this.store.selectedPartner(null)
+}
 </script>
 
 <style scoped lang="scss">
