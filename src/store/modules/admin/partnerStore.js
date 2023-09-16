@@ -19,6 +19,7 @@ export const partnerStore = defineStore('partnerStore', {
     },
     partners: [],
     selected: [],
+    tabIndex: 0,
     users: {
       searchParams: {
         page: 1,
@@ -99,6 +100,7 @@ export const partnerStore = defineStore('partnerStore', {
     //   }
     // }),
     partner: (state) => state.partners.filter((t) => {
+      console.log(t, state.selected)
       return state.selected.includes(t.partnerSeq)
     })[0],
     userSearchParams: (state) => state.users.searchParams,

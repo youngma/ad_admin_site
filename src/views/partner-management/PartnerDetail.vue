@@ -1,16 +1,17 @@
 <template>
   <div class="components-container" type="">
-    <PartnerSearchForm2 :selected="selected" :advertisers="partners" @search-update="searchUpdate" @on-change="onChange"/>
-    <el-tabs type="border-card">
-      <el-tab-pane label="사용자">
+    <PartnerSearchForm2 :selected="selected" :partners="partners" @search-update="searchUpdate" @on-change="onSearchUpdate"/>
+
+    <el-tabs v-model="tabIndex" type="border-card" @tab-change="(name) => onTabsChange(name)">
+      <el-tab-pane label="사용자" name="user">
         <PartnerUsers v-if="partner"/>
         <el-alert v-else title="매체사 를 선택해 주세요." type="info" />
       </el-tab-pane>
-      <el-tab-pane label="계좌">
+      <el-tab-pane label="계좌" name="account">
         <PartnerAccounts v-if="partner"/>
         <el-alert v-else title="매체사 를 선택해 주세요." type="info" />
       </el-tab-pane>
-      <el-tab-pane label="광고 그룹">
+      <el-tab-pane label="광고 그룹" name="ad-group">
         <PartnerAdGroups v-if="partner"/>
         <el-alert v-else title="매체사 를 선택해 주세요." type="info" />
       </el-tab-pane>
@@ -35,7 +36,7 @@ defineOptions({
 })
 
 const store = partnerStore()
-const { selected, partners, partner } = storeToRefs(store)
+const { selected, partners, partner, tabIndex } = storeToRefs(store)
 
 onMounted(async() => {
 })
@@ -52,10 +53,26 @@ watch(selected, async(newValue, oldVale) => {
 function searchUpdate({ content, current }) {
   partners.value = content
   selected.value = current
+
+  console.log(content, current)
 }
 
-function onChange(value) {
+function onSearchUpdate(value) {
   selected.value = value
+}
+
+function onTabsChange(name) {
+  console.log(this.partner)
+  if (this.partner) {
+    switch (name) {
+      case 'user': this.store.reloadByUsers()
+        break
+      case 'account': this.store.reloadByAccounts()
+        break
+      case 'ad-group': this.store.reloadByAdGroups()
+        break
+    }
+  }
 }
 
 // watch: {
