@@ -6,7 +6,7 @@
   >
     <el-table-column fixed prop="businessName" label="광고주 사업자 명" width="150" header-align="center" align="center" >
       <template #default="scope">
-        <el-button @click="open(scope.row)">{{ scope.row.businessName }}</el-button>
+        <el-button @click="goDetail(scope.row)">{{ scope.row.businessName }}</el-button>
       </template>
     </el-table-column>
     <el-table-column prop="businessNumber" label="사업자 번호"  header-align="center" align="center">
@@ -23,6 +23,11 @@
     <el-table-column prop="advertiserName" label="광고주 대표 명" header-align="center" align="center" />
     <el-table-column prop="insertedAt" label="등록일" header-align="center" />
     <el-table-column prop="updatedAt" label="등록일" header-align="center" />
+    <el-table-column prop="advertiserSeq" label="" >
+      <template #default="scope">
+        <el-button @click="open(scope.row)">수정</el-button>
+      </template>
+    </el-table-column>
   </el-table>
 
   <div class="page-box">
@@ -41,15 +46,17 @@
 <!--    <b-pagination hide-ellipsis v-model="listCondition.offset" :total-rows="listCondition.total" :per-page="listCondition.limit" @input="pageChange" />-->
   </div>
 
-  <ModifyModal />
+  <ModifyModal @close="close" />
 
 </template>
 
 <script setup>
 
 import { advertiserManagementStore } from '@/store/modules/admin/advertiserManagementStore.js'
+import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 import { phoneFormatter, businessNumberFormatter } from '@/utils/customElTableFormatter'
 import { storeToRefs } from 'pinia'
+import { useRouter, useRoute } from 'vue-router'
 
 import ModifyModal from '@/components/AdvertiserManagement/AdvertiserModifyModal.vue'
 
@@ -58,6 +65,10 @@ defineOptions({
 })
 
 const store = advertiserManagementStore()
+const advertiserStoreInst = advertiserStore()
+
+const router = useRouter()
+const route = useRoute()
 
 const { advertisers, searchParams, total } = storeToRefs(store)
 
@@ -67,6 +78,15 @@ function pageChange(number) {
 
 function open(row) {
   this.store.selectedAdvertiser(row)
+}
+
+function close() {
+  this.store.selectedAdvertiser(null)
+}
+
+function goDetail(row) {
+  this.store.setDetail(row)
+  this.router.push({ name: 'AdvertiserDetail', query: { referrer: '/advertiser-management/detail' }})
 }
 
 </script>

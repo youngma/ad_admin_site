@@ -159,7 +159,6 @@ export default {
       for (const tag of affixTags) {
         // Must have tag name
         if (tag.name) {
-          console.log('initTags', tag)
           this.tagsView.addVisitedView(tag)
         }
       }

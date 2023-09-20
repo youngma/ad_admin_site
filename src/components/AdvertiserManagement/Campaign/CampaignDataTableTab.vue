@@ -43,7 +43,7 @@
         {{ scope.row.adEndDate.split(' ')[0] }} ~ {{ scope.row.adEndDate.split(' ')[0] }}
       </template>
     </el-table-column>
-    <el-table-column  prop="campaignStatusNm" label="캠페인 상태" width="150" header-align="center" align="center" >
+    <el-table-column  prop="campaignStatusName" label="캠페인 상태" width="150" header-align="center" align="center" >
       <template #default="scope">
         <el-popover
           placement="bottom-start"
@@ -52,7 +52,7 @@
           trigger="hover"
         >
           <template #reference>
-            {{ scope.row.campaignStatusNm }}
+            {{ scope.row.campaignStatusName }}
           </template>
           <template #default>
             {{ getStatusMessage(scope.row) }}

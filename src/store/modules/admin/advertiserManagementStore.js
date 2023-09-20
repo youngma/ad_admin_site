@@ -4,7 +4,7 @@ import _ from 'lodash'
 import * as ADMIN_API from '@/api/ADMIN_API.js'
 import { deepClone } from '@/utils/index.js'
 import { ElMessage } from 'element-plus'
-import {replaceNumber} from "@/utils/customElTableFormatter.js";
+import { replaceNumber } from '@/utils/customElTableFormatter.js'
 
 const initData = {
   searchParams: {
@@ -73,6 +73,10 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
 
       await this.reload()
     },
+    setDetail(row) {
+      this.advertisers = [row]
+      this.selected = [row.advertiserSeq]
+    },
     initRegisterForm() {
       this.uploadFiles = []
       this.register = {
@@ -101,7 +105,6 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       return this.register.alReadyCheck
     },
     advertiserRegister() {
-
       const advertiser = deepClone(this.register)
       const { businessNumber, phoneNumber } = advertiser
 
@@ -109,7 +112,6 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
         businessNumber: replaceNumber(businessNumber),
         phoneNumber: replaceNumber(phoneNumber)
       })
-
 
       ADVERTISER_API.register(advertiser).then(() => {
         this.$alert('등록 되었습니다.', '확인', {})
@@ -119,18 +121,23 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       })
     },
     selectedAdvertiser(row) {
-      this.selected = deepClone(row)
-      const { file } = this.selected
+      if (row) {
+        this.selected = deepClone(row)
+        const { file } = this.selected
 
-      this.uploadFiles = [
-        {
-          name: file ? file.originName : null,
-          type: file ? file.fileType : null,
-          url: file ? [import.meta.env.VITE_FIEL_SERVER, 'files', file.fileName].join('/') : null
-        }
-      ]
+        this.uploadFiles = [
+          {
+            name: file ? file.originName : null,
+            type: file ? file.fileType : null,
+            url: file ? [import.meta.env.VITE_FIEL_SERVER, 'files', file.fileName].join('/') : null
+          }
+        ]
 
-      this.modifyPopup = true
+        this.modifyPopup = true
+      } else {
+        this.selected = null
+        this.modifyPopup = false
+      }
     },
     modifyAdvertiser() {
       const { advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail } = this.selected

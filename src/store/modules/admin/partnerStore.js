@@ -3,6 +3,7 @@ import * as PARTNER_API from '@/api/PARTNER_API.js'
 import _ from 'lodash'
 import { ElMessage } from 'element-plus'
 import { adGroupModify } from '@/api/PARTNER_API.js'
+import { deepClone } from '@/utils/index.js'
 
 const initData = {
   searchParams: {
@@ -190,8 +191,9 @@ export const partnerStore = defineStore('partnerStore', {
       this.adGroups.statusModal = false
     },
     generateParams(source) {
+      const { partnerSeq } = this.partner
       return Object.assign({
-        partnerSeq: this.partner.partnerSeq
+        partnerSeq
       }, source)
     },
     async reloadByUsers() {
@@ -468,7 +470,6 @@ export const partnerStore = defineStore('partnerStore', {
       window.open(uploadFile.url)
     },
     handleBeforeUpload(regType, rawFile) {
-
       console.log(rawFile)
       const { type, size } = rawFile
 
@@ -495,7 +496,6 @@ export const partnerStore = defineStore('partnerStore', {
 
           break
       }
-
       return true
     },
     handleExceed(type) {
@@ -510,16 +510,41 @@ export const partnerStore = defineStore('partnerStore', {
           break
       }
     },
-    async adGroupRegister() {
+    async adGroupRegister(callback) {
       const newAdGroup = this.generateParams(this.adGroups.register)
       PARTNER_API.adGroupRegister(newAdGroup).then(() => {
-        this.$alert('등록 되었습니다.', '확인', {})
-        this.initRegisterForm('adGroup')
-        this.reloadByAdGroups().then(() => {
-        })
+        this.$alert('등록 되었습니다.', '확인', { callback })
+        // this.reloadByAdGroups().then(() => {
+        // })
       }).catch(() => {
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })
+    },
+    setAdGroupDetail(row) {
+      if (row) {
+        this.adGroups.selectedAdGroup = deepClone(row)
+        const { pointIconFile, logoFile } = this.adGroups.selectedAdGroup
+
+        this.adGroups.uploadLogoFile = [pointIconFile].map(file => {
+          const { originName, fileType, fileName } = file
+          return {
+            name: originName,
+            type: fileType,
+            url: [import.meta.env.VITE_FIEL_SERVER, 'files', fileName].join('/')
+          }
+        })
+
+        this.adGroups.uploadPointIconFile = [logoFile].map(file => {
+          const { originName, fileType, fileName } = file
+          return {
+            name: originName,
+            type: fileType,
+            url: [import.meta.env.VITE_FIEL_SERVER, 'files', fileName].join('/')
+          }
+        })
+      } else {
+        this.adGroups.selectedAdGroup = null
+      }
     },
     adGroupModalOpen(target, row) {
       if (target === 'register') {
@@ -551,16 +576,15 @@ export const partnerStore = defineStore('partnerStore', {
         this.adGroups.statusModal = true
       }
     },
-    adGroupApproval(groupSeq) {
-      const adGroupStatus = this.generateParams({
+    adGroupApproval({ partnerSeq, groupSeq }, callback) {
+      const adGroupStatus = {
+        partnerSeq,
         groupSeq,
         message: ''
-      })
+      }
 
       PARTNER_API.adGroupApproval(adGroupStatus).then(() => {
-        this.$alert('승인 되었습니다.', '확인', {})
-        this.reloadByAdGroups().then(() => {
-        })
+        this.$alert('승인 되었습니다.', '확인', { callback })
       }).catch(() => {
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })
@@ -595,14 +619,16 @@ export const partnerStore = defineStore('partnerStore', {
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })
     },
-    adGroupModify() {
-      const adGroupModify = this.generateParams(this.adGroups.selectedAdGroup)
+    adGroupModify(callback) {
+      const { groupSeq, partner, groupName, pointName, logoFile, pointIconFile, rewordRate, commissionRate, callBackUrl } = this.adGroups.selectedAdGroup
+      const { partnerSeq } = partner
+
+      const adGroupModify = {
+        partnerSeq, groupSeq, groupName, pointName, logoFile, pointIconFile, rewordRate, commissionRate, callBackUrl
+      }
 
       PARTNER_API.adGroupModify(adGroupModify).then(() => {
-        this.$alert('수정 되었습니다.', '확인', {})
-        this.reloadByAdGroups().then(() => {
-          this.adGroups.modifyModal = false
-        })
+        this.$alert('수정 되었습니다.', '확인', { callback })
       }).catch(() => {
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })

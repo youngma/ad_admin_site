@@ -1,6 +1,9 @@
 
 <template>
+
   <div class="components-container">
+    {{ selected }}
+    {{ advertisers }}
     <AdvertiserSearchForm2 title="캠페인 등록" :multiple=false :selected="selected" :advertisers="advertisers" @search-update="searchUpdate" @on-change="onChange"/>
     <CampaignRegisterForm v-if="selected.length > 0 && selected[0] !== null" />
     <el-alert v-else title="광고주를 선택해 주세요." type="info" />
@@ -14,7 +17,7 @@ import CampaignRegisterForm from '@/components/AdCampaignManagement/CampaignRegi
 
 import { campaignStore } from '@/store/modules/admin/campaignStore.js'
 
-import { onMounted } from 'vue'
+import { onBeforeMount } from 'vue'
 import { storeToRefs } from 'pinia'
 
 defineOptions({
@@ -24,18 +27,18 @@ defineOptions({
 const store = campaignStore()
 const { selected, advertisers } = storeToRefs(store)
 
-onMounted(async() => {
-  // store.init('register')
-})
-
 function searchUpdate({ content, current }) {
   advertisers.value = content
-  selected.value = content.length === 0 ? [] : current
+  // selected.value = content.length === 0 ? [] : current || null
 }
 
 function onChange(value) {
   selected.value = [value]
 }
+
+onBeforeMount(() => {
+  campaignStore().init('register')
+})
 
 </script>
 

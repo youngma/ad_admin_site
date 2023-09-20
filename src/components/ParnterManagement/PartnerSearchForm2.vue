@@ -18,6 +18,7 @@
             filterable
             remote
             :remote-method="(query) => searchByName(query)"
+            clearable
             :options="options"
             :loading="loading"
             placeholder="Please enter a keyword"
@@ -27,6 +28,7 @@
         </el-col>
       </el-row>
     </div>
+    {{ partner }}
     <div v-if="partner && multipleLimit === 1" class="comm_comp_table mt_15">
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
@@ -69,6 +71,8 @@
 import { ref, computed, defineProps, defineEmits } from 'vue'
 import { businessNumberFormatter, phoneFormatter } from '@/utils/customElTableFormatter.js'
 import * as PARTNER_API from '@/api/PARTNER_API.js'
+import { partnerStore } from '@/store/modules/admin/partnerStore.js'
+import { onBeforeMount } from 'vue'
 
 const { multiple, selected, partners, multipleLimit } = defineProps({
   title: {
@@ -161,6 +165,11 @@ function onChange(value) {
   }
 }
 
+onBeforeMount(() => {
+  // partnerStore().init()
+  // currentPartners.value = []
+  // current.value = multiple ? selected : selected
+})
 </script>
 
 <style scoped lang="scss">

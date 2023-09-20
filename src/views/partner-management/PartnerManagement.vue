@@ -10,16 +10,15 @@
 import PartnerSearchForm from '@/components/ParnterManagement/PartnerSearchForm.vue'
 import PartnerDataTable from '@/components/ParnterManagement/PartnerDataTable.vue'
 
-
-
 import { onMounted } from 'vue'
 import { partnerManagementStore } from '@/store/modules/admin/partnerManagementStore.js'
 
 const store = partnerManagementStore()
 
 onMounted(async() => {
-  store.init()
-  await store.search({ page: 1 })
+  console.debug('onMounted')
+  partnerManagementStore().init()
+  await partnerManagementStore().search({ page: 1 })
 })
 
 </script>

@@ -1,8 +1,5 @@
 <template>
   <div class="comm_comp">
-<!--    <el-row>-->
-<!--      <el-col class="comm_form_box comm_text_tit">캠페인 등록</el-col>-->
-<!--    </el-row>-->
     <div class="comm_comp_table">
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
@@ -766,15 +763,14 @@ function save() {
 
   if (validation.value.valid) {
     this.store.campaignRegister().then(() => {
-      ElMessageBox.alert('등록 되었습니다.', '확인', {})
-      // this.store.init('register')
-      // try {
-      smart_store_file_upload.value.initUploader()
-      // } catch (e) {
-      // }
-      const { referrer } = route.query
-
-      router.push({ path: referrer || route.params.referrer })
+      ElMessageBox.alert('등록 되었습니다.', '확인', {
+        callback: () => {
+          smart_store_file_upload.value.initUploader()
+          this.store.init('register')
+          const { referrer } = route.query
+          router.push({ path: referrer || route.params.referrer })
+        }
+      })
     }).catch((e) => {
       console.error(e)
       ElMessageBox.alert('처리 중 오류가 발생 했습니다.', '확인', {})

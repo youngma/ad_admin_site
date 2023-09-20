@@ -19,12 +19,16 @@ export const tagsViewStore = defineStore('tagsViewStore',
       },
 
       addVisitedView(view) {
-        if (this.visitedViews.some(v => v.path === view.path)) return
-        this.visitedViews.push(
-          Object.assign({}, view, {
-            title: view.meta.title || 'no-name'
-          })
-        )
+        const { meta } = view
+        // console.log(meta)
+        if (!meta.hidden) {
+          if (this.visitedViews.some(v => v.path === view.path)) return
+          this.visitedViews.push(
+            Object.assign({}, view, {
+              title: view.meta.title || 'no-name'
+            })
+          )
+        }
       },
 
       addCachedView(view) {

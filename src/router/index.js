@@ -192,7 +192,7 @@ export const asyncRoutes = [
         path: 'register',
         component: () => import('@/views/partner-management/PartnerRegister.vue'),
         name: 'PartnerRegister',
-        meta: { title: '매체사 등록', icon: 'ri:add-box-fill' }
+        meta: { title: '매체사 등록', icon: 'ri:add-box-fill', params: { referrer: '/partner-management/search' }}
       },
       {
         path: 'detail',
@@ -215,21 +215,21 @@ export const asyncRoutes = [
     children: [
       {
         path: 'search',
-        component: () => import('@/views/campaign-management/CampaignManagement.vue'),
-        name: 'AdCampaignSearch',
+        component: () => import('@/views/ad-group-management/AdGroupManagement.vue'),
+        name: 'AdGroupSearch',
         meta: { title: '광고 그룹 조회', icon: 'ri:menu-search-fill' }
       },
       {
         path: 'register',
-        component: () => import('@/views/campaign-management/CampaignRegister.vue'),
-        name: 'AdCampaignRegister',
-        meta: { title: '광고 그룹 등록', icon: 'ri:add-box-fill' }
+        component: () => import('@/views/ad-group-management/AdGroupRegister.vue'),
+        name: 'AdGroupRegister',
+        meta: { title: '광고 그룹 등록', icon: 'ri:add-box-fill', params: { referrer: '/ad-group-management/search' }}
       },
       {
         path: 'detail',
-        component: () => import('@/views/campaign-management/CampaignRegister.vue'),
-        name: 'AdCampaignDetail',
-        meta: { title: '광고 그룹 상세', icon: 'cib:campaign-monitor', init: true },
+        component: () => import('@/views/ad-group-management/AdGroupDetail.vue'),
+        name: 'AdGroupDetail',
+        meta: { title: '광고 그룹 상세', icon: 'cib:campaign-monitor', hidden: true },
         hidden: true
       }
     ]
@@ -292,7 +292,7 @@ export const asyncRoutes = [
         path: 'detail',
         component: () => import('@/views/campaign-management/CampaignDetail.vue'),
         name: 'AdCampaignDetail',
-        meta: { title: '캠페인 상세', icon: 'cib:campaign-monitor', init: true },
+        meta: { title: '캠페인 상세', icon: 'cib:campaign-monitor', hidden: true },
         hidden: true
       }
     ]

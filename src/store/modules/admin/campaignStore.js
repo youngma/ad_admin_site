@@ -77,8 +77,8 @@ export const campaignStore = defineStore('campaignStore', {
   actions: {
     init(type) {
       if (type === 'register') {
-        // this.advertisers = []
-        // this.selected = []
+        this.advertisers = []
+        this.selected = []
         this.register = {
           campaignType: null,
           campaignName: null,
@@ -122,6 +122,11 @@ export const campaignStore = defineStore('campaignStore', {
           size: 20
         }
       }
+
+      // if (type === 'search-result') {
+      //   this.advertisers = []
+      //   this.selected = []
+      // }
     },
     setAdvertisers({ advertisers, selected }) {
       this.advertisers = advertisers
@@ -220,8 +225,7 @@ export const campaignStore = defineStore('campaignStore', {
       }
     },
     modifyAfCampaign() {
-
-      const selectedCampaign = deepClone(this.selectedCampaign);
+      const selectedCampaign = deepClone(this.selectedCampaign)
 
       const { seq, adDate, totalParticipationLimit, dayParticipationLimit, smartStore, advertiser } = selectedCampaign
       const { advertiserSeq } = advertiser

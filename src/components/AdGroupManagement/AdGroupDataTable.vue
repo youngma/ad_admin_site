@@ -1,6 +1,6 @@
 <template>
   <el-table
-    :data="adGroupList"
+    :data="adGroups"
     class="custom-table"
     style="width: 100%"
   >
@@ -79,12 +79,12 @@
 
   <div class="page-box">
     <el-pagination
-      :page-size="adGroupSearchParams.size"
-      :current-page="adGroupSearchParams.page"
+      :page-size="searchParams.size"
+      :current-page="searchParams.page"
       background
       :default-current-page=1
       :default-page-size=20
-      :total="adGroupTotal"
+      :total="total"
       layout="prev, pager, next"
       class="mt-4"
       @size-change="pageChange"
@@ -92,19 +92,17 @@
     />
   </div>
 
-  <PartnerAdGroupStatusModal :group-seq="statusModalGroupSeq" :status="statusModalStatus" />
-  <PartnerAdGroupModifyModal />
+<!--  <PartnerAdGroupStatusModal :group-seq="statusModalGroupSeq" :status="statusModalStatus" />-->
+<!--  <PartnerAdGroupModifyModal />-->
 </template>
 
 <script setup>
 
-import { commonStore } from '@/store/modules/admin/commonStore.js'
-import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { adGroupStore } from '@/store/modules/admin/adGroupStore.js'
-import { phoneFormatter } from '@/utils/customElTableFormatter'
+import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 import PartnerAdGroupStatusModal from '@/components/ParnterManagement/AdGroup/PartnerAdGroupStatusModal.vue'
 import PartnerAdGroupModifyModal from '@/components/ParnterManagement/AdGroup/PartnerAdGroupModifyModal.vue'
@@ -112,16 +110,14 @@ import PartnerAdGroupModifyModal from '@/components/ParnterManagement/AdGroup/Pa
 // import ModifyModal from '@/components/AdminManagement/AdvertiserModifyModal.vue'
 
 defineOptions({
-  name: 'PartnerAdGroupDataTable'
+  name: 'AdGroupDataTable'
 })
 
-const adGroupStoreInst = adGroupStore()
-const store = partnerStore()
-
-const route = useRoute()
+const store = adGroupStore()
 const router = useRouter()
+const partnerStoreInst = partnerStore()
 
-const { adGroupList, adGroupSearchParams, adGroupTotal, adGroupModifyModal } = storeToRefs(store)
+const { adGroups, searchParams, total } = storeToRefs(store)
 
 const filePath = computed(() => import.meta.env.VITE_FIEL_SERVER)
 
@@ -132,17 +128,16 @@ function pageChange(number) {
   this.store.searchByAdGroups({ page: number })
 }
 
-function statusModalOpen(row, status) {
-  this.store.adGroupModalOpen('status')
-
-  statusModalStatus.value = status
-  statusModalGroupSeq.value = row.groupSeq
-}
-
-function goAdGroupDetail(row) {
-  this.store.setAdGroupDetail(row)
-  this.router.push({ name: 'AdGroupDetail', query: { referrer: '/partner-management/detail' }})
-}
+// function statusModalOpen(row, status) {
+//   this.store.adGroupModalOpen('status')
+//
+//   statusModalStatus.value = status
+//   statusModalGroupSeq.value = row.groupSeq
+// }
+//
+// function openModifyModal(row) {
+//   this.store.adGroupModalOpen('modify', row)
+// }
 
 function getStatusAt(row) {
   const { requestAt, approvalAt, holdAt, rejectAt, holdMessage, rejectMessage } = row
@@ -184,11 +179,16 @@ function getStatusMessage(row) {
   return message
 }
 
+function goAdGroupDetail(row) {
+  this.partnerStoreInst.setAdGroupDetail(row)
+  this.router.push({ name: 'AdGroupDetail', query: { referrer: '/ad-group-management/search' }})
+}
+
 function approval(row) {
   const { groupSeq, partner } = row
   const { partnerSeq } = partner
   this.store.adGroupApproval({ partnerSeq, groupSeq }, () => {
-    this.adGroupStoreInst.reloadByAdGroups()
+    this.store.reloadByAdGroups()
   })
 }
 

@@ -381,14 +381,12 @@ import { ref, getCurrentInstance, watch } from 'vue'
 import { numberFormatter, moneyFormatter } from '@/utils/customElTableFormatter.js'
 import { validURL } from '@/utils/validate.js'
 import { ElMessageBox } from 'element-plus'
+import { useRoute, useRouter } from 'vue-router'
 
 defineOptions({
   name: 'CampaignModifyModal'
 })
 
-const smart_store_file_upload = ref(null)
-
-const { appContext } = getCurrentInstance()
 
 const validation = ref({
   valid: true,
@@ -457,6 +455,14 @@ const validation = ref({
 
 const store = campaignStore()
 const common = commonStore()
+
+const route = useRoute()
+const router = useRouter()
+
+const smart_store_file_upload = ref(null)
+const { appContext } = getCurrentInstance()
+
+
 const { selectedCampaign, modifyModal, defaultAdDate } = storeToRefs(store)
 const { CampaignType, PaymentTerms } = storeToRefs(common)
 
@@ -765,12 +771,14 @@ function save() {
 
   if (validation.value.valid) {
     this.store.modifyAfCampaign().then(() => {
-      ElMessageBox.alert('수정 되었습니다.', '확인', {})
-      // this.store.init('selectedCampaign')
-      // try {
-      smart_store_file_upload.value.initUploader()
-      // } catch (e) {
-      // }
+      ElMessageBox.alert('수정 되었습니다.', '확인', {
+        callback: () => {
+          smart_store_file_upload.value.initUploader()
+          this.store.init('modify')
+          const { referrer } = route.query
+          router.push({ path: referrer || route.params.referrer })
+        }
+      })
     }).catch((e) => {
       console.error(e)
       ElMessageBox.alert('처리 중 오류가 발생 했습니다.', '확인', {})
