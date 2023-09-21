@@ -1,6 +1,6 @@
 <template>
   <el-table
-    :data="campaigns"
+    :data="list"
     class="custom-table"
     style="width: 100%"
   >
@@ -78,16 +78,16 @@
 
   <div class="page-box">
     <el-pagination
-      :page-size="campaignSearchParams.size"
-      :current-page="campaignSearchParams.page"
+      :page-size="size"
+      :current-page="page_count"
       background
       :default-current-page=1
       :default-page-size=20
       :total="total"
       layout="prev, pager, next"
       class="mt-4"
-      @size-change="(number) => pageChange(number)"
-      @current-change="(number) => pageChange(number)"
+      @size-change="pageChange"
+      @current-change="pageChange"
     />
 <!--    <b-pagination hide-ellipsis v-model="listCondition.offset" :total-rows="listCondition.total" :per-page="listCondition.limit" @input="pageChange" />-->
   </div>
@@ -102,14 +102,43 @@
 import CampaignModifyModal from '@/components/AdCampaignManagement/CampaignModifyModal.vue'
 import CampaignStatusModal from '@/components/AdCampaignManagement/CampaignStatusModal.vue'
 
-import { campaignStore } from '@/store/modules/admin/campaignStore.js'
+import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { moneyFormatter, phoneFormatter } from '@/utils/customElTableFormatter'
-import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, defineEmits, defineProps, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import {advertiserStore} from "@/store/modules/admin/advertiserStore.js";
 
 defineOptions({
   name: 'CampaignDataTable'
+})
+
+const emit = defineEmits(['search-call'])
+
+const { list, total, page, size, referrer } = defineProps({
+  list: {
+    type: Array,
+    default: [],
+    required: true
+  },
+  total: {
+    type: Number,
+    default: 1,
+    required: true
+  },
+  page: {
+    type: Number,
+    default: 1,
+    required: true
+  },
+  size: {
+    type: Number,
+    default: 1,
+    required: true
+  },
+  referrer: {
+    type: String,
+    required: false
+  }
 })
 
 const filePath = computed(() => import.meta.env.VITE_FIEL_SERVER)
@@ -117,14 +146,17 @@ const filePath = computed(() => import.meta.env.VITE_FIEL_SERVER)
 const statusAdvertiserSeq = ref(0)
 const statusCampaignSeq = ref(0)
 const campaignStatus = ref('')
+const page_count = ref(page)
 
 const router = useRouter()
-const store = campaignStore()
+const store = advertiserStore()
 
-const { campaigns, campaignSearchParams, total, selectedCampaign } = storeToRefs(store)
+// const { campaigns } = storeToRefs(store)
 
 function pageChange(number) {
   this.store.search({ page: number })
+  emit('search-call', { page: number })
+  page_count.value = page
 }
 
 function open(url) {
@@ -139,7 +171,7 @@ function approval(row) {
 
 function goCampaignDetail(row) {
   this.store.setCampaignDetail(row)
-  this.router.push({ name: 'AdCampaignDetail', query: { referrer: '/campaign-management/search' }})
+  this.router.push({ name: 'AdCampaignDetail', query: { referrer }})
 }
 
 function statusModalOpen(row, status) {

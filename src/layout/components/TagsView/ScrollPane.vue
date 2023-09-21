@@ -10,6 +10,7 @@ import { ref } from 'vue'
 
 export default {
   name: 'ScrollPane',
+
   setup: () => {
     const scrollContainer = ref()
     return {

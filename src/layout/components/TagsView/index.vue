@@ -2,12 +2,17 @@
   <div id="tags-view-container" class="tags-view-container">
     <scroll-pane ref="scrollPaneRef" class="tags-view-wrapper" @scroll="handleScroll">
       <router-link
-        ref="tagRef"
         v-for="tag in visitedViews"
+        ref="tagRef"
         :key="tag.path"
         v-slot="{ navigate }"
         custom
-        :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
+        :to="{
+          path: tag.path,
+          query: tag.query,
+          meta: tag.meta,
+          fullPath: tag.fullPath
+        }"
       >
         <div
             class="tags-view-item"
@@ -40,7 +45,7 @@ import { tagsViewStore } from '@/store/modules/core/tagsView.js'
 
 import { ref, inject, watch, nextTick } from 'vue'
 
-// import router from '@/router'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'TagsView',
@@ -52,47 +57,20 @@ export default {
     const app = appStore()
 
     const router = inject('$router')
+    const route = useRoute()
 
-    const scrollPaneRef = ref()
-    const tagRef = ref()
+    const scrollPaneRef = ref(null)
+    const tagRef = ref(null)
 
-    function addTags() {
-      const { name } = router.currentRoute.value
-      if (name) {
-        tagsView.addView(router.currentRoute.value)
-      }
-      return false
-    }
-
-    function moveToCurrentTag() {
-      const currentPath = router.currentRoute.value.path
-      const currentFullPath = router.currentRoute.value.fullPath
-
-      nextTick(() => {
-        for (const tag of tagsView.visitedViews) {
-          if (tag.path === currentPath) {
-            scrollPaneRef.value.moveToTarget(tag)
-            // when query is different then update
-            if (tag.fullPath !== currentFullPath) {
-              tagsView.updateVisitedView(this.router)
-            }
-            break
-          }
-        }
-      })
-    }
-
-    watch(
-      () => router.currentRoute.value.fullPath,
-      async fullPath => {
-        addTags()
-        moveToCurrentTag()
-      }
-    )
+    // watch(
+    //   () => route.fullPath,
+    //   async fullPath => {
+    //
+    //   }
+    // )
 
     return {
-      permission, setting, app, tagsView, router, addTags,
-      moveToCurrentTag,
+      permission, setting, app, tagsView, router, route,
       scrollPaneRef, tagRef
     }
   },
@@ -120,6 +98,12 @@ export default {
       } else {
         document.body.removeEventListener('click', this.closeMenu)
       }
+    },
+    async 'route.fullPath'(value) {
+      if (value) {
+        this.addTags()
+        this.moveToCurrentTag()
+      }
     }
   },
   mounted() {
@@ -127,8 +111,39 @@ export default {
     this.addTags()
   },
   methods: {
+    addTags() {
+      const { fullPath, name } = this.route
+      const { title } = this.route.meta
+
+      console.log('tagview', this.route)
+      // const { name } = router.currentRoute.value
+      if (name) {
+        this.tagsView.addView(this.route)
+      }
+      return false
+    },
+    moveToCurrentTag() {
+      const { path, fullPath, name } = this.route
+      const { title } = this.route.meta
+
+      const currentPath = path
+      const currentFullPath = fullPath
+
+      nextTick(() => {
+        for (const tag of this.tagsView.visitedViews) {
+          if (tag.path === currentPath) {
+            this.scrollPaneRef.moveToTarget(tag)
+            // when query is different then update
+            if (tag.fullPath !== currentFullPath) {
+              this.tagsView.updateVisitedView(this.router)
+            }
+            break
+          }
+        }
+      })
+    },
     isActive(route) {
-      return route.path === this.$route.path
+      return route.path === this.route.path
     },
     isAffix(tag) {
       return tag.meta && tag.meta.affix

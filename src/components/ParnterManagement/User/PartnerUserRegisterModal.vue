@@ -1,7 +1,6 @@
 <template>
   <el-dialog v-model="users.registerModal" title="사용자 등록" width="700">
     <div class="comm_comp">
-      {{ users.register }}
       <div class="comm_comp_table">
         <el-row :gutter="10">
           <el-col :span="6" class="col_tit">

@@ -20,7 +20,7 @@ export const tagsViewStore = defineStore('tagsViewStore',
 
       addVisitedView(view) {
         const { meta } = view
-        // console.log(meta)
+        console.log(meta)
         if (!meta.hidden) {
           if (this.visitedViews.some(v => v.path === view.path)) return
           this.visitedViews.push(

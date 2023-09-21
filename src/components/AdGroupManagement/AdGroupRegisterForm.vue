@@ -1,6 +1,5 @@
 <template>
     <div class="comm_comp">
-       {{route}}
       <div class="comm_comp_table">
         <el-row :gutter="10">
           <el-col :span="6" class="col_tit">
@@ -420,14 +419,21 @@ function handleRemove(type) {
 }
 
 function save() {
-  this.validate('adType', 'groupName', 'logoFile', 'pointIconFile', 'callBackUrl', 'pointName')
-  if (validation.value.valid) {
-    this.store.adGroupRegister(() => {
-      this.store.initRegisterForm('adGroup')
-      const { referrer } = route.query
-      router.push({ path: referrer || route.params.referrer })
-    })
-  }
+  // this.validate('adType', 'groupName', 'logoFile', 'pointIconFile', 'callBackUrl', 'pointName')
+  // if (validation.value.valid) {
+  //   this.store.adGroupRegister(() => {
+  //     this.store.initRegisterForm('adGroup')
+  //     const { referrer } = route.query
+  //
+  //   })
+  //
+  //
+  // }
+  const { referrer } = route.query
+
+  console.log(route.meta.params)
+  console.log({ path: referrer || route.meta.params.referrer })
+  router.push({ path: referrer || route.meta.params.referrer })
 }
 
 </script>

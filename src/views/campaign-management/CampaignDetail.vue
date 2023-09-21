@@ -14,7 +14,7 @@
             <el-row :gutter="10">
               <el-col :span="10">
                 <el-select
-                  v-model="selectedCampaign.campaignType"
+                  v-model="campaigns.selectedCampaign.campaignType"
                   disabled
                   class="m-2"
                   :class="{ 'is-error': !validation.campaignType.check }"
@@ -45,7 +45,7 @@
                 :class="{ 'is-error': !validation.campaignName.check }"
               >
                 <el-input
-                  v-model="selectedCampaign.campaignName"
+                  v-model="campaigns.selectedCampaign.campaignName"
                   class=""
                   placeholder="캠페인 명을 입력 해주세요."
                 />
@@ -67,7 +67,7 @@
                 :class="{ 'is-error': !validation.campaignDesc.check }"
               >
                 <el-input
-                  v-model="selectedCampaign.campaignDesc"
+                  v-model="campaigns.selectedCampaign.campaignDesc"
                   type="textarea"
                   :rows="4"
                   :autosize="{ minRows: 4, maxRows: 5 }"
@@ -90,7 +90,7 @@
             <el-row :gutter="10">
               <el-col :span="20">
                 <el-input
-                  v-model="selectedCampaign.totalParticipationLimit"
+                  v-model="campaigns.selectedCampaign.totalParticipationLimit"
                   :formatter="(value) => moneyFormatter(value)"
                   :class="{ 'is-error': !validation.totalParticipationLimit.check }"
                   class="text-end" placeholder="일 참여 제한 수 입력 해주세요."  >
@@ -109,7 +109,7 @@
             <el-row :gutter="10">
               <el-col :span="20">
                 <el-input
-                  v-model="selectedCampaign.dayParticipationLimit"
+                  v-model="campaigns.selectedCampaign.dayParticipationLimit"
                   :formatter="(value) => moneyFormatter(value)"
                   :class="{ 'is-error': !validation.dayParticipationLimit.check }"
                   class="text-end" placeholder="일 참여 제한 수 입력 해주세요."  >
@@ -134,7 +134,7 @@
                 :class="{ 'is-error': !validation.adPrice.check }"
               >
                 <el-date-picker
-                  v-model="selectedCampaign.adDate"
+                  v-model="campaigns.selectedCampaign.adDate"
                   type="daterange"
                   size="large"
                   start-placeholder="광고 시작 일자"
@@ -157,7 +157,7 @@
           </el-col>
         </el-row>
 
-        <div v-if="selectedCampaign.smartStore" class="comm_comp mt_15">
+        <div v-if="campaigns.selectedCampaign.smartStore" class="comm_comp mt_15">
           <el-row>
             <el-col class="comm_form_box comm_text_tit2">스마트 스토어 광고 추가 입력</el-col>
           </el-row>
@@ -175,7 +175,7 @@
                     :class="{ 'is-error': !validation.useHow.check }"
                   >
                     <el-input
-                      v-model="selectedCampaign.smartStore.useHow"
+                      v-model="campaigns.selectedCampaign.smartStore.useHow"
                       type="textarea"
                       :rows="4"
                       :autosize="{ minRows: 4, maxRows: 5 }"
@@ -201,7 +201,7 @@
                     :class="{ 'is-error': !validation.targetUrlPc.check }"
                   >
                     <el-input
-                      v-model="selectedCampaign.smartStore.targetUrlPc"
+                      v-model="campaigns.selectedCampaign.smartStore.targetUrlPc"
                       class=""
                       placeholder="모바일 랜딩 URL을 입력 해주세요."
                     />
@@ -224,7 +224,7 @@
                     :class="{ 'is-error': !validation.targetUrlMobile.check }"
                   >
                     <el-input
-                      v-model="selectedCampaign.smartStore.targetUrlMobile"
+                      v-model="campaigns.selectedCampaign.smartStore.targetUrlMobile"
                       class=""
                       placeholder="모바일 랜딩 URL을 입력 해주세요."
                     />
@@ -248,7 +248,7 @@
                 >
                   <CampaignImageUpload
                     ref="smart_store_file_upload"
-                    :files="selectedCampaign.uploads.smartStore"
+                    :files="campaigns.selectedCampaign.uploads.smartStore"
                     @upload-after="onUploadAfter"
                   />
 
@@ -269,7 +269,7 @@
                 <el-row :gutter="10">
                   <el-col :span="20">
                     <el-input
-                      v-model="selectedCampaign.smartStore.totalBudget"
+                      v-model="campaigns.selectedCampaign.smartStore.totalBudget"
                       :formatter="(value) => moneyFormatter(value)"
                       :class="{ 'is-error': !validation.totalBudget.check }"
                       class="text-end" placeholder="총 예산 금액 입력 해주세요." >
@@ -288,7 +288,7 @@
                 <el-row :gutter="10">
                   <el-col :span="20">
                     <el-input
-                      v-model="selectedCampaign.smartStore.adPrice"
+                      v-model="campaigns.selectedCampaign.smartStore.adPrice"
                       :formatter="(value) => moneyFormatter(value)"
                       :class="{ 'is-error': !validation.adPrice.check }"
                       class="text-end" placeholder="광고 단가를 입력 해주세요." >
@@ -312,7 +312,7 @@
                 <el-row :gutter="10">
                   <el-col :span="20">
                     <el-input
-                      v-model="selectedCampaign.smartStore.goodsCode"
+                      v-model="campaigns.selectedCampaign.smartStore.goodsCode"
                       :class="{ 'is-error': !validation.goodsCode.check }"
                       class="" placeholder="상품 코드를 입력 해주세요." />
                   </el-col>
@@ -329,7 +329,7 @@
                 <el-row :gutter="10">
                   <el-col :span="10">
                     <el-select
-                      v-model="selectedCampaign.smartStore.paymentTerms"
+                      v-model="campaigns.selectedCampaign.smartStore.paymentTerms"
                       class="m-2"
                       :class="{ 'is-error': !validation.paymentTerms.check }"
                       placeholder="Select"
@@ -342,9 +342,9 @@
                       />
                     </el-select>
                   </el-col>
-                  <el-col v-if="selectedCampaign.smartStore.paymentTerms === 'TIME'" :span="10">
+                  <el-col v-if="campaigns.selectedCampaign.smartStore.paymentTerms === 'TIME'" :span="10">
                     <el-input
-                      v-model="selectedCampaign.smartStore.holdingTime"
+                      v-model="campaigns.selectedCampaign.smartStore.holdingTime"
                       :formatter="(value) => numberFormatter(value)"
                       :class="{ 'is-error': !validation.paymentTerms.check }"
                       class="text-end" placeholder="시간을 설정 해주세요." >
@@ -373,7 +373,7 @@
 <script setup>
 import CampaignImageUpload from '@/components/AdCampaignManagement/CampaignImageUpload.vue'
 
-import { campaignStore } from '@/store/modules/admin/campaignStore.js'
+import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 
 import { storeToRefs } from 'pinia'
@@ -384,9 +384,8 @@ import { ElMessageBox } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 
 defineOptions({
-  name: 'CampaignModifyModal'
+  name: 'CampaignModifyForm'
 })
-
 
 const validation = ref({
   valid: true,
@@ -453,7 +452,7 @@ const validation = ref({
   }
 })
 
-const store = campaignStore()
+const store = advertiserStore()
 const common = commonStore()
 
 const route = useRoute()
@@ -462,8 +461,7 @@ const router = useRouter()
 const smart_store_file_upload = ref(null)
 const { appContext } = getCurrentInstance()
 
-
-const { selectedCampaign, modifyModal, defaultAdDate } = storeToRefs(store)
+const { campaigns, defaultAdDate } = storeToRefs(store)
 const { CampaignType, PaymentTerms } = storeToRefs(common)
 
 const disabledDate = (time) => {
@@ -471,7 +469,8 @@ const disabledDate = (time) => {
 }
 
 function validate(...types) {
-  const { campaignName, campaignType, campaignDesc, dayParticipationLimit, adDate, smartStore } = this.selectedCampaign
+
+  const { campaignName, campaignType, campaignDesc, dayParticipationLimit, adDate, smartStore } = this.campaigns.selectedCampaign
 
   const { useHow, image, targetUrlPc, targetUrlMobile, totalBudget, adPrice, goodsCode, paymentTerms, holdingTime } = smartStore
   validation.value.valid = true
@@ -740,11 +739,11 @@ const onUploadAfter = (resp) => {
   if (result && result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
 
-    selectedCampaign.value.uploads.smartStore = uploadFiles.map(file => {
+    campaigns.value.selectedCampaign.uploads.smartStore = uploadFiles.map(file => {
       const { name, raw } = file
       const { type } = raw
 
-      selectedCampaign.value.smartStore.image = {
+      campaigns.value.selectedCampaign.smartStore.image = {
         newFile: true,
         fileType: type,
         originName: originFileName,
@@ -758,7 +757,7 @@ const onUploadAfter = (resp) => {
       }
     })
   } else {
-    selectedCampaign.value.uploads.smartStore = []
+    campaigns.value.selectedCampaign.uploads.smartStore = []
   }
 }
 
@@ -774,7 +773,7 @@ function save() {
       ElMessageBox.alert('수정 되었습니다.', '확인', {
         callback: () => {
           smart_store_file_upload.value.initUploader()
-          this.store.init('modify')
+          this.store.setCampaignDetail(null)
           const { referrer } = route.query
           router.push({ path: referrer || route.params.referrer })
         }
@@ -787,7 +786,7 @@ function save() {
 }
 
 function paymentTermsChange() {
-  selectedCampaign.value.holdingTime = 0
+  campaigns.value.selectedCampaign.holdingTime = 0
 }
 
 </script>

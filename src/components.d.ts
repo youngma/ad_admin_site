@@ -17,6 +17,7 @@ declare module '@vue/runtime-core' {
     AdGroupRegisterForm: typeof import('./components/AdGroupManagement/AdGroupRegisterForm.vue')['default']
     adGroupsearchForm: typeof import('./components/AdvertiserManagement/Account/adGroupsearchForm.vue')['default']
     AdGroupSearchForm: typeof import('./components/AdGroupManagement/AdGroupSearchForm.vue')['default']
+    AdGroupStatusModal: typeof import('./components/AdGroupManagement/AdGroupStatusModal.vue')['default']
     AdminDataTable: typeof import('./components/AdminManagement/AdminDataTable.vue')['default']
     AdminModifyModal: typeof import('./components/AdminManagement/AdminModifyModal.vue')['default']
     AdminRegisterForm: typeof import('./components/AdminManagement/AdminRegisterForm.vue')['default']

@@ -1,5 +1,6 @@
 // import { Router } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
+import { partnerStore} from "@/store/modules/admin/partnerStore.js";
 
 /* Layout */
 import Layout from '@/layout/index.vue'
@@ -198,7 +199,7 @@ export const asyncRoutes = [
         path: 'detail',
         component: () => import('@/views/partner-management/PartnerDetail.vue'),
         name: 'PartnerDetail',
-        meta: { title: '매체사 상세', icon: 'ri:database-fill', init: true }
+        meta: { title: '매체사 상세', icon: 'ri:database-fill' }
       }
     ]
   },
@@ -223,7 +224,14 @@ export const asyncRoutes = [
         path: 'register',
         component: () => import('@/views/ad-group-management/AdGroupRegister.vue'),
         name: 'AdGroupRegister',
-        meta: { title: '광고 그룹 등록', icon: 'ri:add-box-fill', params: { referrer: '/ad-group-management/search' }}
+        meta: { title: '광고 그룹 등록', icon: 'ri:add-box-fill', params: { init: true, referrer: '/ad-group-management/search' }},
+        beforeEnter: (to, from, next) => {
+          const { query } = to
+          if (query.init !== 'false') {
+            partnerStore().init()
+          }
+          next()
+        }
       },
       {
         path: 'detail',
@@ -286,7 +294,7 @@ export const asyncRoutes = [
         path: 'register',
         component: () => import('@/views/campaign-management/CampaignRegister.vue'),
         name: 'AdCampaignRegister',
-        meta: { title: '캠페인 등록', icon: 'ri:add-box-fill', params: { referrer: '/campaign-management/search' }}
+        meta: { title: '캠페인 등록', icon: 'ri:add-box-fill', params: { init: true, referrer: '/campaign-management/search' }}
       },
       {
         path: 'detail',

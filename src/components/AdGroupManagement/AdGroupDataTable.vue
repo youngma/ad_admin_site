@@ -1,6 +1,6 @@
 <template>
   <el-table
-    :data="adGroups"
+    :data="list"
     class="custom-table"
     style="width: 100%"
   >
@@ -62,6 +62,7 @@
     <el-table-column prop="updatedAt" label="수정일" width="170" header-align="center" />
     <el-table-column label="" width="250" header-align="center" align="center">
       <template #default="scope">
+
         <!--
           // 승인 요청 -> 승인
           // 승인 요청 -> 보류 -> 승인
@@ -69,18 +70,18 @@
           // 승인 -> 중지
         -->
 
-        <el-button type="primary" tag="span" class="comm_form_btn" @click="goAdGroupDetail(scope.row)">수정</el-button>
-        <el-button v-if="scope.row.groupStatus === 'Request'"  type="success" tag="span" class="comm_form_btn" @click="approval(scope.row)">승인</el-button>
-        <el-button v-if="scope.row.groupStatus === 'Request'"  type="success" tag="span" class="comm_form_btn" @click="statusModalOpen(scope.row, 'reject')">거절</el-button>
-        <el-button v-if="scope.row.groupStatus === 'Request'"  type="success" tag="span" class="comm_form_btn" @click="statusModalOpen(scope.row, 'hold')">보류</el-button>
+        <el-button type="primary" tag="span" class="comm_form_btn" @click="() => goAdGroupDetail(scope.row)">수정</el-button>
+        <el-button v-if="scope.row.groupStatus === 'Request'"  type="success" tag="span" class="comm_form_btn" @click="({ scope }) =>approval(scope.row)">승인</el-button>
+        <el-button v-if="scope.row.groupStatus === 'Request'"  type="success" tag="span" class="comm_form_btn" @click="({ scope }) =>statusModalOpen(scope.row, 'reject')">거절</el-button>
+        <el-button v-if="scope.row.groupStatus === 'Request'"  type="success" tag="span" class="comm_form_btn" @click="({ scope }) =>statusModalOpen(scope.row, 'hold')">보류</el-button>
       </template>
     </el-table-column>
   </el-table>
 
   <div class="page-box">
     <el-pagination
-      :page-size="searchParams.size"
-      :current-page="searchParams.page"
+      :page-size="size"
+      :current-page="page_count"
       background
       :default-current-page=1
       :default-page-size=20
@@ -91,33 +92,57 @@
       @current-change="pageChange"
     />
   </div>
-
-<!--  <PartnerAdGroupStatusModal :group-seq="statusModalGroupSeq" :status="statusModalStatus" />-->
-<!--  <PartnerAdGroupModifyModal />-->
+  <PartnerAdGroupStatusModal :group-seq="statusModalGroupSeq" :status="statusModalStatus" />
 </template>
 
 <script setup>
 
-import { adGroupStore } from '@/store/modules/admin/adGroupStore.js'
 import { partnerStore } from '@/store/modules/admin/partnerStore.js'
-import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, defineProps, defineEmits } from 'vue'
 import { useRouter } from 'vue-router'
 
 import PartnerAdGroupStatusModal from '@/components/ParnterManagement/AdGroup/PartnerAdGroupStatusModal.vue'
-import PartnerAdGroupModifyModal from '@/components/ParnterManagement/AdGroup/PartnerAdGroupModifyModal.vue'
-
-// import ModifyModal from '@/components/AdminManagement/AdvertiserModifyModal.vue'
 
 defineOptions({
   name: 'AdGroupDataTable'
 })
 
-const store = adGroupStore()
-const router = useRouter()
-const partnerStoreInst = partnerStore()
+const emit = defineEmits(['search-call'])
 
-const { adGroups, searchParams, total } = storeToRefs(store)
+const { list, total, page, size, referrer } = defineProps({
+  list: {
+    type: Array,
+    default: [],
+    required: true
+  },
+  total: {
+    type: Number,
+    default: 1,
+    required: true
+  },
+  page: {
+    type: Number,
+    default: 1,
+    required: true
+  },
+  size: {
+    type: Number,
+    default: 1,
+    required: true
+  },
+  referrer: {
+    type: String,
+    required: false
+  }
+})
+
+// const adGroups = ref(list)
+// const total_count = ref(total)
+const page_count = ref(page)
+// const size_count = ref(size)
+
+const store = partnerStore()
+const router = useRouter()
 
 const filePath = computed(() => import.meta.env.VITE_FIEL_SERVER)
 
@@ -125,19 +150,9 @@ const statusModalStatus = ref('')
 const statusModalGroupSeq = ref(0)
 
 function pageChange(number) {
-  this.store.searchByAdGroups({ page: number })
+  emit('search-call', { page: number })
+  page_count.value = page
 }
-
-// function statusModalOpen(row, status) {
-//   this.store.adGroupModalOpen('status')
-//
-//   statusModalStatus.value = status
-//   statusModalGroupSeq.value = row.groupSeq
-// }
-//
-// function openModifyModal(row) {
-//   this.store.adGroupModalOpen('modify', row)
-// }
 
 function getStatusAt(row) {
   const { requestAt, approvalAt, holdAt, rejectAt, holdMessage, rejectMessage } = row
@@ -180,8 +195,8 @@ function getStatusMessage(row) {
 }
 
 function goAdGroupDetail(row) {
-  this.partnerStoreInst.setAdGroupDetail(row)
-  this.router.push({ name: 'AdGroupDetail', query: { referrer: '/ad-group-management/search' }})
+  this.store.setAdGroupDetail(row)
+  this.router.push({ name: 'AdGroupDetail', query: { referrer }})
 }
 
 function approval(row) {
@@ -191,15 +206,6 @@ function approval(row) {
     this.store.reloadByAdGroups()
   })
 }
-
-// function unused(row) {
-//   const { seq } = row
-//   this.store.accountUnused(seq)
-// }
-//
-// function remove(row) {
-//   this.store.accountDelete(row)
-// }
 
 function open(url) {
   window.open(url)

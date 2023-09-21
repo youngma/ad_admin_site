@@ -1,6 +1,15 @@
 <template>
   <div class="components-container" type="">
-    <PartnerSearchForm2 :selected="selected" :partners="partners" @search-update="searchUpdate" @on-change="(value) => onSearchChange(value)"/>
+
+    {{ tabIndex }}
+    <PartnerSearchForm2
+      :selected="selected"
+      :partners="partners"
+      :multiple=false
+      :multiple-limit=1
+      @search-update="({ content, current }) => searchUpdate({ content, current })"
+      @on-change="(value) => onSearchChange(value)"
+    />
 
     <el-tabs v-model="tabIndex" type="border-card" @tab-change="(name) => onTabsChange(name)">
       <el-tab-pane label="사용자" name="user">
@@ -21,7 +30,7 @@
 
 <script setup>
 
-import { watch, onMounted } from 'vue'
+import { watch, onMounted, onActivated } from 'vue'
 import PartnerSearchForm2 from '@/components/ParnterManagement/PartnerSearchForm2.vue'
 
 import PartnerUsers from '@/views/partner-management/tabs/PartnerUsers.vue'
@@ -41,23 +50,26 @@ const { selected, partners, partner, tabIndex } = storeToRefs(store)
 onMounted(async() => {
 })
 
-watch(selected, async(newValue, oldVale) => {
-  if (newValue.length === 0) {
-    // store.init()
-  } else {
-    // store.tabInitUser()
-    // store.tabInitAccount()
+onActivated(async() => {
+  switch (tabIndex.value) {
+    case 'user': partnerStore().reloadByUsers()
+      break
+    case 'account': partnerStore().reloadByAccounts()
+      break
+    case 'ad-group': partnerStore().reloadByAdGroups()
+      break
   }
 })
 
 function searchUpdate({ content, current }) {
-  partners.value = content
-  selected.value = current
+  this.store.setPartners({
+    partners: content,
+    selected: current
+  })
 }
 
 function onSearchChange(value) {
-  selected.value = value
-
+  this.store.setPartnerSeq({ selected: value })
   if (this.partner) {
     this.store.reloadByUsers()
     this.store.reloadByAccounts()
@@ -71,14 +83,18 @@ function onSearchChange(value) {
 
 function onTabsChange(name) {
   if (this.partner) {
-    switch (name) {
-      case 'user': this.store.reloadByUsers()
-        break
-      case 'account': this.store.reloadByAccounts()
-        break
-      case 'ad-group': this.store.reloadByAdGroups()
-        break
-    }
+    reload(name)
+  }
+}
+
+function reload(name) {
+  switch (name) {
+    case 'user': this.store.reloadByUsers()
+      break
+    case 'account': this.store.reloadByAccounts()
+      break
+    case 'ad-group': this.store.reloadByAdGroups()
+      break
   }
 }
 

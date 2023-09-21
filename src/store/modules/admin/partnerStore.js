@@ -18,9 +18,12 @@ export const partnerStore = defineStore('partnerStore', {
       page: 1,
       size: 50
     },
+
     partners: [],
     selected: [],
-    tabIndex: 0,
+
+    tabIndex: 'user',
+
     users: {
       searchParams: {
         page: 1,
@@ -101,7 +104,8 @@ export const partnerStore = defineStore('partnerStore', {
     //   }
     // }),
     partner: (state) => state.partners.filter((t) => {
-      return state.selected.includes(t.partnerSeq)
+      const list = [].concat(state.selected)
+      return list.includes(t.partnerSeq)
     })[0],
     userSearchParams: (state) => state.users.searchParams,
     userList: (state) => state.users.list,
@@ -510,6 +514,13 @@ export const partnerStore = defineStore('partnerStore', {
           break
       }
     },
+    setPartners({ partners, selected }) {
+      this.partners = partners
+      this.selected = selected
+    },
+    setPartnerSeq({ selected }) {
+      this.selected = selected
+    },
     async adGroupRegister(callback) {
       const newAdGroup = this.generateParams(this.adGroups.register)
       PARTNER_API.adGroupRegister(newAdGroup).then(() => {
@@ -548,8 +559,8 @@ export const partnerStore = defineStore('partnerStore', {
     },
     adGroupModalOpen(target, row) {
       if (target === 'register') {
-        this.initRegisterForm('adGroup')
-        this.adGroups.registerModal = true
+        // this.initRegisterForm('adGroup')
+        // this.adGroups.registerModal = true
       } else if (target === 'modify') {
         this.adGroups.modifyModal = true
         this.adGroups.selectedAdGroup = row

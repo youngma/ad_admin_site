@@ -8,19 +8,17 @@ import { ElMessage } from 'element-plus'
 export const adGroupStore = defineStore('adGroupStore', {
   state: () => ({
     searchParams: {
-      adType: null,
-      groupName: null,
+      groupName: '',
       groupCode: null,
-      groupStatus: null,
-      page: 1,
-      size: 20
+      adType: '',
+      groupStatus: ''
     },
 
-    partners: [],
-    selected: [],
+    // partners: [],
+    // selected: [],
 
-    adGroups: [],
-    total: 0,
+    // adGroups: [],
+    // total: 0,
 
     adGroupRegisterModal: false,
     adGroupModifyModal: false
@@ -29,23 +27,6 @@ export const adGroupStore = defineStore('adGroupStore', {
 
   },
   actions: {
-    init(type) {
-      if (type === 'search') {
-        this.searchParams = {
-          adType: null,
-          groupName: null,
-          groupCode: null,
-          groupStatus: null,
-          page: 1,
-          size: 20
-        }
-        this.partners = []
-        this.selected = []
-      }
-      if (type === 'register') {
-
-      }
-    },
     generateParams(source) {
       return Object.assign({
         partnerSeq: this.partner.partnerSeq
@@ -68,25 +49,24 @@ export const adGroupStore = defineStore('adGroupStore', {
       this.adGroups = []
       this.total = 0
     },
-    async reloadByAdGroups() {
+    async reloadByAdGroups(params) {
       const searchParams = Object.assign(
-        {
-          partnerSeq: this.selected.join(',')
-        },
-        this.searchParams)
+        params,
+        this.searchParams
+      )
 
       const result = await PARTNER_API.searchByAdGroups(searchParams)
       const { content, totalElements } = result
 
-      this.adGroups = content
-      this.total = totalElements
+      return { content, totalElements }
     },
-    async searchByAdGroups({ page, size }) {
-      this.searchParams.page = page
-      if (!size && size > 0) {
-        this.searchParams.size = size
+    async searchByAdGroups({ selected, page, size }) {
+      const params = {
+        partnerSeq: selected.value.join(','),
+        page: page,
+        size: !size && size > 0 ? size : undefined
       }
-      await this.reloadByAdGroups()
+      return await this.reloadByAdGroups(params)
     }
   },
   persist: {

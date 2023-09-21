@@ -4,7 +4,13 @@ import * as CAMPAIGN_API from '@/api/CAMPAIGN_API.js'
 import _ from 'lodash'
 import { ElMessage } from 'element-plus'
 import { deepClone } from '@/utils/index.js'
-import { phoneFormatter } from '@/utils/customElTableFormatter.js'
+import {
+  endDatePostFix,
+  moneyFormatter,
+  numberFormatter,
+  phoneFormatter,
+  startDatePostFix
+} from '@/utils/customElTableFormatter.js'
 
 const initData = {
   searchParams: {
@@ -19,8 +25,12 @@ export const advertiserStore = defineStore('advertiserStore', {
       page: 1,
       size: 50
     },
+
     advertisers: [],
     selected: [],
+
+    tabIndex: 'user',
+
     users: {
       searchParams: {
         page: 1,
@@ -64,6 +74,7 @@ export const advertiserStore = defineStore('advertiserStore', {
         file: null
       }
     },
+
     campaigns: {
       searchParams: {
         page: 1,
@@ -77,7 +88,36 @@ export const advertiserStore = defineStore('advertiserStore', {
         campaignStatus: ''
       },
       list: [],
-      selectedCampaign: null,
+      selectedCampaign: {
+        smartStore: null,
+        uploads: {
+          smartStore: []
+        }
+      },
+      register: {
+        campaignType: null,
+        campaignName: null,
+        campaignDesc: null,
+        totalParticipationLimit: 0,
+        dayParticipationLimit: 0,
+        adDate: [],
+        adStartDate: null,
+        adEndDate: null,
+        smartStore: {
+          useHow: null,
+          image: null,
+          targetUrlPc: null,
+          targetUrlMobile: null,
+          goodsCode: null,
+          paymentTerms: null,
+          holdingTime: 0,
+          totalBudget: 0,
+          adPrice: 0
+        },
+        uploads: {
+          smartStore: []
+        }
+      },
       total: 0,
       registerModal: false
     }
@@ -90,7 +130,8 @@ export const advertiserStore = defineStore('advertiserStore', {
     //   }
     // }),
     advertiser: (state) => state.advertisers.filter((t) => {
-      return state.selected.includes(t.advertiserSeq)
+      const list = [].concat(state.selected)
+      return list.includes(t.advertiserSeq)
     })[0],
     userSearchParams: (state) => state.users.searchParams,
     userList: (state) => state.users.list,
@@ -261,10 +302,31 @@ export const advertiserStore = defineStore('advertiserStore', {
         this.accounts.registerModal = false
       }
 
-      if (target === 'campaign') {
-        this.campaign.register = null
-        this.campaign.uploadFiles = []
-        this.campaign.registerModal = false
+      if (target === 'campaigns') {
+        this.campaigns.register = {
+          campaignType: null,
+          campaignName: null,
+          campaignDesc: null,
+          totalParticipationLimit: 0,
+          dayParticipationLimit: 0,
+          adDate: [],
+          adStartDate: null,
+          adEndDate: null,
+          smartStore: {
+            useHow: null,
+            image: null,
+            targetUrlPc: null,
+            targetUrlMobile: null,
+            goodsCode: null,
+            paymentTerms: null,
+            holdingTime: 0,
+            totalBudget: 0,
+            adPrice: 0
+          },
+          uploads: {
+            smartStore: []
+          }
+        }
       }
     },
     userModalOpen(target) {
@@ -449,11 +511,156 @@ export const advertiserStore = defineStore('advertiserStore', {
         '파일은 1개만 업로드 가능 합니다.'
       )
     },
-    campaignModalOpen(target) {
-      if (target === 'register') {
-        this.initRegisterForm('campaign')
-        this.campaigns.registerModal = true
+
+    setAdvertisers({ advertisers, selected }) {
+      this.advertisers = advertisers
+      this.selected = selected
+    },
+    setAdvertiserSeq({ selected }) {
+      this.selected = selected
+    },
+    setCampaignDetail(row) {
+      if (row) {
+        const { adStartDate, adEndDate, totalParticipationLimit, dayParticipationLimit, smartStore } = row
+        const { seq, useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms, holdingTime, totalBudget, adPrice } = smartStore
+
+        const uploads = [image].map(file => {
+          const { originName, fileType, fileName } = file
+          return {
+            name: originName,
+            type: fileType,
+            url: [import.meta.env.VITE_FIEL_SERVER, 'files', fileName].join('/')
+          }
+        })
+
+        const smartStoreDump = Object.assign(smartStore, {
+          seq, useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms,
+          totalBudget: moneyFormatter(totalBudget),
+          adPrice: moneyFormatter(adPrice),
+          holdingTime: moneyFormatter(holdingTime)
+        })
+
+        const adCampaign = Object.assign(row, {
+          adDate: [adStartDate.split(' ')[0], adEndDate.split(' ')[0]],
+          dayParticipationLimit: moneyFormatter(dayParticipationLimit),
+          totalParticipationLimit: moneyFormatter(totalParticipationLimit),
+          smartStore: smartStoreDump,
+          uploads: {
+            smartStore: uploads
+          }
+        })
+
+        this.campaigns.selectedCampaign = deepClone(adCampaign)
+      } else {
+        this.campaigns.selectedCampaign = {
+          smartStore: null,
+          uploads: {
+            smartStore: []
+          }
+        }
       }
+    },
+    adCampaignModalOpen(type, row) {
+      if (type === 'modify') {
+        this.setCampaignDetail(row)
+        this.modifyModal = true
+      } else if (type === 'status') {
+        this.statusModal = true
+      }
+    },
+    campaignRegister() {
+      const { adDate, totalParticipationLimit, dayParticipationLimit, smartStore } = this.campaigns.register
+      const { useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms, holdingTime, totalBudget, adPrice } = smartStore
+
+      const newSmartStore = Object.assign({}, {
+        useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms,
+        totalBudget: numberFormatter(totalBudget),
+        adPrice: numberFormatter(adPrice),
+        holdingTime: numberFormatter(holdingTime)
+      })
+
+      const newCampaign = Object.assign(this.campaigns.register, {
+        adStartDate: startDatePostFix(adDate[0]),
+        adEndDate: endDatePostFix(adDate[1]),
+        dayParticipationLimit: numberFormatter(dayParticipationLimit),
+        totalParticipationLimit: numberFormatter(totalParticipationLimit),
+        smartStore: newSmartStore
+      })
+
+      return CAMPAIGN_API.register(this.generateParams(newCampaign))
+    },
+    modifyAfCampaign() {
+      const selectedCampaign = deepClone(this.campaigns.selectedCampaign)
+
+      const { seq, adDate, totalParticipationLimit, dayParticipationLimit, smartStore, advertiser } = selectedCampaign
+      const { advertiserSeq } = advertiser
+      const { useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms, holdingTime, totalBudget, adPrice } = smartStore
+
+      const newSmartStore = Object.assign(smartStore, {
+        useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms,
+        totalBudget: numberFormatter(totalBudget),
+        adPrice: numberFormatter(adPrice),
+        holdingTime: numberFormatter(holdingTime)
+      })
+
+      const newCampaign = Object.assign(selectedCampaign, {
+        advertiserSeq,
+        adStartDate: startDatePostFix(adDate[0]),
+        adEndDate: endDatePostFix(adDate[1]),
+        dayParticipationLimit: numberFormatter(dayParticipationLimit),
+        totalParticipationLimit: numberFormatter(totalParticipationLimit),
+        smartStore: newSmartStore,
+        advertiser: null
+      })
+
+      return CAMPAIGN_API.modify(newCampaign)
+    },
+    campaignApproval(advertiserSeq, seq) {
+      const status = {
+        advertiserSeq,
+        seq,
+        message: ''
+      }
+
+      CAMPAIGN_API.campaignApproval(status).then(() => {
+        this.$alert('승인 되었습니다.', '확인', {})
+        this.reload().then(() => {
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
+    },
+    campaignHold(advertiserSeq, seq, message) {
+      const status = {
+        advertiserSeq,
+        seq,
+        message
+      }
+
+      CAMPAIGN_API.campaignHold(status).then(() => {
+        this.$alert('승인 보류 되었습니다.', '확인', {})
+        this.reload().then(() => {
+          this.statusModal = false
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
+    },
+    campaignReject(advertiserSeq, seq, message) {
+      const status = {
+        advertiserSeq,
+        seq,
+        message
+      }
+
+      CAMPAIGN_API.campaignReject(status).then(() => {
+        this.$alert('승인 거절 되었습니다.', '확인', {})
+        this.reload().then(() => {
+          this.statusModal = false
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
     }
   },
   persist: {

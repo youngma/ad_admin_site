@@ -10,8 +10,15 @@
       @search-update="searchUpdate"
       @on-change="onChange"
     />
-    <AdGroupSearchForm/>
-    <AdGroupDataTable/>
+    <AdGroupSearchForm @search-call="({ page, size }) => search({ page, size })"/>
+    <AdGroupDataTable
+      :list="list"
+      :total="total"
+      :page="page"
+      :size="size"
+      referrer="/ad-group-management/search"
+      @search-call="({ page, size }) => search({ page, size })"
+   />
   </div>
 </template>
 
@@ -20,14 +27,20 @@
 import PartnerSearchForm2 from '@/components/ParnterManagement/PartnerSearchForm2.vue'
 import AdGroupSearchForm from '@/components/AdGroupManagement/AdGroupSearchForm.vue'
 import AdGroupDataTable from '@/components/AdGroupManagement/AdGroupDataTable.vue'
-
 import { adGroupStore } from '@/store/modules/admin/adGroupStore.js'
+import { onMounted, ref } from 'vue'
 
-import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
+// const store = adGroupStore()
 
-const store = adGroupStore()
-const { selected, partners } = storeToRefs(store)
+const selected = ref([])
+const partners = ref([])
+
+const list = ref([])
+const total = ref(0)
+const page = ref(1)
+const size = ref(20)
+
+// const { selected, partners } = storeToRefs(store)
 
 function searchUpdate({ content, current }) {
   partners.value = content
@@ -38,11 +51,15 @@ function onChange(value) {
   selected.value = value
 }
 
-onMounted(async() => {
+async function search({ page, size }) {
+  const { content, totalElements } = await adGroupStore().searchByAdGroups({ selected, page, size })
+  list.value = content
+  total.value = totalElements
+}
+
+onMounted(() => {
+  search({ page, size })
 })
 
 </script>
 
-<style scoped lang="scss">
-
-</style>

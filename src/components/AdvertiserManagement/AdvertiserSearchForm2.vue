@@ -1,5 +1,6 @@
 <template>
   <div class="comm_comp">
+    {{ current }}
     <el-row>
       <el-col class="comm_form_box comm_text_tit">{{ title || '광고주 상세' }}</el-col>
     </el-row>
@@ -10,9 +11,9 @@
         </el-col>
         <el-col :span="20">
           <el-select-v2
-            v-model="current"
+            v-model=current
             style="width: 240px"
-            :multiple="multiple"
+            :multiple=multiple
             :multiple-limit=multipleLimit
             :fit-input-width="true"
             filterable
@@ -21,7 +22,7 @@
             clearable
             :options="options"
             :loading="loading"
-            placeholder="Please enter a keyword"
+            placeholder="광고주 명을 입력 해주세요."
             @remove-tag="onRemoveTag"
             @change="onChange"
           />
@@ -67,7 +68,7 @@
 
 <script setup>
 
-import { ref, computed, defineProps, defineEmits } from 'vue'
+import {ref, computed, defineProps, defineEmits, defineExpose} from 'vue'
 import { businessNumberFormatter, phoneFormatter } from '@/utils/customElTableFormatter.js'
 import * as ADVERTISER_API from '@/api/ADVERTISER_API'
 
@@ -77,7 +78,7 @@ const { multiple, selected, advertisers, multipleLimit } = defineProps({
     default: '광고주 상세',
     required: false
   },
-  'multipleLimit': {
+  multipleLimit: {
     type: Number,
     default: 1,
     required: false
@@ -125,7 +126,7 @@ const advertiser = computed(() => {
       let cmp = current.value
 
       if (Array.isArray(current.value)) {
-        cmp = current.value[9]
+        cmp = current.value[0]
       }
 
       return cmp === (t.advertiserSeq)
@@ -146,22 +147,34 @@ async function searchByName(query) {
   const { content } = result
   currentAdvertisers.value = content
 
-  emit('search-update', { content, current: current.value })
+  emit('search-update', { content, current: multiple ? current.value : [current.value] })
   this.loading = false
 }
 
 function onRemoveTag(value) {
-  current.value = current.value.filter(t => t !== value)
-  // emit('search-update', { content: [], current: current.value })
+  if (multiple) {
+    current.value = current.value.filter(t => t !== value)
+  } else {
+    current.value = null
+  }
 }
 
 function onChange(value) {
   if (value) {
-    emit('on-change', value)
+    emit('on-change', multiple ? value : [value])
   } else {
-    emit('on-change', null)
+    emit('on-change', multiple ? [] : [])
   }
 }
+
+function initSet(selected, advertisers) {
+  current.value = multiple ? selected : selected[0]
+  currentAdvertisers.value = advertisers
+}
+
+defineExpose({
+  initSet
+})
 
 </script>
 

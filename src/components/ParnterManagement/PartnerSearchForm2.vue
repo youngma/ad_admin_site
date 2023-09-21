@@ -1,5 +1,6 @@
 <template>
   <div class="comm_comp">
+<!--    {{ selected }}, {{current}}-->
     <el-row>
       <el-col class="comm_form_box comm_text_tit">{{ title || '매체사 상세' }}</el-col>
     </el-row>
@@ -10,9 +11,9 @@
         </el-col>
         <el-col :span="20">
           <el-select-v2
-            v-model="current"
+            v-model=current
             style="width: 240px"
-            :multiple="multiple"
+            :multiple=multiple
             :multiple-limit=multipleLimit
             :fit-input-width="true"
             filterable
@@ -21,14 +22,13 @@
             clearable
             :options="options"
             :loading="loading"
-            placeholder="Please enter a keyword"
+            placeholder="매체사 명을 입력 해주세요."
             @remove-tag="onRemoveTag"
             @change="onChange"
           />
         </el-col>
       </el-row>
     </div>
-    {{ partner }}
     <div v-if="partner && multipleLimit === 1" class="comm_comp_table mt_15">
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
@@ -68,11 +68,11 @@
 
 <script setup>
 
-import { ref, computed, defineProps, defineEmits } from 'vue'
+import { ref, computed, defineProps, defineEmits, watch } from 'vue'
 import { businessNumberFormatter, phoneFormatter } from '@/utils/customElTableFormatter.js'
 import * as PARTNER_API from '@/api/PARTNER_API.js'
 import { partnerStore } from '@/store/modules/admin/partnerStore.js'
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, defineExpose } from 'vue'
 
 const { multiple, selected, partners, multipleLimit } = defineProps({
   title: {
@@ -80,7 +80,7 @@ const { multiple, selected, partners, multipleLimit } = defineProps({
     default: '매체사 상세',
     required: false
   },
-  'multipleLimit': {
+  multipleLimit: {
     type: Number,
     default: 1,
     required: false
@@ -126,6 +126,7 @@ const partner = computed(() => {
   } else {
     return currentPartners.value.filter((t) => {
       let cmp = current.value
+
       if (Array.isArray(current.value)) {
         cmp = current.value[0]
       }
@@ -148,28 +149,42 @@ async function searchByName(query) {
   const { content } = result
   currentPartners.value = content
 
-  emit('search-update', { content, current: current.value })
+  emit('search-update', { content, current: multiple ? current.value : [current.value] })
   this.loading = false
 }
 
 function onRemoveTag(value) {
-  current.value = current.value.filter(t => t !== value)
+  if (multiple) {
+    current.value = current.value.filter(t => t !== value)
+  } else {
+    current.value = null
+  }
   // emit('search-update', { content: [], current: current.value })
 }
 
 function onChange(value) {
   if (value) {
-    emit('on-change', value)
+    emit('on-change', multiple ? value : [value])
   } else {
-    emit('on-change', null)
+    emit('on-change', multiple ? [] : [])
   }
 }
+
+function initSet(selected, partners) {
+  current.value = multiple ? selected : selected[0]
+  currentPartners.value = partners
+}
+
+defineExpose({
+  initSet
+})
 
 onBeforeMount(() => {
   // partnerStore().init()
   // currentPartners.value = []
   // current.value = multiple ? selected : selected
 })
+
 </script>
 
 <style scoped lang="scss">

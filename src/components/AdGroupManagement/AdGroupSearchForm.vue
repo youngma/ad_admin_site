@@ -73,16 +73,17 @@
 import { adGroupStore } from '@/store/modules/admin/adGroupStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 import { storeToRefs } from 'pinia'
-import { businessNumberFormatter, phoneFormatter } from '@/utils/customElTableFormatter.js'
 
 defineOptions({
   name: 'AdGroupSearchForm'
 })
 
+const emit = defineEmits(['search-call'])
+
 const store = adGroupStore()
 const common = commonStore()
 
-const { searchParams, partner } = storeToRefs(store)
+const { searchParams } = storeToRefs(store)
 const { CampaignType, AdGroupStatus } = storeToRefs(common)
 
 function clickInit() {
@@ -90,7 +91,8 @@ function clickInit() {
 }
 
 function search({ page, size }) {
-  this.store.searchByAdGroups({ page, size })
+  // this.store.searchByAdGroups({ page, size })
+  emit('search-call', { page, size })
 }
 
 </script>

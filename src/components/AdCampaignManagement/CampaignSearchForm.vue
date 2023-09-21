@@ -89,7 +89,6 @@
         </el-col>
       </el-row>
 
-
     </div>
     <el-row justify="end">
       <el-col class="t_r comm_form_box" tag="span">
@@ -114,6 +113,7 @@ import { storeToRefs } from 'pinia'
 defineOptions({
   name: 'CampaignSearchForm'
 })
+const emit = defineEmits(['search-call'])
 
 const store = campaignStore()
 const common = commonStore()
@@ -128,7 +128,8 @@ function clickInit() {
 }
 
 function search({ page, size }) {
-  this.store.search({ page, size })
+  // this.store.search({ page, size })
+  emit('search-call', { page, size })
 }
 
 </script>
