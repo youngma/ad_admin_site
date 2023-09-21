@@ -1,12 +1,7 @@
 <template>
   <div class="components-container" type="">
-
-    {{ advertisers }}
-    {{ selected }}
-    {{ advertiser }}
-    {{ tabIndex }}
-
     <AdvertiserSearchForm2
+      ref="advertiserDetailSearchForm"
       :selected="selected"
       :advertisers="advertisers"
       :multiple=false
@@ -34,7 +29,7 @@
 
 <script setup>
 
-import { onMounted, onActivated } from 'vue'
+import { onMounted, onActivated, ref } from 'vue'
 
 import AdvertiserSearchForm2 from '@/components/AdvertiserManagement/AdvertiserSearchForm2.vue'
 
@@ -44,11 +39,13 @@ import AdvertiserCampaign from '@/views/advertiser-management/tabs/AdvertiserCam
 
 import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 import { storeToRefs } from 'pinia'
+import PartnerSearchForm2 from '@/components/ParnterManagement/PartnerSearchForm2.vue'
 
 defineOptions({
   name: 'AdvertiserDetail'
 })
 
+const advertiserDetailSearchForm = ref(null)
 const store = advertiserStore()
 const { selected, advertisers, advertiser, tabIndex } = storeToRefs(store)
 
@@ -104,6 +101,14 @@ function reload(name) {
       break
   }
 }
+
+function searchFormInit() {
+  advertiserDetailSearchForm.value.initSet(selected.value, advertisers.value)
+}
+
+onActivated(() => {
+  searchFormInit()
+})
 
 // watch: {
 //   // whenever question changes, this function will run

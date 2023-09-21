@@ -5,16 +5,11 @@
     style="width: 100%"
   >
     <el-table-column fixed prop="userId" label="사용자 아이디" width="150" header-align="center" align="center" />
-    <el-table-column prop="userName" label="사용자 이름" header-align="center" >
-      <template #default="scope">
-<!--        <el-button @click="open(scope.row)">{{ scope.row.userName }}</el-button>-->
-        {{ scope.row.userName  }}
-      </template>
-    </el-table-column>
+    <el-table-column prop="userName" label="사용자 이름" header-align="center" />
 <!--    <el-table-column prop="phoneNumber" label="전화 번호" :formatter="phoneFormatter" header-align="center" align="center">-->
     <el-table-column prop="phoneNumber" label="전화 번호" width="150" header-align="center" align="center">
       <template #default="scope">
-        {{ phoneFormatter(scope.row.phoneNumber) }}
+        <span>{{ phoneFormatter(scope.row.phoneNumber) }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="userStatusName" label="사용자 상태" width="120" header-align="center" align="center" />
@@ -25,7 +20,6 @@
           <el-button v-if="scope.row.userStatus !== 'ENABLED'" type="success" tag="span" class="comm_form_btn" @click="enabled(scope.row)">활성화</el-button>
           <el-button v-else type="warning" tag="span" class="comm_form_btn" @click="disabled(scope.row)">비활성화</el-button>
           <el-button type="primary" tag="span" class="comm_form_btn" @click="modify(scope.row)">수정</el-button>
-
       </template>
     </el-table-column>
   </el-table>

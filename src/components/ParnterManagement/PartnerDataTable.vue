@@ -6,7 +6,7 @@
   >
     <el-table-column fixed prop="businessName" label="광고주 사업자 명" width="150" header-align="center" align="center" >
       <template #default="scope">
-        <el-button @click="open(scope.row)">{{ scope.row.businessName }}</el-button>
+        <el-button @click="goDetail(scope.row)">{{ scope.row.businessName }}</el-button>
       </template>
     </el-table-column>
     <el-table-column prop="businessNumber" label="사업자 번호"  header-align="center" align="center">
@@ -22,6 +22,13 @@
     <el-table-column prop="email" label="이메일" header-align="center" align="center" />
     <el-table-column prop="insertedAt" label="등록일" header-align="center" />
     <el-table-column prop="updatedAt" label="수정일" header-align="center" />
+
+    <el-table-column prop="advertiserSeq" label="" align="center">
+      <template #default="scope">
+        <el-button @click="open(scope.row)">수정</el-button>
+      </template>
+    </el-table-column>
+
   </el-table>
 
   <div class="page-box">
@@ -39,15 +46,17 @@
     />
 <!--    <b-pagination hide-ellipsis v-model="listCondition.offset" :total-rows="listCondition.total" :per-page="listCondition.limit" @input="pageChange" />-->
   </div>
-  <PartnerModifyModal v-if="selected" @close="close()"/>
+  <PartnerModifyModal @close="close()"/>
 </template>
 
 <script setup>
 
 import { partnerManagementStore } from '@/store/modules/admin/partnerManagementStore.js'
+import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { phoneFormatter, businessNumberFormatter } from '@/utils/customElTableFormatter'
 import { storeToRefs } from 'pinia'
 import PartnerModifyModal from '@/components/ParnterManagement/PartnerModifyModal.vue'
+import { useRoute, useRouter } from 'vue-router'
 
 defineOptions({
   name: 'PartnerDataTable'
@@ -55,7 +64,10 @@ defineOptions({
 
 const store = partnerManagementStore()
 
-const { partners, searchParams, total, selected } = storeToRefs(store)
+const router = useRouter()
+const route = useRoute()
+
+const { partners, searchParams, total } = storeToRefs(store)
 
 function pageChange(number) {
   this.store.search({ page: number })
@@ -68,6 +80,16 @@ function open(row) {
 function close() {
   this.store.selectedPartner(null)
 }
+
+function goDetail(row) {
+  partnerStore().setPartners({
+    partners: [row],
+    selected: [row.partnerSeq]
+  })
+
+  this.router.push({ name: 'PartnerDetail', query: { referrer: '/partner-management/detail' }})
+}
+
 </script>
 
 <style scoped lang="scss">

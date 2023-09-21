@@ -25,7 +25,7 @@ export default {
   },
   props: {
   },
-  setup(props) {
+  setup() {
     const store = advertiserStore()
     const { selected, userRegisterModal, userModifyModal } = storeToRefs(store)
     onMounted(async() => {

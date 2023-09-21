@@ -1,8 +1,7 @@
 <template>
   <div class="components-container" type="">
-
-    {{ tabIndex }}
     <PartnerSearchForm2
+      ref="partnerDetailSearchForm"
       :selected="selected"
       :partners="partners"
       :multiple=false
@@ -30,7 +29,7 @@
 
 <script setup>
 
-import { watch, onMounted, onActivated } from 'vue'
+import {watch, onMounted, onActivated, ref} from 'vue'
 import PartnerSearchForm2 from '@/components/ParnterManagement/PartnerSearchForm2.vue'
 
 import PartnerUsers from '@/views/partner-management/tabs/PartnerUsers.vue'
@@ -44,6 +43,8 @@ defineOptions({
   name: 'PartnerDetail'
 })
 
+
+const partnerDetailSearchForm = ref(null)
 const store = partnerStore()
 const { selected, partners, partner, tabIndex } = storeToRefs(store)
 
@@ -51,13 +52,15 @@ onMounted(async() => {
 })
 
 onActivated(async() => {
-  switch (tabIndex.value) {
-    case 'user': partnerStore().reloadByUsers()
-      break
-    case 'account': partnerStore().reloadByAccounts()
-      break
-    case 'ad-group': partnerStore().reloadByAdGroups()
-      break
+  if (partner.value) {
+    switch (tabIndex.value) {
+      case 'user': partnerStore().reloadByUsers()
+        break
+      case 'account': partnerStore().reloadByAccounts()
+        break
+      case 'ad-group': partnerStore().reloadByAdGroups()
+        break
+    }
   }
 })
 
@@ -97,6 +100,14 @@ function reload(name) {
       break
   }
 }
+
+function searchFormInit() {
+  partnerDetailSearchForm.value.initSet(selected.value, partners.value)
+}
+
+onActivated(() => {
+  searchFormInit()
+})
 
 // watch: {
 //   // whenever question changes, this function will run

@@ -1,6 +1,5 @@
 <template>
   <div class="comm_comp">
-    {{ current }}
     <el-row>
       <el-col class="comm_form_box comm_text_tit">{{ title || '광고주 상세' }}</el-col>
     </el-row>

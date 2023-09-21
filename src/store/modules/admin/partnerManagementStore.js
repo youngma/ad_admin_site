@@ -71,6 +71,10 @@ export const partnerManagementStore = defineStore('partnerManagementStore', {
 
       await this.reload()
     },
+    setDetail(row) {
+      this.partners = [row]
+      this.selected = [row.partnerSeq]
+    },
     initRegisterForm() {
       this.uploadFiles = []
       this.register = {

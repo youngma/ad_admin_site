@@ -14,11 +14,11 @@ defineOptions({
   name: 'AdvertiserRegister'
 })
 
-const store = partnerManagementStore()
+// const store = partnerManagementStore()
 
-onMounted(async() => {
-  store.initRegisterForm()
-})
+// onMounted(async() => {
+//   store.initRegisterForm()
+// })
 
 </script>
 

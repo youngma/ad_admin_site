@@ -23,7 +23,7 @@
     <el-table-column prop="advertiserName" label="광고주 대표 명" header-align="center" align="center" />
     <el-table-column prop="insertedAt" label="등록일" header-align="center" />
     <el-table-column prop="updatedAt" label="등록일" header-align="center" />
-    <el-table-column prop="advertiserSeq" label="" >
+    <el-table-column prop="advertiserSeq" label="" align="center">
       <template #default="scope">
         <el-button @click="open(scope.row)">수정</el-button>
       </template>
@@ -59,13 +59,13 @@ import { storeToRefs } from 'pinia'
 import { useRouter, useRoute } from 'vue-router'
 
 import ModifyModal from '@/components/AdvertiserManagement/AdvertiserModifyModal.vue'
+import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 
 defineOptions({
   name: 'AdvertiserDataTable'
 })
 
 const store = advertiserManagementStore()
-const advertiserStoreInst = advertiserStore()
 
 const router = useRouter()
 const route = useRoute()
@@ -85,7 +85,11 @@ function close() {
 }
 
 function goDetail(row) {
-  this.store.setDetail(row)
+  advertiserStore().setAdvertisers({
+    advertisers: [row],
+    selected: [row.advertiserSeq]
+  })
+
   this.router.push({ name: 'AdvertiserDetail', query: { referrer: '/advertiser-management/detail' }})
 }
 

@@ -16,7 +16,6 @@ import { partnerManagementStore } from '@/store/modules/admin/partnerManagementS
 const store = partnerManagementStore()
 
 onMounted(async() => {
-  console.debug('onMounted')
   partnerManagementStore().init()
   await partnerManagementStore().search({ page: 1 })
 })
