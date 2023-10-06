@@ -83,7 +83,7 @@ function remove(row) {
 }
 
 function open(row) {
-  window.open([import.meta.env.VITE_FIEL_SERVER, 'files', row.file.fileName].join('/'))
+  window.open([import.meta.env.VITE_FILE_SERVER, 'files', row.file.fileName].join('/'))
 }
 
 </script>

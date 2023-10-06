@@ -144,7 +144,7 @@ const page_count = ref(page)
 const store = partnerStore()
 const router = useRouter()
 
-const filePath = computed(() => import.meta.env.VITE_FIEL_SERVER)
+const filePath = computed(() => import.meta.env.VITE_FILE_SERVER)
 
 const statusModalStatus = ref('')
 const statusModalGroupSeq = ref(0)

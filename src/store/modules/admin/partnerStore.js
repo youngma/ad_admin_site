@@ -440,7 +440,7 @@ export const partnerStore = defineStore('partnerStore', {
             return {
               name: originFileName,
               type,
-              url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+              url: [import.meta.env.VITE_FILE_SERVER, 'temp', target, newFileName].join('/')
             }
           })
           break
@@ -451,7 +451,7 @@ export const partnerStore = defineStore('partnerStore', {
             return {
               name: originFileName,
               type,
-              url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+              url: [import.meta.env.VITE_FILE_SERVER, 'temp', target, newFileName].join('/')
             }
           })
           break
@@ -462,7 +462,7 @@ export const partnerStore = defineStore('partnerStore', {
             return {
               name: originFileName,
               type,
-              url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+              url: [import.meta.env.VITE_FILE_SERVER, 'temp', target, newFileName].join('/')
             }
           })
           break
@@ -541,7 +541,7 @@ export const partnerStore = defineStore('partnerStore', {
           return {
             name: originName,
             type: fileType,
-            url: [import.meta.env.VITE_FIEL_SERVER, 'files', fileName].join('/')
+            url: [import.meta.env.VITE_FILE_SERVER, 'files', fileName].join('/')
           }
         })
 
@@ -550,7 +550,7 @@ export const partnerStore = defineStore('partnerStore', {
           return {
             name: originName,
             type: fileType,
-            url: [import.meta.env.VITE_FIEL_SERVER, 'files', fileName].join('/')
+            url: [import.meta.env.VITE_FILE_SERVER, 'files', fileName].join('/')
           }
         })
       } else {
@@ -571,7 +571,7 @@ export const partnerStore = defineStore('partnerStore', {
           return {
             name: originName,
             type: fileType,
-            url: [import.meta.env.VITE_FIEL_SERVER, 'files', fileName].join('/')
+            url: [import.meta.env.VITE_FILE_SERVER, 'files', fileName].join('/')
           }
         })
 
@@ -580,7 +580,7 @@ export const partnerStore = defineStore('partnerStore', {
           return {
             name: originName,
             type: fileType,
-            url: [import.meta.env.VITE_FIEL_SERVER, 'files', fileName].join('/')
+            url: [import.meta.env.VITE_FILE_SERVER, 'files', fileName].join('/')
           }
         })
       } else if (target === 'status') {

@@ -7,7 +7,6 @@ import router from '@/router/index.js'
 
 import qs from 'qs'
 
-
 // create an axios instance
 const service = axios.create({
   baseURL: import.meta.env.VITE_ADMIN_API, // url = base url + request url
@@ -73,6 +72,7 @@ service.interceptors.response.use(
           confirmButtonText: '확인',
           type: 'warning'
         }).then(() => {
+          console.log(router)
           _authStore.resetToken().then(() => {
             router.push(`/login?redirect=${router.currentRoute.value.path}`).then(r => {})
           })

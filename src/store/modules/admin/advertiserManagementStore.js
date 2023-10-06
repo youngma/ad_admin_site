@@ -129,7 +129,7 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
           {
             name: file ? file.originName : null,
             type: file ? file.fileType : null,
-            url: file ? [import.meta.env.VITE_FIEL_SERVER, 'files', file.fileName].join('/') : null
+            url: file ? [import.meta.env.VITE_FILE_SERVER, 'files', file.fileName].join('/') : null
           }
         ]
 
@@ -160,7 +160,7 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
         return {
           name: originFileName,
           type,
-          url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+          url: [import.meta.env.VITE_FILE_SERVER, 'temp', target, newFileName].join('/')
         }
       })
 

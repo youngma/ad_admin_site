@@ -12,7 +12,8 @@
                 v-model="campaigns.register.campaignType"
                 class="m-2"
                 :class="{ 'is-error': !validation.campaignType.check }"
-                placeholder="Select" size="large">
+                placeholder="Select"
+                size="large" @change="(value) => campaignTypeChanged(value)">
                 <el-option key="" label="선택" value=""/>
                 <el-option
                   v-for="code of CampaignType"
@@ -125,7 +126,7 @@
           <el-row :gutter="10">
             <el-col
               :span="20"
-              :class="{ 'is-error': !validation.adPrice.check }"
+              :class="{ 'is-error': !validation.adDate.check }"
             >
               <el-date-picker
                 v-model="campaigns.register.adDate"
@@ -151,7 +152,7 @@
         </el-col>
       </el-row>
 
-      <div class="comm_comp mt_15">
+      <div v-if="campaigns.register.campaignType === 'TYPE1'" class="comm_comp mt_15">
 
         <el-row>
           <el-col class="comm_form_box comm_text_tit2">스마트 스토어 광고 추가 입력</el-col>
@@ -244,7 +245,7 @@
                 <CampaignImageUpload
                   ref="smart_store_file_upload"
                   :files="campaigns.register.uploads.smartStore"
-                  @upload-after="onUploadAfter"
+                  @upload-after="(resp) => onUploadAfter('smartStore.image', resp)"
                 />
 
               </el-row>
@@ -355,6 +356,225 @@
         </div>
       </div>
 
+      <div v-if="campaigns.register.campaignType === 'QUIZ01'" class="comm_comp mt_15">
+
+        <el-row>
+          <el-col class="comm_form_box comm_text_tit2">퀴즈 광고 추가 입력</el-col>
+        </el-row>
+
+        <div class="comm_comp_table">
+
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">참여 방법</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row :gutter="10">
+                <el-col
+                  :span="20"
+                  :class="{ 'is-error': !validation.useHow.check }"
+                >
+                  <el-input
+                    v-model="campaigns.register.quiz.useHow"
+                    type="textarea"
+                    :rows="4"
+                    :autosize="{ minRows: 4, maxRows: 5 }"
+                    class=""
+                    placeholder="참여 방법을 입력 해주세요."
+                  />
+                </el-col>
+
+              </el-row>
+              <div v-show="!validation.useHow.check" class="invalid-feedback">
+                {{validation.useHow.message}}
+              </div>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">퀴즈 제목</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row :gutter="10">
+                <el-col
+                  :span="20"
+                  :class="{ 'is-error': !validation.quizTitle.check }"
+                >
+                  <el-input
+                    v-model="campaigns.register.quiz.quizTitle"
+                    class=""
+                    placeholder="퀴즈 제목을 입력 해주세요."
+                  />
+                </el-col>
+
+              </el-row>
+              <div v-show="!validation.quizTitle.check" class="invalid-feedback">
+                {{validation.quizTitle.message}}
+              </div>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">퀴즈 정답</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row :gutter="10">
+                <el-col
+                  :span="20"
+                  :class="{ 'is-error': !validation.quizAnswer.check }"
+                >
+                  <el-input
+                    v-model="campaigns.register.quiz.quizAnswer"
+                    class=""
+                    placeholder="퀴즈 제목을 입력 해주세요."
+                  />
+                </el-col>
+
+              </el-row>
+              <div v-show="!validation.quizAnswer.check" class="invalid-feedback">
+                {{validation.quizAnswer.message}}
+              </div>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">PC 랜딩 URL</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row :gutter="10">
+                <el-col
+                  :span="20"
+                  :class="{ 'is-error': !validation.targetUrlPc.check }"
+                >
+                  <el-input
+                    v-model="campaigns.register.quiz.targetUrlPc"
+                    class=""
+                    placeholder="모바일 랜딩 URL을 입력 해주세요."
+                  />
+                </el-col>
+
+              </el-row>
+              <div v-show="!validation.targetUrlPc.check" class="invalid-feedback">
+                {{validation.targetUrlPc.message}}
+              </div>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">모바일 랜딩 URL</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row :gutter="10">
+                <el-col
+                  :span="20"
+                  :class="{ 'is-error': !validation.targetUrlMobile.check }"
+                >
+                  <el-input
+                    v-model="campaigns.register.quiz.targetUrlMobile"
+                    class=""
+                    placeholder="모바일 랜딩 URL을 입력 해주세요."
+                  />
+                </el-col>
+
+              </el-row>
+              <div v-show="!validation.targetUrlMobile.check" class="invalid-feedback">
+                {{validation.targetUrlMobile.message}}
+              </div>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">상품 코드</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row :gutter="10">
+                <el-col
+                  :span="20"
+                  :class="{ 'is-error': !validation.goodsCode.check }"
+                >
+                  <el-input
+                    v-model="campaigns.register.quiz.goodsCode"
+                    :class="{ 'is-error': !validation.goodsCode.check }"
+                    class="" placeholder="상품 코드를 입력 해주세요." />
+
+                </el-col>
+              </el-row>
+              <div v-show="!validation.goodsCode.check" class="invalid-feedback">
+                {{validation.goodsCode.message}}
+              </div>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">퀴즈 목록 노출 이미지</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row
+                :gutter="10"
+                :class="{ 'is-error': !validation.mainImage.check }"
+              >
+                <CampaignImageUpload
+                  ref="quiz_mainImage_upload"
+                  :files="campaigns.register.uploads.quiz.mainImage"
+                  @upload-after="(resp) => onUploadAfter('quiz.mainImage', resp)"
+                />
+
+              </el-row>
+              <div v-show="!validation.image.check" class="invalid-feedback">
+                {{validation.mainImage.message}}
+              </div>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">상세 이미지 1</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row
+                :gutter="10"
+                :class="{ 'is-error': !validation.detailImage1.check }"
+              >
+                <CampaignImageUpload
+                  ref="quiz_detailImage1_upload"
+                  :files="campaigns.register.uploads.quiz.detailImage1"
+                  @upload-after="(resp) => onUploadAfter('quiz.detailImage1', resp)"
+                />
+
+              </el-row>
+              <div v-show="!validation.image.check" class="invalid-feedback">
+                {{validation.detailImage1.message}}
+              </div>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">상세 이미지 2</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row
+                :gutter="10"
+                :class="{ 'is-error': !validation.detailImage2.check }"
+              >
+                <CampaignImageUpload
+                  ref="quiz_detailImage2_upload"
+                  :files="campaigns.register.uploads.quiz.detailImage2"
+                  @upload-after="(resp) => onUploadAfter('quiz.detailImage2', resp)"
+                />
+
+              </el-row>
+              <div v-show="!validation.image.check" class="invalid-feedback">
+                {{validation.detailImage2.message}}
+              </div>
+            </el-col>
+          </el-row>
+
+        </div>
+      </div>
+
     </div>
     <el-row justify="end">
       <el-col class="t_r comm_form_box" tag="span">
@@ -373,7 +593,7 @@ import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 
 import { storeToRefs } from 'pinia'
-import { ref, getCurrentInstance, watch, onMounted } from 'vue'
+import { ref, getCurrentInstance, onActivated, onMounted } from 'vue'
 import { numberFormatter, moneyFormatter } from '@/utils/customElTableFormatter.js'
 import { validURL } from '@/utils/validate.js'
 import { ElMessageBox } from 'element-plus'
@@ -383,6 +603,9 @@ defineOptions({
 })
 
 const smart_store_file_upload = ref(null)
+const quiz_mainImage_upload = ref(null)
+const quiz_detailImage1_upload = ref(null)
+const quiz_detailImage2_upload = ref(null)
 
 const { appContext } = getCurrentInstance()
 
@@ -448,6 +671,26 @@ const validation = ref({
   holdingTime: {
     check: true,
     message: ''
+  },
+  quizTitle: {
+    check: true,
+    message: ''
+  },
+  quizAnswer: {
+    check: true,
+    message: ''
+  },
+  mainImage: {
+    check: true,
+    message: ''
+  },
+  detailImage1: {
+    check: true,
+    message: ''
+  },
+  detailImage2: {
+    check: true,
+    message: ''
   }
 })
 
@@ -463,9 +706,8 @@ const disabledDate = (time) => {
 }
 
 function validate(...types) {
-  const { campaignName, campaignType, campaignDesc, dayParticipationLimit, adDate, smartStore } = this.campaigns.register
+  const { campaignName, campaignType, campaignDesc, dayParticipationLimit, adDate, smartStore, quiz } = this.campaigns.register
 
-  const { useHow, image, targetUrlPc, targetUrlMobile, totalBudget, adPrice, goodsCode, paymentTerms, holdingTime } = smartStore
   validation.value.valid = true
 
   for (const type of types) {
@@ -550,6 +792,37 @@ function validate(...types) {
 
         break
 
+      case 'adDate' :
+
+        validation.value.adDate.check = true
+        validation.value.adDate.message = ''
+
+        if (adDate.size === 0) {
+          validation.value.adDate.check = false
+          validation.value.adDate.message = '광고 기간을 설정 해주세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+    }
+
+    if (campaignType === 'TYPE1') {
+      this.smartSotreValidate('useHow', 'image', 'targetUrlPc', 'targetUrlMobile', 'totalBudget', 'adPrice', 'goodsCode', 'paymentTerms', 'holdingTime')
+    }
+
+    if (campaignType === 'QUIZ01') {
+      this.quizValidate('useHow', 'mainImage', 'detailImage1', 'detailImage2', 'targetUrlPc', 'targetUrlMobile', 'quizTitle', 'quizAnswer', 'goodsCode')
+    }
+  }
+}
+
+function smartSotreValidate(...types) {
+  const { useHow, image, targetUrlPc, targetUrlMobile, totalBudget, adPrice, goodsCode, paymentTerms, holdingTime } = this.campaigns.register.smartStore
+  for (const type of types) {
+    switch (type) {
       case 'targetUrlPc' :
 
         validation.value.targetUrlPc.check = true
@@ -668,22 +941,6 @@ function validate(...types) {
 
         break
 
-      case 'adDate' :
-
-        validation.value.adDate.check = true
-        validation.value.adDate.message = ''
-
-        if (adDate.size === 0) {
-          validation.value.adDate.check = false
-          validation.value.adDate.message = '광고 기간을 설정 해주세요.'
-
-          validation.value.valid = false
-
-          break
-        }
-
-        break
-
       case 'goodsCode' :
 
         validation.value.goodsCode.check = true
@@ -715,7 +972,7 @@ function validate(...types) {
         if (validation.value.paymentTerms.check) {
           if (holdingTime <= 0) {
             validation.value.paymentTerms.check = false
-            validation.value.paymentTerms.message = '호딩 타임을 1초 이상 설정 해주세요.'
+            validation.value.paymentTerms.message = '로딩 타임을 1초 이상 설정 해주세요.'
 
             validation.value.valid = false
 
@@ -727,46 +984,356 @@ function validate(...types) {
     }
   }
 }
-const onUploadAfter = (resp) => {
+
+function quizValidate(...types) {
+  const { useHow, quizTitle, quizAnswer, mainImage, detailImage1, detailImage2, targetUrlPc, targetUrlMobile, goodsCode } = this.campaigns.register.quiz
+  for (const type of types) {
+    switch (type) {
+      case 'targetUrlPc' :
+
+        validation.value.targetUrlPc.check = true
+        validation.value.targetUrlPc.message = ''
+
+        if (targetUrlPc === null || targetUrlPc === '') {
+          validation.value.targetUrlPc.check = false
+          validation.value.targetUrlPc.message = '타켓 URL 을 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        // var regex = new RegExp('^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?')
+        // var without_regex = new RegExp('^([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?')
+
+        if (!validURL(targetUrlPc)) {
+          validation.value.targetUrlPc.check = false
+          validation.value.targetUrlPc.message = 'URL 형색을 확인 해주세요..'
+
+          validation.value.valid = false
+          break
+        }
+
+        break
+
+      case 'targetUrlMobile' :
+
+        validation.value.targetUrlMobile.check = true
+        validation.value.targetUrlMobile.message = ''
+
+        if (targetUrlMobile === null || targetUrlMobile === '') {
+          validation.value.targetUrlMobile.check = false
+          validation.value.targetUrlMobile.message = '타켓 URL 을 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        // var regex = new RegExp('^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?')
+        // var without_regex = new RegExp('^([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?')
+
+        if (!validURL(targetUrlMobile)) {
+          validation.value.targetUrlMobile.check = false
+          validation.value.targetUrlMobile.message = 'URL 형색을 확인 해주세요..'
+
+          validation.value.valid = false
+          break
+        }
+
+        break
+
+      case 'useHow' :
+
+        validation.value.useHow.check = true
+        validation.value.useHow.message = ''
+
+        if (useHow === null || useHow === '') {
+          validation.value.useHow.check = false
+          validation.value.useHow.message = '참여 방법 을 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
+      case 'quizTitle' :
+
+        validation.value.quizTitle.check = true
+        validation.value.quizTitle.message = ''
+
+        if (quizTitle === null || quizTitle === '') {
+          validation.value.quizTitle.check = false
+          validation.value.quizTitle.message = '퀴즈 제목 을 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
+      case 'quizAnswer' :
+
+        validation.value.quizAnswer.check = true
+        validation.value.quizAnswer.message = ''
+
+        if (quizAnswer === null || quizAnswer === '') {
+          validation.value.quizAnswer.check = false
+          validation.value.quizAnswer.message = '퀴즈 답변 을 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
+      case 'mainImage' :
+
+        validation.value.mainImage.check = true
+        validation.value.mainImage.message = ''
+
+        if (mainImage === null || mainImage === '') {
+          validation.value.mainImage.check = false
+          validation.value.mainImage.message = '메인 이미지 를 등록 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
+      case 'detailImage1' :
+
+        validation.value.detailImage1.check = true
+        validation.value.detailImage1.message = ''
+
+        if (detailImage1 === null || detailImage1 === '') {
+          validation.value.detailImage1.check = false
+          validation.value.detailImage1.message = '상세 이미지1 를 등록 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+      case 'detailImage2' :
+
+        validation.value.detailImage2.check = true
+        validation.value.detailImage2.message = ''
+
+        if (detailImage2 === null || detailImage2 === '') {
+          validation.value.detailImage2.check = false
+          validation.value.detailImage2.message = '상세 이미지2 를 등록 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
+      case 'goodsCode' :
+
+        validation.value.goodsCode.check = true
+        validation.value.goodsCode.message = ''
+
+        if (goodsCode === '' || goodsCode === null) {
+          validation.value.goodsCode.check = false
+          validation.value.goodsCode.message = '상품 코드를 입력 해주세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+    }
+  }
+}
+
+const onUploadAfter = (imageType, resp) => {
   const { result, uploadFiles } = resp
-  if (result && result.length > 0) {
-    const { originFileName, newFileName, target } = result[0]
 
-    campaigns.value.register.uploads.smartStore = uploadFiles.map(file => {
-      const { name, raw } = file
-      const { type } = raw
+  if (imageType === 'smartStore.image') {
+    if (result && result.length > 0) {
+      const { originFileName, newFileName, target } = result[0]
 
-      campaigns.value.register.smartStore.image = {
-        newFile: true,
-        fileType: type,
-        originName: originFileName,
-        fileName: [target, newFileName].join('/')
-      }
+      campaigns.value.register.uploads.smartStore = uploadFiles.map(file => {
+        const { name, raw } = file
+        const { type } = raw
 
-      return {
-        name: name,
-        type,
-        url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
-      }
-    })
-  } else {
-    campaigns.value.register.uploads.smartStore = []
+        campaigns.value.register.smartStore.image = {
+          newFile: true,
+          fileType: type,
+          originName: originFileName,
+          fileName: [target, newFileName].join('/')
+        }
+
+        return {
+          name: name,
+          type,
+          url: [import.meta.env.VITE_FILE_SERVER, 'temp', target, newFileName].join('/')
+        }
+      })
+    } else {
+      campaigns.value.register.uploads.smartStore = []
+    }
+  } else if (imageType === 'quiz.mainImage') {
+    if (result && result.length > 0) {
+      const { originFileName, newFileName, target } = result[0]
+
+      campaigns.value.register.uploads.quiz.mainImage = uploadFiles.map(file => {
+        const { name, raw } = file
+        const { type } = raw
+
+        campaigns.value.register.quiz.mainImage = {
+          newFile: true,
+          fileType: type,
+          originName: originFileName,
+          fileName: [target, newFileName].join('/')
+        }
+
+        return {
+          name: name,
+          type,
+          url: [import.meta.env.VITE_FILE_SERVER, 'temp', target, newFileName].join('/')
+        }
+      })
+    } else {
+      campaigns.value.register.uploads.quiz.mainImage = []
+    }
+  } else if (imageType === 'quiz.detailImage1') {
+    if (result && result.length > 0) {
+      const { originFileName, newFileName, target } = result[0]
+
+      campaigns.value.register.uploads.quiz.detailImage1 = uploadFiles.map(file => {
+        const { name, raw } = file
+        const { type } = raw
+
+        campaigns.value.register.quiz.detailImage1 = {
+          newFile: true,
+          fileType: type,
+          originName: originFileName,
+          fileName: [target, newFileName].join('/')
+        }
+
+        return {
+          name: name,
+          type,
+          url: [import.meta.env.VITE_FILE_SERVER, 'temp', target, newFileName].join('/')
+        }
+      })
+    } else {
+      campaigns.value.register.uploads.quiz.detailImage1 = []
+    }
+  } else if (imageType === 'quiz.detailImage2') {
+    if (result && result.length > 0) {
+      const { originFileName, newFileName, target } = result[0]
+
+      campaigns.value.register.uploads.quiz.detailImage2 = uploadFiles.map(file => {
+        const { name, raw } = file
+        const { type } = raw
+
+        campaigns.value.register.quiz.detailImage2 = {
+          newFile: true,
+          fileType: type,
+          originName: originFileName,
+          fileName: [target, newFileName].join('/')
+        }
+
+        return {
+          name: name,
+          type,
+          url: [import.meta.env.VITE_FILE_SERVER, 'temp', target, newFileName].join('/')
+        }
+      })
+    } else {
+      campaigns.value.register.uploads.quiz.detailImage2 = []
+    }
+  }
+}
+
+function campaignTypeChanged(value) {
+
+
+  console.log(value)
+
+  if (smart_store_file_upload.value) {
+    smart_store_file_upload.value.initUploader()
+  }
+  if (quiz_mainImage_upload.value) {
+    quiz_mainImage_upload.value.initUploader()
+  }
+  if (quiz_detailImage1_upload.value) {
+    quiz_detailImage1_upload.value.initUploader()
+  }
+  if (quiz_detailImage2_upload.value) {
+    quiz_detailImage2_upload.value.initUploader()
+  }
+
+  campaigns.value.register.quiz = {
+    useHow: null,
+    quizTitle: null,
+    quizAnswer: null,
+    mainImage: null,
+    detailImage1: null,
+    detailImage2: null,
+    targetUrlPc: null,
+    targetUrlMobile: null,
+    goodsCode: null
+  }
+  campaigns.value.register.smartStore = {
+    useHow: null,
+    image: null,
+    targetUrlPc: null,
+    targetUrlMobile: null,
+    goodsCode: null,
+    paymentTerms: null,
+    holdingTime: 0,
+    totalBudget: 0,
+    adPrice: 0
+  }
+  campaigns.value.register.uploads = {
+    smartStore: [],
+    quiz: {
+      mainImage: [],
+      detailImage1: [],
+      detailImage2: []
+    }
   }
 }
 
 function save() {
   this.validate(
-    'campaignType', 'campaignName', 'campaignDesc', 'totalParticipationLimit', 'dayParticipationLimit', 'adDate',
-    'useHow', 'image', 'targetUrlPc', 'targetUrlMobile', 'totalBudget', 'adPrice',
-    'goodsCode', 'paymentTerms', 'holdingTime'
+    'campaignType', 'campaignName', 'campaignDesc', 'totalParticipationLimit', 'dayParticipationLimit', 'adDate'
   )
 
   if (validation.value.valid) {
     this.store.campaignRegister().then(() => {
       ElMessageBox.alert('등록 되었습니다.', '확인', {
         callback: () => {
-          smart_store_file_upload.value.initUploader()
+
+          if (smart_store_file_upload.value) {
+            smart_store_file_upload.value.initUploader()
+          }
+          if (quiz_mainImage_upload.value) {
+            quiz_mainImage_upload.value.initUploader()
+          }
+          if (quiz_detailImage1_upload.value) {
+            quiz_detailImage1_upload.value.initUploader()
+          }
+          if (quiz_detailImage2_upload.value) {
+            quiz_detailImage2_upload.value.initUploader()
+          }
+
           this.store.initRegisterForm('campaigns')
+
           const { referrer } = route.query
           router.push({ path: referrer || route.params.referrer })
         }
@@ -781,6 +1348,16 @@ function save() {
 function paymentTermsChange() {
   campaigns.value.register.holdingTime = 0
 }
+
+onActivated(() => {
+  console.log('onActivated')
+  advertiserStore().initRegisterForm('campaigns')
+})
+//
+// onMounted(() => {
+//   console.log('onMounted')
+//   advertiserStore().initRegisterForm('campaigns')
+// })
 
 </script>
 

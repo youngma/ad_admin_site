@@ -20,6 +20,17 @@
           <br/>
           <span> {{scope.row.smartStore.originName}} </span>
         </div>
+        <div v-if="scope.row.quiz">
+          <img
+            width="150"
+            height="150"
+            :src="[filePath, 'files', scope.row.quiz.mainImage.fileName].join('/')"
+            :alt="scope.row.quiz.mainImage.originName"
+            @click="open([filePath, 'files', scope.row.quiz.mainImage.fileName].join('/'))"
+          />
+          <br/>
+          <span> {{scope.row.quiz.mainImage.originName}} </span>
+        </div>
       </template>
     </el-table-column>
     <el-table-column  prop="totalParticipationLimit" label="참여 제한" width="150" header-align="center" align="right" >
@@ -35,6 +46,9 @@
       <template #default="scope">
         <span v-if="scope.row.smartStore">
           {{ moneyFormatter(scope.row.smartStore.totalBudget) }} 원
+        </span>
+        <span v-else>
+          - 원
         </span>
       </template>
     </el-table-column>
@@ -92,14 +106,12 @@
 <!--    <b-pagination hide-ellipsis v-model="listCondition.offset" :total-rows="listCondition.total" :per-page="listCondition.limit" @input="pageChange" />-->
   </div>
 
-  <CampaignModifyModal />
   <CampaignStatusModal :advertiser-seq="statusAdvertiserSeq" :campaign-seq="statusCampaignSeq" :status="campaignStatus" />
 
 </template>
 
 <script setup>
 
-import CampaignModifyModal from '@/components/AdCampaignManagement/CampaignModifyModal.vue'
 import CampaignStatusModal from '@/components/AdCampaignManagement/CampaignStatusModal.vue'
 
 import { partnerStore } from '@/store/modules/admin/partnerStore.js'
@@ -141,7 +153,7 @@ const { list, total, page, size, referrer } = defineProps({
   }
 })
 
-const filePath = computed(() => import.meta.env.VITE_FIEL_SERVER)
+const filePath = computed(() => import.meta.env.VITE_FILE_SERVER)
 
 const statusAdvertiserSeq = ref(0)
 const statusCampaignSeq = ref(0)

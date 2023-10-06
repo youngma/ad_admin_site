@@ -88,12 +88,20 @@ export const advertiserStore = defineStore('advertiserStore', {
         campaignStatus: ''
       },
       list: [],
+      modifyMode: false,
       selectedCampaign: {
         smartStore: null,
+        quiz: null,
         uploads: {
-          smartStore: []
+          smartStore: [],
+          quiz: {
+            mainImage: [],
+            detailImage1: [],
+            detailImage2: []
+          }
         }
       },
+
       register: {
         campaignType: null,
         campaignName: null,
@@ -114,8 +122,24 @@ export const advertiserStore = defineStore('advertiserStore', {
           totalBudget: 0,
           adPrice: 0
         },
+        quiz: {
+          useHow: null,
+          quizTitle: null,
+          quizAnswer: null,
+          mainImage: null,
+          detailImage1: null,
+          detailImage2: null,
+          targetUrlPc: null,
+          targetUrlMobile: null,
+          goodsCode: null
+        },
         uploads: {
-          smartStore: []
+          smartStore: [],
+          quiz: {
+            mainImage: [],
+            detailImage1: [],
+            detailImage2: []
+          }
         }
       },
       total: 0,
@@ -303,6 +327,7 @@ export const advertiserStore = defineStore('advertiserStore', {
       }
 
       if (target === 'campaigns') {
+        console.log('campaigns')
         this.campaigns.register = {
           campaignType: null,
           campaignName: null,
@@ -323,8 +348,24 @@ export const advertiserStore = defineStore('advertiserStore', {
             totalBudget: 0,
             adPrice: 0
           },
+          quiz: {
+            useHow: null,
+            quizTitle: null,
+            quizAnswer: null,
+            mainImage: null,
+            detailImage1: null,
+            detailImage2: null,
+            targetUrlPc: null,
+            targetUrlMobile: null,
+            goodsCode: null
+          },
           uploads: {
-            smartStore: []
+            smartStore: [],
+            quiz: {
+              mainImage: [],
+              detailImage1: [],
+              detailImage2: []
+            }
           }
         }
       }
@@ -486,7 +527,7 @@ export const advertiserStore = defineStore('advertiserStore', {
         return {
           name: originFileName,
           type,
-          url: [import.meta.env.VITE_FIEL_SERVER, 'temp', target, newFileName].join('/')
+          url: [import.meta.env.VITE_FILE_SERVER, 'temp', target, newFileName].join('/')
         }
       })
 
@@ -519,43 +560,95 @@ export const advertiserStore = defineStore('advertiserStore', {
     setAdvertiserSeq({ selected }) {
       this.selected = selected
     },
+    initCampaignDetail() {
+      this.campaigns.selectedCampaign = {
+        smartStore: null,
+        quiz: null,
+        uploads: {
+          smartStore: [],
+          quiz: {
+            mainImage: [],
+            detailImage1: [],
+            detailImage2: []
+          }
+        }
+      }
+    },
     setCampaignDetail(row) {
       if (row) {
-        const { adStartDate, adEndDate, totalParticipationLimit, dayParticipationLimit, smartStore } = row
-        const { seq, useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms, holdingTime, totalBudget, adPrice } = smartStore
+        // init
+        this.initCampaignDetail()
 
-        const uploads = [image].map(file => {
-          const { originName, fileType, fileName } = file
-          return {
-            name: originName,
-            type: fileType,
-            url: [import.meta.env.VITE_FIEL_SERVER, 'files', fileName].join('/')
-          }
-        })
+        const { adStartDate, adEndDate, totalParticipationLimit, dayParticipationLimit, smartStore, quiz } = row
 
-        const smartStoreDump = Object.assign(smartStore, {
-          seq, useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms,
-          totalBudget: moneyFormatter(totalBudget),
-          adPrice: moneyFormatter(adPrice),
-          holdingTime: moneyFormatter(holdingTime)
-        })
+        if (smartStore) {
+          const { image, holdingTime, totalBudget, adPrice } = smartStore
 
-        const adCampaign = Object.assign(row, {
+          Object.assign(smartStore, {
+            totalBudget: numberFormatter(totalBudget),
+            adPrice: numberFormatter(adPrice),
+            holdingTime: numberFormatter(holdingTime)
+          })
+
+          this.campaigns.selectedCampaign.uploads.smartStore = [image].map(file => {
+            const { originName, fileType, fileName } = file
+            return {
+              name: originName,
+              type: fileType,
+              url: [import.meta.env.VITE_FILE_SERVER, 'files', fileName].join('/')
+            }
+          })
+        }
+
+        if (quiz) {
+          const { mainImage, detailImage1, detailImage2 } = quiz
+          this.campaigns.selectedCampaign.uploads.quiz.mainImage = [mainImage].map(file => {
+            const { originName, fileType, fileName } = file
+            return {
+              name: originName,
+              type: fileType,
+              url: [import.meta.env.VITE_FILE_SERVER, 'files', fileName].join('/')
+            }
+          })
+
+          this.campaigns.selectedCampaign.uploads.quiz.detailImage1 = [detailImage1].map(file => {
+            const { originName, fileType, fileName } = file
+            return {
+              name: originName,
+              type: fileType,
+              url: [import.meta.env.VITE_FILE_SERVER, 'files', fileName].join('/')
+            }
+          })
+
+          this.campaigns.selectedCampaign.uploads.quiz.detailImage2 = [detailImage2].map(file => {
+            const { originName, fileType, fileName } = file
+            return {
+              name: originName,
+              type: fileType,
+              url: [import.meta.env.VITE_FILE_SERVER, 'files', fileName].join('/')
+            }
+          })
+        }
+
+        this.campaigns.selectedCampaign = Object.assign(deepClone(row), {
           adDate: [adStartDate.split(' ')[0], adEndDate.split(' ')[0]],
           dayParticipationLimit: moneyFormatter(dayParticipationLimit),
           totalParticipationLimit: moneyFormatter(totalParticipationLimit),
-          smartStore: smartStoreDump,
-          uploads: {
-            smartStore: uploads
-          }
+          smartStore,
+          quiz,
+          uploads: this.campaigns.selectedCampaign.uploads
         })
-
-        this.campaigns.selectedCampaign = deepClone(adCampaign)
       } else {
         this.campaigns.selectedCampaign = {
           smartStore: null,
+          quiz: null,
           uploads: {
-            smartStore: []
+            smartStore: [],
+            quiz: {
+              mainImage: [],
+              detailImage1: [],
+              detailImage2: []
+            }
           }
         }
       }
@@ -569,22 +662,46 @@ export const advertiserStore = defineStore('advertiserStore', {
       }
     },
     campaignRegister() {
-      const { adDate, totalParticipationLimit, dayParticipationLimit, smartStore } = this.campaigns.register
-      const { useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms, holdingTime, totalBudget, adPrice } = smartStore
 
-      const newSmartStore = Object.assign({}, {
-        useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms,
-        totalBudget: numberFormatter(totalBudget),
-        adPrice: numberFormatter(adPrice),
-        holdingTime: numberFormatter(holdingTime)
-      })
 
-      const newCampaign = Object.assign(this.campaigns.register, {
+      const newCampaign = deepClone(this.campaigns.register)
+      const { adDate, totalParticipationLimit, dayParticipationLimit, campaignType, smartStore, quiz } = this.campaigns.register
+
+      let newSmartStore = {}
+      let newQuiz = {}
+
+      if (smartStore) {
+        const { image, paymentTerms, holdingTime, totalBudget, adPrice } = smartStore
+        newSmartStore = campaignType === 'TYPE1' ? Object.assign(newSmartStore, {
+          useHow: smartStore.useHow,
+          targetUrlPc: smartStore.targetUrlPc,
+          targetUrlMobile: smartStore.targetUrlMobile,
+          goodsCode: smartStore.goodsCode,
+          image, paymentTerms,
+          totalBudget: numberFormatter(totalBudget),
+          adPrice: numberFormatter(adPrice),
+          holdingTime: numberFormatter(holdingTime)
+        }) : null
+      }
+
+      if (quiz) {
+        const { quizTitle, quizAnswer, mainImage, detailImage1, detailImage2 } = quiz
+        newQuiz = campaignType === 'QUIZ01' ? Object.assign(newQuiz, {
+          useHow: quiz.useHow,
+          targetUrlPc: quiz.targetUrlPc,
+          targetUrlMobile: quiz.targetUrlMobile,
+          goodsCode: quiz.goodsCode,
+          quizTitle, quizAnswer, mainImage, detailImage1, detailImage2
+        }) : null
+      }
+
+      Object.assign(newCampaign, {
         adStartDate: startDatePostFix(adDate[0]),
         adEndDate: endDatePostFix(adDate[1]),
         dayParticipationLimit: numberFormatter(dayParticipationLimit),
         totalParticipationLimit: numberFormatter(totalParticipationLimit),
-        smartStore: newSmartStore
+        smartStore: newSmartStore,
+        quiz: newQuiz
       })
 
       return CAMPAIGN_API.register(this.generateParams(newCampaign))
@@ -592,16 +709,17 @@ export const advertiserStore = defineStore('advertiserStore', {
     modifyAfCampaign() {
       const selectedCampaign = deepClone(this.campaigns.selectedCampaign)
 
-      const { seq, adDate, totalParticipationLimit, dayParticipationLimit, smartStore, advertiser } = selectedCampaign
+      const { adDate, totalParticipationLimit, dayParticipationLimit, advertiser, smartStore, quiz } = selectedCampaign
       const { advertiserSeq } = advertiser
-      const { useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms, holdingTime, totalBudget, adPrice } = smartStore
 
-      const newSmartStore = Object.assign(smartStore, {
-        useHow, image, targetUrlPc, targetUrlMobile, goodsCode, paymentTerms,
-        totalBudget: numberFormatter(totalBudget),
-        adPrice: numberFormatter(adPrice),
-        holdingTime: numberFormatter(holdingTime)
-      })
+      if (smartStore) {
+        const { holdingTime, totalBudget, adPrice } = smartStore
+        Object.assign(smartStore, {
+          totalBudget: numberFormatter(totalBudget),
+          adPrice: numberFormatter(adPrice),
+          holdingTime: numberFormatter(holdingTime)
+        })
+      }
 
       const newCampaign = Object.assign(selectedCampaign, {
         advertiserSeq,
@@ -609,7 +727,8 @@ export const advertiserStore = defineStore('advertiserStore', {
         adEndDate: endDatePostFix(adDate[1]),
         dayParticipationLimit: numberFormatter(dayParticipationLimit),
         totalParticipationLimit: numberFormatter(totalParticipationLimit),
-        smartStore: newSmartStore,
+        smartStore: smartStore,
+        quiz: quiz,
         advertiser: null
       })
 

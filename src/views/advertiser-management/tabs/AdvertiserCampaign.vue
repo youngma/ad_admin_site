@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     goRegisterForm() {
-      this.store.initRegisterForm('register')
+      this.store.initRegisterForm('campaigns')
       this.router.push({
         name: 'AdCampaignRegister',
         query: {

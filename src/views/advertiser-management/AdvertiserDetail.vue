@@ -53,13 +53,14 @@ onMounted(async() => {
 })
 
 onActivated(async() => {
+  console.log('onActivated', tabIndex.value)
   if (advertiser.value) {
     switch (tabIndex.value) {
-      case 'user': advertiserStore().reloadByUsers()
+      case '0': advertiserStore().reloadByUsers()
         break
-      case 'account': advertiserStore().reloadByAccounts()
+      case '1': advertiserStore().reloadByAccounts()
         break
-      case 'ad-campaign': advertiserStore().reloadByCampaigns()
+      case '2': advertiserStore().reloadByCampaigns()
         break
     }
   }
