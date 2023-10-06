@@ -305,6 +305,31 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/report-quiz-management',
+    component: Layout,
+    // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
+    meta: {
+      title: '퀴즈 광고 리포트',
+      icon: 'bi:badge-ad-fill'
+    },
+    name: 'QuizReport',
+    redirect: '/report-quiz-management/advertiser',
+    children: [
+      {
+        path: 'advertiser',
+        component: () => import('@/views/ad-report/quiz/AdvertiserReport.vue'),
+        name: 'QuizAdvertiserReport',
+        meta: { title: '광고주 리포트', icon: 'ri:menu-search-fill' }
+      },
+      {
+        path: 'partner',
+        component: () => import('@/views/ad-report/quiz/AdvertiserReport.vue'),
+        name: 'QuizPartnerReport',
+        meta: { title: '파트너 리포트', icon: 'ri:add-box-fill'}
+      }
+    ]
+  },
   //
   // {
   //   path: '/example',

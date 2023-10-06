@@ -117,7 +117,6 @@ export const adminManagementStore = defineStore('adminManagementStore', {
       })
     },
     selected(row) {
-
       if (row) {
         this.selectedUser = deepClone(row)
         this.modifyPopup = true

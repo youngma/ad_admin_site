@@ -115,6 +115,8 @@ declare module '@vue/runtime-core' {
     PartnerUserRegisterModal: typeof import('./components/ParnterManagement/User/PartnerUserRegisterModal.vue')['default']
     PartnerUserSearchForm: typeof import('./components/ParnterManagement/User/PartnerUserSearchForm.vue')['default']
     RegisterForm: typeof import('./components/AdminManagement/RegisterForm.vue')['default']
+    ReportDataTable: typeof import('./components/AdQuizReport/Advertiser/ReportDataTable.vue')['default']
+    ReportSearchForm: typeof import('./components/AdQuizReport/Advertiser/ReportSearchForm.vue')['default']
     RightPanel: typeof import('./components/RightPanel/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

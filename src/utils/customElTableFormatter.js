@@ -32,7 +32,8 @@ export const moneyFormatter = (amount, decimalCount = 0, decimal = '.', thousand
 export const startDatePostFix = (value) => value + ' 00:00:01'
 export const endDatePostFix = (value) => value + ' 23:59:59'
 
-
 export function replaceNumber(arg) {
   return arg.replace(/[^0-9]/g, '')
 }
+
+export const dateFormatter = (value) => value.replace(/(\d{4})(\d{2})(\d{2})/g, '$1-$2-$3')

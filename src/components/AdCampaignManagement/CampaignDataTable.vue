@@ -118,7 +118,7 @@ import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { moneyFormatter, phoneFormatter } from '@/utils/customElTableFormatter'
 import { computed, defineEmits, defineProps, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import {advertiserStore} from "@/store/modules/admin/advertiserStore.js";
+import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 
 defineOptions({
   name: 'CampaignDataTable'
