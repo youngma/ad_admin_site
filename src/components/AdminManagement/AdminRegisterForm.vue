@@ -136,7 +136,7 @@ const store = adminManagementStore()
 const { register } = storeToRefs(store)
 
 function validate(...types) {
-  const { userId, userPassword, userName, phoneNumber, alReadyCheck } = this.register
+  const { userId, userPassword, userName, phoneNumber, alReadyCheck } = register.value
 
   console.log(userId, userPassword, userName, phoneNumber, alReadyCheck)
   validation.value.valid = true
@@ -167,7 +167,7 @@ function validate(...types) {
           validation.value.userId.check = false
           validation.value.userId.message = '공백을 제거 해주세요.'
           validation.value.valid = false
-          this.register.userId = replaceWhiteSpace(userId)
+          register.value.userId = replaceWhiteSpace(userId)
           break
         }
 
@@ -201,7 +201,7 @@ function validate(...types) {
           validation.value.userPassword.check = false
           validation.value.userPassword.message = '공백을 제거 해주세요.'
           validation.value.valid = false
-          this.register.userPassword = replaceWhiteSpace(userPassword)
+          register.value.userPassword = replaceWhiteSpace(userPassword)
           break
         }
 
@@ -234,7 +234,7 @@ function validate(...types) {
           validation.value.userName.check = false
           validation.value.userName.message = '공백을 제거 해주세요.'
           validation.value.valid = false
-          this.register.userName = replaceWhiteSpace(userName)
+          register.value.userName = replaceWhiteSpace(userName)
           break
         }
 
@@ -268,11 +268,11 @@ function validate(...types) {
 }
 
 async function check(t) {
-  const { alReadyCheck } = this.register
+  const { alReadyCheck } = register.value
   if (alReadyCheck) {
     return false
   } else {
-    this.validate('userId')
+    validate('userId')
     if (validation.value.valid) {
       const retMsg = await store.userIdCheck() ? '사용 가능한 아이디 입니다.' : '이미 등록된 아이디 입니다.'
       await ElMessageBox.alert(retMsg, '확인', {}, appContext)
@@ -281,7 +281,7 @@ async function check(t) {
 }
 
 function save() {
-  this.validate('userName', 'alReadyCheck', 'userPassword', 'phoneNumber')
+  validate('userName', 'alReadyCheck', 'userPassword', 'phoneNumber')
   if (validation.value.valid) {
     store.adminRegister()
   }
