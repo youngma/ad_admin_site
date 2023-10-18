@@ -191,7 +191,6 @@ import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance } from 'vue'
-import { ElMessageBox } from 'element-plus'
 import { getToken } from '@/utils/auth.js'
 import { validURL } from '@/utils/validate.js'
 import { useRoute, useRouter } from 'vue-router'
@@ -251,7 +250,7 @@ const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/ad
 const headers = ref({ Authorization: getToken() })
 
 function validate(...types) {
-  const { adType, groupName, logoFile, pointIconFile, pointName, callBackUrl, commissionRate, rewordRate } = this.adGroups.selectedAdGroup
+  const { adType, groupName, logoFile, pointIconFile, pointName, callBackUrl, commissionRate, rewordRate } = adGroups.value.selectedAdGroup
   validation.value.valid = true
 
   for (const type of types) {
@@ -355,14 +354,14 @@ function validate(...types) {
 }
 
 function handleExceed() {
-  this.store.handleExceed('adGroup')
+  store.handleExceed('adGroup')
 }
 function handleBeforeUpload(rawFile) {
-  return this.store.handleBeforeUpload('adGroup', rawFile)
+  return store.handleBeforeUpload('adGroup', rawFile)
 }
 
 function handleSuccess(regType, data, uploadFile) {
-  const { result, type } = this.store.uploadSuccess(regType, data, uploadFile)
+  const { result, type } = store.uploadSuccess(regType, data, uploadFile)
 
   if (result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
@@ -390,7 +389,7 @@ function handleSuccess(regType, data, uploadFile) {
 }
 
 function handlePreview(uploadFile) {
-  this.store.handlePreview(uploadFile)
+  store.handlePreview(uploadFile)
 }
 function handleRemove(type) {
   switch (type) {
@@ -406,12 +405,11 @@ function handleRemove(type) {
 }
 
 function save() {
-  this.validate('adType', 'groupName', 'logoFile', 'pointIconFile', 'callBackUrl', 'pointName')
+  validate('adType', 'groupName', 'logoFile', 'pointIconFile', 'callBackUrl', 'pointName')
   if (validation.value.valid) {
-    this.store.adGroupModify(() => {
+    store.adGroupModify(() => {
       const { referrer } = route.query
-      this.store.setAdGroupDetail(null)
-      console.log(referrer, route.params.referrer)
+      store.setAdGroupDetail(null)
       router.push({ path: referrer || route.params.referrer })
     })
   }

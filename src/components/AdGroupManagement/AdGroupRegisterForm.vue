@@ -262,7 +262,7 @@ const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/ad
 const headers = ref({ Authorization: getToken() })
 
 function validate(...types) {
-  const { adType, groupName, logoFile, pointIconFile, pointName, callBackUrl, commissionRate, rewordRate } = this.adGroups.register
+  const { adType, groupName, logoFile, pointIconFile, pointName, callBackUrl, commissionRate, rewordRate } = adGroups.value.register
   validation.value.valid = true
 
   for (const type of types) {
@@ -368,14 +368,14 @@ function validate(...types) {
 }
 
 function handleExceed() {
-  this.store.handleExceed('adGroup')
+  store.handleExceed('adGroup')
 }
 function handleBeforeUpload(rawFile) {
-  return this.store.handleBeforeUpload('adGroup', rawFile)
+  return store.handleBeforeUpload('adGroup', rawFile)
 }
 
 function handleSuccess(regType, data, uploadFile) {
-  const { result, type } = this.store.uploadSuccess(regType, data, uploadFile)
+  const { result, type } = store.uploadSuccess(regType, data, uploadFile)
 
   if (result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
@@ -403,7 +403,7 @@ function handleSuccess(regType, data, uploadFile) {
 }
 
 function handlePreview(uploadFile) {
-  this.store.handlePreview(uploadFile)
+  store.handlePreview(uploadFile)
 }
 function handleRemove(type) {
   switch (type) {
@@ -419,21 +419,14 @@ function handleRemove(type) {
 }
 
 function save() {
-  // this.validate('adType', 'groupName', 'logoFile', 'pointIconFile', 'callBackUrl', 'pointName')
-  // if (validation.value.valid) {
-  //   this.store.adGroupRegister(() => {
-  //     this.store.initRegisterForm('adGroup')
-  //     const { referrer } = route.query
-  //
-  //   })
-  //
-  //
-  // }
-  const { referrer } = route.query
-
-  console.log(route.meta.params)
-  console.log({ path: referrer || route.meta.params.referrer })
-  router.push({ path: referrer || route.meta.params.referrer })
+  validate('adType', 'groupName', 'logoFile', 'pointIconFile', 'callBackUrl', 'pointName')
+  if (validation.value.valid) {
+    store.adGroupRegister(() => {
+      store.initRegisterForm('adGroup')
+      const { referrer } = route.query
+      router.push({ path: referrer || route.meta.params.referrer })
+    })
+  }
 }
 
 </script>

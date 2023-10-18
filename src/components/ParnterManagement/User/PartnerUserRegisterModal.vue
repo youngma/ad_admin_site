@@ -101,6 +101,7 @@ import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance } from 'vue'
 import { ElMessageBox } from 'element-plus'
+import {validPhone} from "@/utils/validate.js";
 
 defineOptions({
   name: 'PartnerUserRegisterModal'
@@ -133,7 +134,8 @@ const store = partnerStore()
 const { users } = storeToRefs(store)
 
 function validate(...types) {
-  const { userId, userPassword, userName, phoneNumber, alReadyCheck } = this.users.register
+
+  const { userId, userPassword, userName, phoneNumber, alReadyCheck } = users.value.register
 
   console.log(userId, userPassword, userName, phoneNumber, alReadyCheck)
   validation.value.valid = true
@@ -210,13 +212,22 @@ function validate(...types) {
           break
         }
 
+        if (!validPhone(phoneNumber)) {
+          validation.value.phoneNumber.check = false
+          validation.value.phoneNumber.message = '전화번호 형식을 확인 해주세요.'
+          users.value.register.phoneNumber = null
+          validation.value.valid = false
+
+          break
+        }
+
         break
     }
   }
 }
 
 async function check(t) {
-  const { alReadyCheck } = this.users.register
+  const { alReadyCheck } = users.value.register
 
   if (alReadyCheck) {
     return false
@@ -224,15 +235,15 @@ async function check(t) {
 
   this.validate('userId')
   if (validation.value.valid) {
-    const retMsg = await this.store.userIdCheck() ? '사용 가능한 아이디 입니다.' : '이미 등록된 아이디 입니다.'
+    const retMsg = await store.userIdCheck() ? '사용 가능한 아이디 입니다.' : '이미 등록된 아이디 입니다.'
     ElMessageBox.alert(retMsg, '확인', {}, appContext)
   }
 }
 
 function save() {
-  this.validate('alReadyCheck', 'userName', 'userPassword', 'phoneNumber')
+  validate('alReadyCheck', 'userName', 'userPassword', 'phoneNumber')
   if (validation.value.valid) {
-    this.store.userRegister()
+    store.userRegister()
   }
 }
 

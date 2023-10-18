@@ -87,7 +87,7 @@ const { searchParams } = storeToRefs(store)
 const { CampaignType, AdGroupStatus } = storeToRefs(common)
 
 function clickInit() {
-  this.store.initAdGroup()
+  store.initAdGroup()
 }
 
 function search({ page, size }) {

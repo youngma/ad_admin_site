@@ -4,7 +4,6 @@
       <el-col class="comm_form_box comm_text_tit">매체사 등록</el-col>
     </el-row>
     <div class="comm_comp_table">
-
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
           <strong class="comm_tit_box">사업자 명</strong>
@@ -205,7 +204,7 @@ const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/bu
 const headers = ref({ Authorization: getToken() })
 
 function validate(...types) {
-  const { businessName, businessNumber, phoneNumber, email, taxBillEmail, alReadyCheck, file } = this.register
+  const { businessName, businessNumber, phoneNumber, email, taxBillEmail, alReadyCheck, file } = register.value
 
   console.log(businessName, businessNumber, phoneNumber, email, taxBillEmail, alReadyCheck, file)
   validation.value.valid = true
@@ -274,7 +273,7 @@ function validate(...types) {
         if (!validPhone(phoneNumber)) {
           validation.value.phoneNumber.check = false
           validation.value.phoneNumber.message = '전화번호 형식을 확인 해주세요.'
-          this.register.phoneNumber = null
+          register.value.phoneNumber = null
           validation.value.valid = false
 
           break
@@ -299,7 +298,7 @@ function validate(...types) {
         if (!validEmail(email)) {
           validation.value.email.check = false
           validation.value.email.message = '이메일형식을 확인 해주세요.'
-          this.register.email = null
+          register.value.email = null
           validation.value.valid = false
 
           break
@@ -324,7 +323,7 @@ function validate(...types) {
         if (!validEmail(taxBillEmail)) {
           validation.value.taxBillEmail.check = false
           validation.value.taxBillEmail.message = '세금계산서 발행 이메일 주소를 확인 해주세요.'
-          this.register.taxBillEmail = null
+          register.value.taxBillEmail = null
           validation.value.valid = false
 
           break
@@ -352,14 +351,14 @@ function validate(...types) {
 }
 
 const handleExceed = () => {
-  this.store.handleExceed()
+  store.handleExceed()
 }
 function handleBeforeUpload(rawFile) {
-  return this.store.handleBeforeUpload(rawFile)
+  return store.handleBeforeUpload(rawFile)
 }
 
 function handleSuccess(data, uploadFile) {
-  const { result, type } = this.store.uploadSuccess(data, uploadFile)
+  const { result, type } = store.uploadSuccess(data, uploadFile)
 
   if (result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
@@ -373,30 +372,29 @@ function handleSuccess(data, uploadFile) {
 }
 
 function handlePreview(uploadFile) {
-  console.log(111, uploadFile)
-  this.store.handlePreview(uploadFile)
+  store.handlePreview(uploadFile)
 }
 function handleRemove() {
   register.value.file = null
 }
 
 async function check(t) {
-  const { alReadyCheck } = this.register
+  const { alReadyCheck } = register.value
   if (alReadyCheck) {
     return false
   }
 
-  this.validate('businessNumber')
+  validate('businessNumber')
   if (validation.value.valid) {
-    const retMsg = await this.store.businessNumberCheck() ? '사용 가능한 사업자 번호 입니다.' : '이미 등록된 사업자번호 입니다.'
+    const retMsg = await store.businessNumberCheck() ? '사용 가능한 사업자 번호 입니다.' : '이미 등록된 사업자번호 입니다.'
     await ElMessageBox.alert(retMsg, '확인', {}, appContext)
   }
 }
 
 function save() {
-  this.validate('alReadyCheck', 'businessName', 'businessNumber', 'phoneNumber', 'email', 'taxBillEmail', 'businessRegistrationFile')
+  validate('alReadyCheck', 'businessName', 'businessNumber', 'phoneNumber', 'email', 'taxBillEmail', 'businessRegistrationFile')
   if (validation.value.valid) {
-    this.store.registerPartner()
+    store.registerPartner()
   }
 }
 

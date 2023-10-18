@@ -1,12 +1,14 @@
 <template>
+  {{ userList }}
+  {{ users.list }}
   <el-table
     :data="userList"
     class="custom-table"
     style="width: 100%"
   >
     <el-table-column fixed prop="userId" label="사용자 아이디" width="150" header-align="center" align="center" />
-    <el-table-column prop="userName" label="사용자 이름"  width="150" header-align="center" />
-    <el-table-column prop="phoneNumber" label="전화 번호" width="150" header-align="center" align="center">
+    <el-table-column prop="userName" label="사용자 이름"  header-align="center" />
+    <el-table-column prop="phoneNumber" label="전화 번호"  header-align="center" align="center">
       <template #default="scope">
         {{ phoneFormatter(scope.row.phoneNumber) }}
       </template>
@@ -59,22 +61,22 @@ const store = partnerStore()
 const { users, userList, userSearchParams, userTotal, selectedUser, userModifyModal } = storeToRefs(store)
 
 function pageChange(number) {
-  this.store.searchByUsers({ page: number })
+  store.searchByUsers({ page: number })
 }
 
 function enabled(row) {
   const { userSeq } = row
-  this.store.userEnable(userSeq)
+  store.userEnable(userSeq)
 }
 
 function disabled(row) {
   const { userSeq } = row
-  this.store.userDisable(userSeq)
+  store.userDisable(userSeq)
 }
 
 function modify(row) {
-  this.store.userSelected(row)
-  this.store.userModalOpen('modify')
+  store.userSelected(row)
+  store.userModalOpen('modify')
 }
 
 </script>

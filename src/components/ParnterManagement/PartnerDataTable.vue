@@ -70,15 +70,15 @@ const route = useRoute()
 const { partners, searchParams, total } = storeToRefs(store)
 
 function pageChange(number) {
-  this.store.search({ page: number })
+  store.search({ page: number })
 }
 
 function open(row) {
-  this.store.selectedPartner(row)
+  store.selectedPartner(row)
 }
 
 function close() {
-  this.store.selectedPartner(null)
+  store.selectedPartner(null)
 }
 
 function goDetail(row) {
@@ -87,7 +87,7 @@ function goDetail(row) {
     selected: [row.partnerSeq]
   })
 
-  this.router.push({ name: 'PartnerDetail', query: { referrer: '/partner-management/detail' }})
+  router.push({ name: 'PartnerDetail', query: { referrer: '/partner-management/detail' }})
 }
 
 </script>

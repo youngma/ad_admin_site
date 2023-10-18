@@ -13,7 +13,7 @@ import PartnerDataTable from '@/components/ParnterManagement/PartnerDataTable.vu
 import { onMounted } from 'vue'
 import { partnerManagementStore } from '@/store/modules/admin/partnerManagementStore.js'
 
-const store = partnerManagementStore()
+// const store = partnerManagementStore()
 
 onMounted(async() => {
   partnerManagementStore().init()

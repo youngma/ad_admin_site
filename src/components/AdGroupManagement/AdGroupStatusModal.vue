@@ -71,7 +71,6 @@ const { adGroups } = storeToRefs(store)
 const message = ref('')
 function validate(...types) {
   validation.value.valid = true
-
   for (const type of types) {
     switch (type) {
       case 'message':
@@ -88,28 +87,26 @@ function validate(...types) {
         }
         break
     }
-
-    console.log(validation)
   }
 }
 
 function modify() {
-  this.validate('message')
+  validate('message')
   if (validation.value.valid) {
     if (status === 'reject') {
-      this.store.adGroupReject(groupSeq, this.message)
+      store.adGroupReject(groupSeq, this.message)
     }
 
     if (status === 'hold') {
-      this.store.adGroupHold(groupSeq, this.message)
+      store.adGroupHold(groupSeq, this.message)
     }
   }
 }
 
 function close() {
-  this.message = ''
-  this.validation.message.check = true
-  this.validation.message.message = ''
+  message.value = ''
+  validation.value.message.check = true
+  validation.value.message.message = ''
 }
 
 </script>

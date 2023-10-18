@@ -195,15 +195,15 @@ function getStatusMessage(row) {
 }
 
 function goAdGroupDetail(row) {
-  this.store.setAdGroupDetail(row)
-  this.router.push({ name: 'AdGroupDetail', query: { referrer }})
+  store.setAdGroupDetail(row)
+  router.push({ name: 'AdGroupDetail', query: { referrer }})
 }
 
 function approval(row) {
   const { groupSeq, partner } = row
   const { partnerSeq } = partner
-  this.store.adGroupApproval({ partnerSeq, groupSeq }, () => {
-    this.store.reloadByAdGroups()
+  store.adGroupApproval({ partnerSeq, groupSeq }, () => {
+    store.reloadByAdGroups()
   })
 }
 

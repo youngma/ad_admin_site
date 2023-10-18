@@ -7,18 +7,10 @@
 <script setup>
 
 import PartnerRegisterForm from '@/components/ParnterManagement/PartnerRegisterForm.vue'
-import { onMounted } from 'vue'
-import { partnerManagementStore } from '@/store/modules/admin/partnerManagementStore.js'
 
 defineOptions({
-  name: 'AdvertiserRegister'
+  name: 'PartnerRegister'
 })
-
-// const store = partnerManagementStore()
-
-// onMounted(async() => {
-//   store.initRegisterForm()
-// })
 
 </script>
 

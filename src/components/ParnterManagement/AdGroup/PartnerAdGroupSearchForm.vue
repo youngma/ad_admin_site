@@ -86,11 +86,11 @@ const { adGroups } = storeToRefs(store)
 const { CampaignType, AdGroupStatus } = storeToRefs(common)
 
 function clickInit() {
-  this.store.tabInitAdGroup()
+  store.tabInitAdGroup()
 }
 
 function search({ page, size }) {
-  this.store.searchByAdGroups({ page, size })
+  store.searchByAdGroups({ page, size })
 }
 
 </script>

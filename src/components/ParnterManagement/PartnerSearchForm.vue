@@ -70,11 +70,11 @@ const store = partnerManagementStore()
 const { searchParams } = storeToRefs(store)
 
 function clickInit() {
-  this.store.init()
+  store.init()
 }
 
 function search({ page, size }) {
-  this.store.search({ page, size })
+  store.search({ page, size })
 }
 
 </script>

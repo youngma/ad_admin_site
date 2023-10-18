@@ -34,14 +34,14 @@ const { selected, partners } = storeToRefs(store)
 
 function searchUpdate({ content, current }) {
   console.log(current)
-  this.store.setPartners({
+  store.setPartners({
     partners: content,
     selected: current
   })
 }
 
 function onSearchChange(value) {
-  this.store.setPartnerSeq({ selected: value })
+  store.setPartnerSeq({ selected: value })
 }
 
 // function init() {

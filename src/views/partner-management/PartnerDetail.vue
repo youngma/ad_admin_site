@@ -29,7 +29,7 @@
 
 <script setup>
 
-import {watch, onMounted, onActivated, ref} from 'vue'
+import { watch, onMounted, onActivated, ref } from 'vue'
 import PartnerSearchForm2 from '@/components/ParnterManagement/PartnerSearchForm2.vue'
 
 import PartnerUsers from '@/views/partner-management/tabs/PartnerUsers.vue'
@@ -42,7 +42,6 @@ import { storeToRefs } from 'pinia'
 defineOptions({
   name: 'PartnerDetail'
 })
-
 
 const partnerDetailSearchForm = ref(null)
 const store = partnerStore()
@@ -65,38 +64,38 @@ onActivated(async() => {
 })
 
 function searchUpdate({ content, current }) {
-  this.store.setPartners({
+  store.setPartners({
     partners: content,
     selected: current
   })
 }
 
 function onSearchChange(value) {
-  this.store.setPartnerSeq({ selected: value })
-  if (this.partner) {
-    this.store.reloadByUsers()
-    this.store.reloadByAccounts()
-    this.store.reloadByAdGroups()
+  store.setPartnerSeq({ selected: value })
+  if (partner.value) {
+    store.reloadByUsers()
+    store.reloadByAccounts()
+    store.reloadByAdGroups()
   } else {
-    this.store.tabInitUser()
-    this.store.tabInitAccount()
-    this.store.tabInitAdGroup()
+    store.tabInitUser('ALL')
+    store.tabInitAccount('ALL')
+    store.tabInitAdGroup('ALL')
   }
 }
 
 function onTabsChange(name) {
-  if (this.partner) {
+  if (partner.value) {
     reload(name)
   }
 }
 
 function reload(name) {
   switch (name) {
-    case 'user': this.store.reloadByUsers()
+    case 'user': store.reloadByUsers()
       break
-    case 'account': this.store.reloadByAccounts()
+    case 'account': store.reloadByAccounts()
       break
-    case 'ad-group': this.store.reloadByAdGroups()
+    case 'ad-group': store.reloadByAdGroups()
       break
   }
 }

@@ -71,7 +71,6 @@
 import { ref, computed, defineProps, defineEmits, watch } from 'vue'
 import { businessNumberFormatter, phoneFormatter } from '@/utils/customElTableFormatter.js'
 import * as PARTNER_API from '@/api/PARTNER_API.js'
-import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { onBeforeMount, defineExpose } from 'vue'
 
 const { multiple, selected, partners, multipleLimit } = defineProps({
@@ -139,7 +138,7 @@ const partner = computed(() => {
 // const { selected, loading, options, advertiser } = storeToRefs(store)
 
 async function searchByName(query) {
-  this.loading = true
+  loading.value = true
 
   const result = await PARTNER_API.search({
     businessName: query,
@@ -150,7 +149,7 @@ async function searchByName(query) {
   currentPartners.value = content
 
   emit('search-update', { content, current: multiple ? current.value : [current.value] })
-  this.loading = false
+  loading.value = false
 }
 
 function onRemoveTag(value) {

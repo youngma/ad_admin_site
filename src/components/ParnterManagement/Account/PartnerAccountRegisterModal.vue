@@ -171,7 +171,7 @@ const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/ac
 const headers = ref({ Authorization: getToken() })
 
 function validate(...types) {
-  const { bankCode, bankAccount, accountHolder, alReadyCheck, file } = this.accounts.register
+  const { bankCode, bankAccount, accountHolder, alReadyCheck, file } = accounts.value.register
   validation.value.valid = true
 
   for (const type of types) {
@@ -260,14 +260,14 @@ function validate(...types) {
 }
 
 const handleExceed = () => {
-  this.store.handleExceed()
+  store.handleExceed()
 }
 function handleBeforeUpload(rawFile) {
-  return this.store.handleBeforeUpload('account', rawFile)
+  return store.handleBeforeUpload('account', rawFile)
 }
 
 function handleSuccess(data, uploadFile) {
-  const { result, type } = this.store.uploadSuccess('account', data, uploadFile)
+  const { result, type } = store.uploadSuccess('account', data, uploadFile)
 
   if (result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
@@ -281,22 +281,22 @@ function handleSuccess(data, uploadFile) {
 }
 
 function handlePreview(uploadFile) {
-  this.store.handlePreview(uploadFile)
+  store.handlePreview(uploadFile)
 }
 function handleRemove() {
   accounts.value.file = null
 }
 async function check() {
-  const { alReadyCheck } = this.accounts.register
+  const { alReadyCheck } = accounts.value.register
 
   if (alReadyCheck) {
     return false
   }
 
-  this.validate('bankCode', 'bankAccount')
+  validate('bankCode', 'bankAccount')
 
   if (validation.value.valid) {
-    const check = await this.store.accountCheck()
+    const check = await store.accountCheck()
 
     const retMsg = check ? '사용 가능한 계좌 입니다.' : '이미 등록된 계좌 입니다.'
 
@@ -309,9 +309,9 @@ async function check() {
 }
 
 function save() {
-  this.validate('alReadyCheck', 'bankCode', 'bankAccount', 'accountHolder')
+  validate('alReadyCheck', 'bankCode', 'bankAccount', 'accountHolder')
   if (validation.value.valid) {
-    this.store.accountRegister()
+    store.accountRegister()
   }
 }
 

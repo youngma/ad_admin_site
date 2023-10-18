@@ -90,7 +90,7 @@ const store = partnerStore()
 const { users } = storeToRefs(store)
 
 function validate(...types) {
-  const { userSeq, userId, userName, phoneNumber } = this.users.selectedUser
+  const { userSeq, userId, userName, phoneNumber } = users.value.selectedUser
 
   console.log(userName, phoneNumber)
   validation.value.valid = true
@@ -131,9 +131,9 @@ function validate(...types) {
 }
 
 function save() {
-  this.validate('userName', 'phoneNumber')
+  validate('userName', 'phoneNumber')
   if (validation.value.valid) {
-    this.store.userModify()
+    store.userModify()
   }
 }
 
