@@ -1,6 +1,6 @@
 // import { Router } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
-import { partnerStore} from "@/store/modules/admin/partnerStore.js";
+import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 
 /* Layout */
 import Layout from '@/layout/index.vue'
@@ -324,9 +324,9 @@ export const asyncRoutes = [
       },
       {
         path: 'partner',
-        component: () => import('@/views/ad-report/quiz/AdvertiserReport.vue'),
+        component: () => import('@/views/ad-report/quiz/PartnerReport.vue'),
         name: 'QuizPartnerReport',
-        meta: { title: '파트너 리포트', icon: 'ri:add-box-fill'}
+        meta: { title: '파트너 리포트', icon: 'ri:add-box-fill' }
       }
     ]
   },

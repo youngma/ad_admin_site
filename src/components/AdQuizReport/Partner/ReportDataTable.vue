@@ -1,6 +1,6 @@
 <template>
   <el-table
-    :data="advertiser.list"
+    :data="partner.list"
     class="custom-table"
     style="width: 100%"
   >
@@ -9,9 +9,9 @@
         {{dateFormatter(scope.row.rptDate) }}
       </template>
     </el-table-column>
-    <el-table-column  prop="businessName" label="광고주 명" width="150" header-align="center" align="center" />
-    <el-table-column  prop="campaignCode" label="광고 코드" width="150" header-align="center" align="center" />
-    <el-table-column  prop="campaignName" label="광고 명" width="150" header-align="center" align="center" />
+    <el-table-column  prop="businessName" label="파트너 명" width="150" header-align="center" align="center" />
+    <el-table-column  prop="groupCode" label="그룹 코드" width="150" header-align="center" align="center" />
+    <el-table-column  prop="groupName" label="그룹 명" width="150" header-align="center" align="center" />
     <el-table-column  prop="reqCnt" label="광고 요청 건"  header-align="center" align="right" >
       <template #default="scope">
         {{moneyFormatter(scope.row.reqCnt) }} 건
@@ -27,21 +27,22 @@
         {{moneyFormatter(scope.row.hintCnt) }} 건
       </template>
     </el-table-column>
-    <el-table-column  prop="clickCnt" label="광코 클릭 건"  header-align="center" align="right" >
+    <el-table-column  prop="clickCnt" label="정답 클릭 건"  header-align="center" align="right" >
       <template #default="scope">
-        {{moneyFormatter(scope.row.clickCnt) }} 건
+        {{moneyFormatter(scope.row.answerCnt) }} 건
       </template>
     </el-table-column>
   </el-table>
 
+  {{ partner }}
   <div class="page-box">
     <el-pagination
-      :page-size="advertiser.searchParams.size"
-      :current-page="advertiser.searchParams.page"
+      :page-size="partner.searchParams.size"
+      :current-page="partner.searchParams.page"
       background
       :default-current-page=1
       :default-page-size=20
-      :total="advertiser.total"
+      :total="partner.total"
       layout="prev, pager, next"
       class="mt-4"
       @size-change="(v) => pageChange(v)"
@@ -57,15 +58,15 @@ import { storeToRefs } from 'pinia'
 import { dateFormatter, moneyFormatter } from '../../../utils/customElTableFormatter.js'
 
 defineOptions({
-  name: 'AdvertiserDailyReportDataTable'
+  name: 'PartnerDailyReportDataTable'
 })
 
 const store = quizReportStore()
 
-const { advertiser } = storeToRefs(store)
+const { partner } = storeToRefs(store)
 
 function pageChange(number) {
-  this.store.searchByAdvertiser({ page: number })
+  this.store.searchByPartner({ page: number })
 }
 
 </script>

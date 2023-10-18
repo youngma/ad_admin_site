@@ -1,6 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import topLevelAwait from 'vite-plugin-top-level-await'
 
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -20,6 +21,13 @@ export default ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
 
   return defineConfig({
+    build: {
+      target: 'modules',
+      outDir: 'dist',
+      assetsDir: 'assets',
+      minify: true,
+      sourcemap: false
+    },
     resolve: {
       alias: {
         path: 'path-browserify',
@@ -44,13 +52,19 @@ export default ({ mode }) => {
       svgLoader({
         // defaultImport: '@/icons/svg/*.svg'
       }),
-      viteMockServe({
-        mockPath: 'mock',
-        // According to the project configuration. Can be configured in the .env file
-        enable: process.env.NODE_ENV === 'development',
-        logger: process.env.NODE_ENV === 'development',
-        watchFiles: true
+      topLevelAwait({
+        // The export name of top-level await promise for each chunk module
+        promiseExportName: '__tla',
+        // The function to generate import names of top-level await promise in each chunk module
+        promiseImportName: i => `__tla_${i}`
       }),
+      // viteMockServe({
+      // mockPath: 'mock',
+      // According to the project configuration. Can be configured in the .env file
+      // enable: process.env.NODE_ENV === 'development',
+      // logger: process.env.NODE_ENV === 'development',
+      // watchFiles: true
+      // }),
       ElementPlus({
         useSource: true
       }),

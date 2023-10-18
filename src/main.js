@@ -28,9 +28,13 @@ import * as permission from '@/permission.js'
 
 const pinia = createPinia()
 
-
-
 pinia.use(piniaPersist)
+
+pinia.use(({ store }) => {
+  store.$messageBox = newApp.config.globalProperties.$messageBox
+  store.$alert = newApp.config.globalProperties.$alert
+  store.$confirm = newApp.config.globalProperties.$confirm
+})
 
 const newApp = createApp(App)
   .use(pinia)
@@ -39,11 +43,6 @@ const newApp = createApp(App)
     locale: koLang
   })
 //
-pinia.use(({ store }) => {
-  store.$messageBox = newApp.config.globalProperties.$messageBox
-  store.$alert = newApp.config.globalProperties.$alert
-  store.$confirm = newApp.config.globalProperties.$confirm
-})
 
 
 await permission.generateRoutes(router)

@@ -17,8 +17,10 @@ export const quizReportStore = defineStore('quizReportStore', {
     },
     partner: {
       searchParams: {
+        partnerSeq: null,
         page: 1,
-        size: 20
+        size: 20,
+        searchDate: [moment().add(-10, 'days').toDate(), moment().add(-1, 'days').toDate()]
       },
       list: [],
       total: 0
@@ -29,6 +31,7 @@ export const quizReportStore = defineStore('quizReportStore', {
   actions: {
     initByAdvertiser() {
       this.advertiser.searchParams = {
+        advertiserSeq: null,
         page: 1,
         size: 20,
         searchDate: [moment().add(-10, 'days').format('YYYY-MM-DD'), moment().add(-1, 'days').format('YYYY-MM-DD')]
@@ -57,6 +60,38 @@ export const quizReportStore = defineStore('quizReportStore', {
     },
     setAdvertiser(advertiserSeq) {
       this.advertiser.searchParams.advertiserSeq = advertiserSeq
+    },
+    initByPartner() {
+      this.partner.searchParams = {
+        partnerSeq: null,
+        page: 1,
+        size: 20,
+        searchDate: [moment().add(-10, 'days').format('YYYY-MM-DD'), moment().add(-1, 'days').format('YYYY-MM-DD')]
+      }
+    },
+    async reloadByPartner(params) {
+      const searchParams = Object.assign(
+        params, {
+          startDate: this.partner.searchParams.searchDate[0],
+          endDate: this.partner.searchParams.searchDate[1]
+        }
+      )
+
+      const result = await REPORT_QUIZ_API.searchByPartner(searchParams)
+      const { content, totalElements } = result
+
+      this.partner.list = content
+      this.partner.total = totalElements
+    },
+    async searchByPartner({ page, size }) {
+      const params = {
+        page: page,
+        size: !size && size > 0 ? size : undefined
+      }
+      await this.reloadByPartner(params)
+    },
+    setPartner(partnerSeq) {
+      this.partner.searchParams.partnerSeq = partnerSeq
     }
   },
   persist: {

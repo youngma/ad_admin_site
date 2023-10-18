@@ -67,15 +67,12 @@
 import { adminManagementStore } from '@/store/modules/admin/adminManagementStore.js'
 import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance } from 'vue'
-import { ElMessageBox } from 'element-plus'
 import { replaceWhiteSpace, validPhone, validSpace } from '@/utils/validate.js'
 import { phoneFormatter } from '@/utils/customElTableFormatter.js'
 
 defineOptions({
   name: 'AdminModifyModal'
 })
-
-const { appContext } = getCurrentInstance()
 
 const validation = ref({
   valid: true,
@@ -93,9 +90,12 @@ const store = adminManagementStore()
 const { selectedUser, modifyPopup } = storeToRefs(store)
 
 function validate(...types) {
-  const { userSeq, userId, userName, phoneNumber } = this.selectedUser
+
+  console.log(selectedUser)
+  const { userSeq, userId, userName, phoneNumber } = selectedUser.value
 
   console.log(userName, phoneNumber)
+
   validation.value.valid = true
 
   for (const type of types) {
@@ -118,7 +118,7 @@ function validate(...types) {
           validation.value.userName.check = false
           validation.value.userName.message = '공백을 제거 해주세요.'
           validation.value.valid = false
-          this.selectedUser.userName = replaceWhiteSpace(userName)
+          selectedUser.value.userName = replaceWhiteSpace(userName)
           break
         }
 
@@ -147,14 +147,12 @@ function validate(...types) {
         break
     }
   }
-
-  console.log(validation.value)
 }
 
 function modify() {
-  this.validate('userName', 'phoneNumber')
+  validate('userName', 'phoneNumber')
   if (validation.value.valid) {
-    this.store.adminModify()
+    store.adminModify()
   }
 }
 

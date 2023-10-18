@@ -64,26 +64,26 @@ const store = adminManagementStore()
 
 const { adminUsers, selectedUser, searchParams, total } = storeToRefs(store)
 
-function pageChange(number) {
-  this.store.search({ page: number })
+const pageChange = (number) => {
+  store.search({ page: number })
 }
 
-function enabled(row) {
+const enabled = (row) => {
   const { userSeq } = row
-  this.store.enabled(userSeq)
+  store.enabled(userSeq)
 }
 
-function disabled(row) {
+const disabled = (row) => {
   const { userSeq } = row
-  this.store.disabled(userSeq)
+  store.disabled(userSeq)
 }
 
-function open(row) {
-  this.store.selected(row)
+const open = (row) => {
+  store.selected(row)
 }
 
-function close() {
-  this.store.selected(null)
+const close = () => {
+  store.selected(null)
 }
 
 </script>

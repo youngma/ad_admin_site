@@ -77,11 +77,11 @@ const { searchParams } = storeToRefs(store)
 const { UserStatus } = storeToRefs(common)
 
 function clickInit() {
-  this.store.init()
+  store.init()
 }
 
 function search({ page, size }) {
-  this.store.search({ page, size })
+  store.search({ page, size })
 }
 
 </script>
