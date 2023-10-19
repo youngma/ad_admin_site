@@ -200,7 +200,7 @@ export const advertiserStore = defineStore('advertiserStore', {
     //
     //   this.loading = false
     // },
-    tabInitUser() {
+    tabInitUser(type) {
       this.users.searchParams = {
         page: 1,
         size: 20,
@@ -209,12 +209,15 @@ export const advertiserStore = defineStore('advertiserStore', {
         userStatus: ''
       }
 
-      this.users.list = []
+      if (type === 'ALL') {
+        this.users.list = []
+      }
+
       this.users.selectedUser = null
       this.users.registerModal = false
       this.users.modifyModal = false
     },
-    tabInitAccount() {
+    tabInitAccount(type) {
       this.accounts.searchParams = {
         page: 1,
         size: 20,
@@ -223,12 +226,16 @@ export const advertiserStore = defineStore('advertiserStore', {
         accountHolder: null,
         accountUse: ''
       }
-      this.accounts.list = []
+
+      if (type === 'ALL') {
+        this.accounts.list = []
+      }
+
       this.accounts.selectedUser = null
       this.accounts.registerModal = false
       this.accounts.modifyModal = false
     },
-    tabInitCampaign() {
+    tabInitCampaign(type) {
       this.campaigns.searchParams = {
         page: 1,
         size: 20,
@@ -240,9 +247,13 @@ export const advertiserStore = defineStore('advertiserStore', {
         targetUrl: null,
         campaignStatus: ''
       }
-      this.campaigns.list = [],
-      this.campaigns.selectedCampaign = null,
-      this.campaigns.total = 0,
+
+      if (type === 'ALL') {
+        this.campaigns.list = []
+      }
+
+      this.campaigns.selectedCampaign = null
+      this.campaigns.total = 0
       this.campaigns.registerModal = false
     },
 
@@ -662,8 +673,6 @@ export const advertiserStore = defineStore('advertiserStore', {
       }
     },
     campaignRegister() {
-
-
       const newCampaign = deepClone(this.campaigns.register)
       const { adDate, totalParticipationLimit, dayParticipationLimit, campaignType, smartStore, quiz } = this.campaigns.register
 

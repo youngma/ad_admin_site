@@ -226,7 +226,7 @@ const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/bu
 const headers = ref({ Authorization: getToken() })
 
 function validate(...types) {
-  const { businessName, businessNumber, advertiserName, phoneNumber, email, taxBillEmail, alReadyCheck, file } = this.register
+  const { businessName, businessNumber, advertiserName, phoneNumber, email, taxBillEmail, alReadyCheck, file } = register.value
 
   validation.value.valid = true
 
@@ -387,14 +387,14 @@ function validate(...types) {
 }
 
 const handleExceed = () => {
-  this.store.handleExceed()
+  store.handleExceed()
 }
 function handleBeforeUpload(rawFile) {
-  return this.store.handleBeforeUpload(rawFile)
+  return store.handleBeforeUpload(rawFile)
 }
 
 function handleSuccess(data, uploadFile) {
-  const { result, type } = this.store.uploadSuccess(data, uploadFile)
+  const { result, type } = store.uploadSuccess(data, uploadFile)
 
   if (result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
@@ -408,21 +408,21 @@ function handleSuccess(data, uploadFile) {
 }
 
 function handlePreview(uploadFile) {
-  this.store.handlePreview(uploadFile)
+  store.handlePreview(uploadFile)
 }
 function handleRemove() {
   register.value.file = null
 }
 
 async function check(t) {
-  const { alReadyCheck } = this.register
+  const { alReadyCheck } = register.value
   if (alReadyCheck) {
     return false
   }
 
-  this.validate('businessNumber')
+  validate('businessNumber')
   if (validation.value.valid) {
-    const retMsg = await this.store.businessNumberCheck() ? '사용 가능한 사업자 번호 입니다.' : '이미 등록된 사업자번호 입니다.'
+    const retMsg = await store.businessNumberCheck() ? '사용 가능한 사업자 번호 입니다.' : '이미 등록된 사업자번호 입니다.'
     await ElMessageBox.alert(retMsg, '확인', {}, appContext)
   }
 }
@@ -430,7 +430,7 @@ async function check(t) {
 function save() {
   this.validate('alReadyCheck', 'businessName', 'businessNumber', 'advertiserName', 'phoneNumber', 'email', 'taxBillEmail', 'businessRegistrationFile')
   if (validation.value.valid) {
-    this.store.advertiserRegister()
+    store.advertiserRegister()
   }
 }
 

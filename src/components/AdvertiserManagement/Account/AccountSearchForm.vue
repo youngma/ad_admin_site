@@ -72,11 +72,11 @@ const { accounts } = storeToRefs(store)
 const { Bank } = storeToRefs(common)
 
 function clickInit() {
-  this.store.tabInitAccount()
+  store.tabInitAccount()
 }
 
 function search({ page, size }) {
-  this.store.searchByAccounts({ page, size })
+  store.searchByAccounts({ page, size })
 }
 
 </script>

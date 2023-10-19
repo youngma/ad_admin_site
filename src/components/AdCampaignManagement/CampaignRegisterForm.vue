@@ -426,7 +426,7 @@
                   <el-input
                     v-model="campaigns.register.quiz.quizAnswer"
                     class=""
-                    placeholder="퀴즈 제목을 입력 해주세요."
+                    placeholder="퀴즈 정답을 입력 해주세요."
                   />
                 </el-col>
 
@@ -706,7 +706,7 @@ const disabledDate = (time) => {
 }
 
 function validate(...types) {
-  const { campaignName, campaignType, campaignDesc, dayParticipationLimit, adDate, smartStore, quiz } = this.campaigns.register
+  const { campaignName, campaignType, campaignDesc, dayParticipationLimit, adDate, smartStore, quiz } = campaigns.value.register
 
   validation.value.valid = true
 
@@ -810,17 +810,17 @@ function validate(...types) {
     }
 
     if (campaignType === 'TYPE1') {
-      this.smartSotreValidate('useHow', 'image', 'targetUrlPc', 'targetUrlMobile', 'totalBudget', 'adPrice', 'goodsCode', 'paymentTerms', 'holdingTime')
+      smartSotreValidate('useHow', 'image', 'targetUrlPc', 'targetUrlMobile', 'totalBudget', 'adPrice', 'goodsCode', 'paymentTerms', 'holdingTime')
     }
 
     if (campaignType === 'QUIZ01') {
-      this.quizValidate('useHow', 'mainImage', 'detailImage1', 'detailImage2', 'targetUrlPc', 'targetUrlMobile', 'quizTitle', 'quizAnswer', 'goodsCode')
+      quizValidate('useHow', 'mainImage', 'detailImage1', 'detailImage2', 'targetUrlPc', 'targetUrlMobile', 'quizTitle', 'quizAnswer', 'goodsCode')
     }
   }
 }
 
 function smartSotreValidate(...types) {
-  const { useHow, image, targetUrlPc, targetUrlMobile, totalBudget, adPrice, goodsCode, paymentTerms, holdingTime } = this.campaigns.register.smartStore
+  const { useHow, image, targetUrlPc, targetUrlMobile, totalBudget, adPrice, goodsCode, paymentTerms, holdingTime } = campaigns.value.register.smartStore
   for (const type of types) {
     switch (type) {
       case 'targetUrlPc' :
@@ -986,7 +986,7 @@ function smartSotreValidate(...types) {
 }
 
 function quizValidate(...types) {
-  const { useHow, quizTitle, quizAnswer, mainImage, detailImage1, detailImage2, targetUrlPc, targetUrlMobile, goodsCode } = this.campaigns.register.quiz
+  const { useHow, quizTitle, quizAnswer, mainImage, detailImage1, detailImage2, targetUrlPc, targetUrlMobile, goodsCode } = campaigns.value.register.quiz
   for (const type of types) {
     switch (type) {
       case 'targetUrlPc' :
@@ -1260,10 +1260,6 @@ const onUploadAfter = (imageType, resp) => {
 }
 
 function campaignTypeChanged(value) {
-
-
-  console.log(value)
-
   if (smart_store_file_upload.value) {
     smart_store_file_upload.value.initUploader()
   }
@@ -1310,15 +1306,14 @@ function campaignTypeChanged(value) {
 }
 
 function save() {
-  this.validate(
+  validate(
     'campaignType', 'campaignName', 'campaignDesc', 'totalParticipationLimit', 'dayParticipationLimit', 'adDate'
   )
 
   if (validation.value.valid) {
-    this.store.campaignRegister().then(() => {
+    store.campaignRegister().then(() => {
       ElMessageBox.alert('등록 되었습니다.', '확인', {
         callback: () => {
-
           if (smart_store_file_upload.value) {
             smart_store_file_upload.value.initUploader()
           }
@@ -1332,7 +1327,7 @@ function save() {
             quiz_detailImage2_upload.value.initUploader()
           }
 
-          this.store.initRegisterForm('campaigns')
+          store.initRegisterForm('campaigns')
 
           const { referrer } = route.query
           router.push({ path: referrer || route.params.referrer })

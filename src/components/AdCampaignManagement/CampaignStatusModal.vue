@@ -83,7 +83,7 @@ function validate(...types) {
         validation.value.message.check = true
         validation.value.message.message = ''
 
-        if (!this.message === null || this.message === '') {
+        if (!message.value === null || message.value === '') {
           validation.value.message.check = false
           validation.value.message.message = '변경 사유를 입력 해주세요'
           validation.value.valid = false
@@ -97,22 +97,22 @@ function validate(...types) {
 }
 
 function modify() {
-  this.validate('message')
+  validate('message')
   if (validation.value.valid) {
     if (status === 'reject') {
-      this.store.campaignReject(advertiserSeq, campaignSeq, this.message)
+      store.campaignReject(advertiserSeq, campaignSeq, message.value)
     }
 
     if (status === 'hold') {
-      this.store.campaignHold(advertiserSeq, campaignSeq, this.message)
+      store.campaignHold(advertiserSeq, campaignSeq, message.value)
     }
   }
 }
 
 function close() {
-  this.message = ''
-  this.validation.message.check = true
-  this.validation.message.message = ''
+  message.value = ''
+  validation.value.message.check = true
+  validation.value.message.message = ''
 }
 
 </script>

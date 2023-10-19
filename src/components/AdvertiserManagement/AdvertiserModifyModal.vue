@@ -199,7 +199,7 @@ const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/bu
 const headers = ref({ Authorization: getToken() })
 
 function validate(...types) {
-  const { advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail, file } = this.selected
+  const { advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail, file } = selected.value
 
   console.log(advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail, file)
   validation.value.valid = true
@@ -252,7 +252,7 @@ function validate(...types) {
         if (!validPhone(phoneNumber)) {
           validation.value.phoneNumber.check = false
           validation.value.phoneNumber.message = '전화번호 형식을 확인 해주세요.'
-          this.register.phoneNumber = null
+          selected.value.phoneNumber = null
           validation.value.valid = false
 
           break
@@ -277,7 +277,7 @@ function validate(...types) {
         if (!validEmail(email)) {
           validation.value.email.check = false
           validation.value.email.message = '이메일형식을 확인 해주세요.'
-          this.register.email = null
+          selected.value.email = null
           validation.value.valid = false
 
           break
@@ -302,7 +302,7 @@ function validate(...types) {
         if (!validEmail(taxBillEmail)) {
           validation.value.taxBillEmail.check = false
           validation.value.taxBillEmail.message = '세금계산서 발행 이메일 주소를 확인 해주세요.'
-          this.selected.taxBillEmail = null
+          selected.value.taxBillEmail = null
           validation.value.valid = false
 
           break
@@ -331,14 +331,14 @@ function validate(...types) {
 }
 
 const handleExceed = () => {
-  this.store.handleExceed()
+  store.handleExceed()
 }
 function handleBeforeUpload(rawFile) {
-  return this.store.handleBeforeUpload(rawFile)
+  return store.handleBeforeUpload(rawFile)
 }
 
 function handleSuccess(data, uploadFile) {
-  const { result, type } = this.store.uploadSuccess(data, uploadFile)
+  const { result, type } = store.uploadSuccess(data, uploadFile)
   if (result.length > 0) {
     const { originFileName, newFileName, target } = result[0]
     this.selected.file = {
@@ -351,18 +351,17 @@ function handleSuccess(data, uploadFile) {
 }
 
 function handlePreview(uploadFile) {
-  this.store.handlePreview(uploadFile)
+  store.handlePreview(uploadFile)
 }
 function handleRemove() {
-  this.selected.file = null
+  selected.value.file = null
 }
 
 function modify() {
-  this.validate('businessName', 'advertiserName', 'phoneNumber', 'email', 'taxBillEmail', 'businessRegistrationFile')
+  validate('businessName', 'advertiserName', 'phoneNumber', 'email', 'taxBillEmail', 'businessRegistrationFile')
 
-  console.log(validation)
   if (validation.value.valid) {
-    this.store.modifyAdvertiser()
+    store.modifyAdvertiser()
   }
 }
 

@@ -67,38 +67,38 @@ onActivated(async() => {
 })
 
 function searchUpdate({ content, current }) {
-  this.store.setAdvertisers({
+  store.setAdvertisers({
     advertisers: content,
     selected: current
   })
 }
 
 function onSearchChange(value) {
-  this.store.setAdvertiserSeq({ selected: value })
-  if (this.advertiser) {
-    this.store.reloadByUsers()
-    this.store.reloadByAccounts()
-    this.store.reloadByCampaigns()
+  store.setAdvertiserSeq({ selected: value })
+  if (advertiser.value) {
+    store.reloadByUsers('ALL')
+    store.reloadByAccounts('ALL')
+    store.reloadByCampaigns('ALL')
   } else {
-    this.store.tabInitUser()
-    this.store.tabInitAccount()
-    this.store.tabInitCampaign()
+    store.tabInitUser()
+    store.tabInitAccount()
+    store.tabInitCampaign()
   }
 }
 
 function onTabsChange(name) {
-  if (this.partner) {
+  if (advertiser.value) {
     reload(name)
   }
 }
 
 function reload(name) {
   switch (name) {
-    case 'user': this.store.reloadByUsers()
+    case 'user': store.reloadByUsers()
       break
-    case 'account': this.store.reloadByAccounts()
+    case 'account': store.reloadByAccounts()
       break
-    case 'ad-campaign': this.store.reloadByCampaigns()
+    case 'ad-campaign': store.reloadByCampaigns()
       break
   }
 }

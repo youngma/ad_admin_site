@@ -124,7 +124,7 @@ const { CampaignType, CampaignStatus, PaymentTerms } = storeToRefs(common)
 // const defaultAdDate = ref([moment().add(10, 'days').toDate(), Date.now()])
 
 function clickInit() {
-  this.store.init('search')
+  store.init('search')
 }
 
 function search({ page, size }) {

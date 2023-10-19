@@ -2,7 +2,6 @@
 <template>
 
   <div class="components-container">
-    {{  selected }}
     <AdvertiserSearchForm2
       ref="adCampaignRegisterSearchForm"
       title="캠페인 등록"
@@ -38,13 +37,13 @@ const store = advertiserStore()
 const { selected, advertisers } = storeToRefs(store)
 
 function searchUpdate({ content, current }) {
-  this.store.setAdvertisers({
+  store.setAdvertisers({
     advertisers: content,
     selected: current
   })
 }
 function onSearchChange(value) {
-  this.store.setAdvertiserSeq({ selected: value })
+  store.setAdvertiserSeq({ selected: value })
 }
 
 function searchFormInit() {

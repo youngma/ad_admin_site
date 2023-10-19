@@ -136,7 +136,7 @@ const advertiser = computed(() => {
 // const { selected, loading, options, advertiser } = storeToRefs(store)
 
 async function searchByName(query) {
-  this.loading = true
+  loading.value = true
 
   const result = await ADVERTISER_API.search({
     businessName: query,
@@ -147,7 +147,7 @@ async function searchByName(query) {
   currentAdvertisers.value = content
 
   emit('search-update', { content, current: multiple ? current.value : [current.value] })
-  this.loading = false
+  loading.value = false
 }
 
 function onRemoveTag(value) {

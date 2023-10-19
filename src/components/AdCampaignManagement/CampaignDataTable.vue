@@ -166,7 +166,7 @@ const store = advertiserStore()
 // const { campaigns } = storeToRefs(store)
 
 function pageChange(number) {
-  this.store.search({ page: number })
+  store.search({ page: number })
   emit('search-call', { page: number })
   page_count.value = page
 }
@@ -178,16 +178,16 @@ function open(url) {
 function approval(row) {
   const { advertiser, seq } = row
   const { advertiserSeq } = advertiser
-  this.store.campaignApproval(advertiserSeq, seq)
+  store.campaignApproval(advertiserSeq, seq)
 }
 
 function goCampaignDetail(row) {
-  this.store.setCampaignDetail(row)
-  this.router.push({ name: 'AdCampaignDetail', query: { referrer }})
+  store.setCampaignDetail(row)
+  router.push({ name: 'AdCampaignDetail', query: { referrer }})
 }
 
 function statusModalOpen(row, status) {
-  this.store.adCampaignModalOpen('status', row)
+  store.adCampaignModalOpen('status', row)
 
   const { advertiser, seq } = row
   const { advertiserSeq } = advertiser

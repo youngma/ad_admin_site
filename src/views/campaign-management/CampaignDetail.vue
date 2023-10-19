@@ -722,7 +722,7 @@ const disabledDate = (time) => {
 }
 
 function validate(...types) {
-  const { campaignName, campaignType, campaignDesc, dayParticipationLimit, adDate, smartStore, quiz } = this.campaigns.selectedCampaign
+  const { campaignName, campaignType, campaignDesc, dayParticipationLimit, adDate, smartStore, quiz } = campaigns.value.selectedCampaign
 
   validation.value.valid = true
 
@@ -826,17 +826,17 @@ function validate(...types) {
     }
 
     if (campaignType === 'TYPE1') {
-      this.smartSotreValidate('useHow', 'image', 'targetUrlPc', 'targetUrlMobile', 'totalBudget', 'adPrice', 'goodsCode', 'paymentTerms', 'holdingTime')
+      smartSotreValidate('useHow', 'image', 'targetUrlPc', 'targetUrlMobile', 'totalBudget', 'adPrice', 'goodsCode', 'paymentTerms', 'holdingTime')
     }
 
     if (campaignType === 'QUIZ01') {
-      this.quizValidate('useHow', 'mainImage', 'detailImage1', 'detailImage2', 'targetUrlPc', 'targetUrlMobile', 'quizTitle', 'quizAnswer', 'goodsCode')
+      quizValidate('useHow', 'mainImage', 'detailImage1', 'detailImage2', 'targetUrlPc', 'targetUrlMobile', 'quizTitle', 'quizAnswer', 'goodsCode')
     }
   }
 }
 
 function smartSotreValidate(...types) {
-  const { useHow, image, targetUrlPc, targetUrlMobile, totalBudget, adPrice, goodsCode, paymentTerms, holdingTime } = this.campaigns.selectedCampaign.smartStore
+  const { useHow, image, targetUrlPc, targetUrlMobile, totalBudget, adPrice, goodsCode, paymentTerms, holdingTime } = campaigns.value.selectedCampaign.smartStore
   for (const type of types) {
     switch (type) {
       case 'targetUrlPc' :
@@ -1002,7 +1002,7 @@ function smartSotreValidate(...types) {
 }
 
 function quizValidate(...types) {
-  const { useHow, quizTitle, quizAnswer, mainImage, detailImage1, detailImage2, targetUrlPc, targetUrlMobile, goodsCode } = this.campaigns.selectedCampaign.quiz
+  const { useHow, quizTitle, quizAnswer, mainImage, detailImage1, detailImage2, targetUrlPc, targetUrlMobile, goodsCode } = campaigns.value.selectedCampaign.quiz
   for (const type of types) {
     switch (type) {
       case 'targetUrlPc' :
@@ -1280,12 +1280,12 @@ function modeChange() {
 }
 
 function save() {
-  this.validate(
+  validate(
     'campaignType', 'campaignName', 'campaignDesc', 'totalParticipationLimit', 'dayParticipationLimit', 'adDate'
   )
 
   if (validation.value.valid) {
-    this.store.modifyAfCampaign().then(() => {
+    store.modifyAfCampaign().then(() => {
       ElMessageBox.alert('수정 되었습니다.', '확인', {
         callback: () => {
           if (smart_store_file_modify_upload.value) {
@@ -1300,7 +1300,7 @@ function save() {
           if (quiz_detailImage2_modify_upload.value) {
             quiz_detailImage2_modify_upload.value.initUploader()
           }
-          this.store.setCampaignDetail(null)
+          store.setCampaignDetail(null)
           const { referrer } = route.query
           router.push({ path: referrer || route.params.referrer })
         }

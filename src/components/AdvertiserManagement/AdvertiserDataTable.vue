@@ -25,7 +25,7 @@
     <el-table-column prop="updatedAt" label="등록일" header-align="center" />
     <el-table-column prop="advertiserSeq" label="" align="center">
       <template #default="scope">
-        <el-button @click="open(scope.row)">수정</el-button>
+        <el-button type="success" @click="open(scope.row)">수정</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -59,7 +59,6 @@ import { storeToRefs } from 'pinia'
 import { useRouter, useRoute } from 'vue-router'
 
 import ModifyModal from '@/components/AdvertiserManagement/AdvertiserModifyModal.vue'
-import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 
 defineOptions({
   name: 'AdvertiserDataTable'
@@ -68,20 +67,20 @@ defineOptions({
 const store = advertiserManagementStore()
 
 const router = useRouter()
-const route = useRoute()
+// const route = useRoute()
 
 const { advertisers, searchParams, total } = storeToRefs(store)
 
 function pageChange(number) {
-  this.store.search({ page: number })
+  store.search({ page: number })
 }
 
 function open(row) {
-  this.store.selectedAdvertiser(row)
+  store.selectedAdvertiser(row)
 }
 
 function close() {
-  this.store.selectedAdvertiser(null)
+  store.selectedAdvertiser(null)
 }
 
 function goDetail(row) {
@@ -89,8 +88,7 @@ function goDetail(row) {
     advertisers: [row],
     selected: [row.advertiserSeq]
   })
-
-  this.router.push({ name: 'AdvertiserDetail', query: { referrer: '/advertiser-management/detail' }})
+  router.push({ name: 'AdvertiserDetail', query: { referrer: '/advertiser-management/detail' }})
 }
 
 </script>

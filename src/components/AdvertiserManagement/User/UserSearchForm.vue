@@ -67,11 +67,11 @@ const { users, searchParams } = storeToRefs(store)
 const { UserStatus } = storeToRefs(common)
 
 function clickInit() {
-  this.store.tabInitUser()
+  store.tabInitUser()
 }
 
 function search({ page, size }) {
-  this.store.searchByUsers({ page, size })
+  store.searchByUsers({ page, size })
 }
 
 </script>

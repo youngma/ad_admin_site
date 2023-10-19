@@ -124,11 +124,11 @@ const { CampaignType, CampaignStatus } = storeToRefs(common)
 // const defaultAdDate = ref([moment().add(10, 'days').toDate(), Date.now()])
 
 function clickInit() {
-  this.store.tabInitCampaign()
+  store.tabInitCampaign()
 }
 
 function search({ page, size }) {
-  this.store.searchByCampaigns({ page, size })
+  store.searchByCampaigns({ page, size })
 }
 
 </script>

@@ -61,25 +61,25 @@ const store = advertiserStore()
 const { userList, userSearchParams, userTotal, userModifyModal } = storeToRefs(store)
 
 function pageChange(number) {
-  this.store.searchByUsers({ page: number })
+  store.searchByUsers({ page: number })
 }
 
 function enabled(row) {
   const { userSeq } = row
-  this.store.userEnable(userSeq)
+  store.userEnable(userSeq)
 }
 
 function disabled(row) {
   const { userSeq } = row
-  this.store.userDisable(userSeq)
+  store.userDisable(userSeq)
 }
 
 function modify(row) {
-  this.store.userSelected(row)
+  store.userSelected(row)
 }
 
 function close() {
-  this.store.userSelected(null)
+  store.userSelected(null)
 }
 
 </script>

@@ -65,21 +65,21 @@ const store = advertiserStore()
 const { accountList, accountSearchParams, accountTotal, accountModifyModal } = storeToRefs(store)
 
 function pageChange(number) {
-  this.store.searchByAccounts({ page: number })
+  store.searchByAccounts({ page: number })
 }
 
 function used(row) {
   const { seq } = row
-  this.store.accountUsed(seq)
+  store.accountUsed(seq)
 }
 
 function unused(row) {
   const { seq } = row
-  this.store.accountUnused(seq)
+  store.accountUnused(seq)
 }
 
 function remove(row) {
-  this.store.accountDelete(row)
+  store.accountDelete(row)
 }
 
 function open(row) {

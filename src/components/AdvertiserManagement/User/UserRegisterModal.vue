@@ -133,7 +133,7 @@ const store = advertiserStore()
 const { users } = storeToRefs(store)
 
 function validate(...types) {
-  const { userId, userPassword, userName, phoneNumber, alReadyCheck } = this.users.register
+  const { userId, userPassword, userName, phoneNumber, alReadyCheck } = users.value.register
   validation.value.valid = true
 
   for (const type of types) {
@@ -214,13 +214,13 @@ function validate(...types) {
 }
 
 async function check(t) {
-  const { alReadyCheck } = this.users.register
+  const { alReadyCheck } = users.value.register
 
   if (alReadyCheck) {
     return false
   }
 
-  this.validate('userId')
+  validate('userId')
   if (validation.value.valid) {
     const retMsg = await this.store.userIdCheck() ? '사용 가능한 아이디 입니다.' : '이미 등록된 아이디 입니다.'
     ElMessageBox.alert(retMsg, '확인', {}, appContext)
@@ -228,9 +228,9 @@ async function check(t) {
 }
 
 function save() {
-  this.validate('alReadyCheck', 'userName', 'userPassword', 'phoneNumber')
+  validate('alReadyCheck', 'userName', 'userPassword', 'phoneNumber')
   if (validation.value.valid) {
-    this.store.userRegister()
+    store.userRegister()
   }
 }
 
