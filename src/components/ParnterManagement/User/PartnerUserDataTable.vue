@@ -1,6 +1,4 @@
 <template>
-  {{ userList }}
-  {{ users.list }}
   <el-table
     :data="userList"
     class="custom-table"
