@@ -1,121 +1,260 @@
 <template>
   <div class="dashboard-editor-container">
-<!--    <github-corner class="github-corner" />-->
+    <DailyCount
+      :advertiser-count="dailyCount.advertiserCount"
+      :partner-count="dailyCount.partnerCount"
+      :campaign-count="dailyCount.campaignCount"
+      :group-count="dailyCount.groupCount"
+    />
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
-
-    <el-row  style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-
-        <Flicking :options="{ renderOnlyVisible: true }">
-          <div v-for="idx in flickings" :key="idx" class="flicking-panel has-background-primary has-text-white is-size-1">
-            <span class="flicking-index">{{ idx }}</span>
-          </div>
-        </Flicking>
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <DailyChart ref="quizChart" :options="options" />
     </el-row>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-<!--      <line-chart :chart-data="lineChartData" />-->
-    </el-row>
+      <el-col>
+        <el-row justify="end" class="mb_15" >
+          <el-col class="t_r comm_form_box" tag="span">
+            <el-date-picker
+              v-model="datepicker"
+              type="daterange"
+              size="large"
+              class="mt_5"
+              start-placeholder="광고 시작 일자"
+              end-placeholder="광고 종료 일자"
+              :disabled-date="disabledDate"
+              format="YYYY/MM/DD"
+              value-format="YYYYMMDD"
+              @calendar-change="() => reload"
+            />
+          </el-col>
+        </el-row>
+        <DailyTable :list="list" />
 
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-<!--          <raddar-chart />-->
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-<!--          <pie-chart />-->
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-<!--          <bar-chart />-->
-        </div>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-<!--        <transaction-table />-->
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-<!--        <todo-list />-->
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-<!--        <box-card />-->
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script setup>
-// import GithubCorner from '@/components/GithubCorner/index.vue'
-import PanelGroup from './components/PanelGroup.vue'
-import { computed, ref } from 'vue'
-import Flicking from '@egjs/vue3-flicking'
 
-// import LineChart from './components/LineChart.vue'
-// import RaddarChart from './components/RaddarChart.vue'
-// import PieChart from './components/PieChart.vue'
-// import BarChart from './components/BarChart.vue'
-import TransactionTable from './components/TransactionTable.vue'
-// import TodoList from './components/TodoList/index.vue'
-// import BoxCard from './components/BoxCard.vue'
+import { computed, watch } from 'vue'
+import DailyCount from './components/DailyCount.vue'
+import DailyTable from '@/views/dashboard/admin/components/DailyTable.vue'
+import DailyChart from '@/views/dashboard/admin/components/DailyChart.vue'
+
+import * as REPORT_API from '@/api/REPORT_QUIZ_API.js'
+
+import { ref } from 'vue'
+import moment from 'moment'
+import { dateFormatter } from '@/utils/customElTableFormatter.js'
+// import Flicking from '@egjs/vue3-flicking'
 
 defineOptions({
   name: 'DashboardAdmin'
 })
 
-const lineChartData = ref({
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
+const dailyCount = ref({
+  advertiserCount: 0,
+  partnerCount: 0,
+  campaignCount: 0,
+  groupCount: 0
 })
 
-const flickings = ref([1, 2, 3, 4, 5])
-
-function handleSetLineChartData(type) {
-  this.value.lineChartData = lineChartData[type]
+const quizChart = ref(null)
+const list = ref([])
+const options = ref({})
+const datepicker = ref([
+  moment().add(-10, 'days').format('YYYYMMDD'),
+  moment().add(-1, 'days').format('YYYYMMDD')
+]
+)
+// const defaultDate = ref([moment().add(-10, 'days').toDate(), moment().add(-1, 'days').toDate()])
+const disabledDate = (time) => {
+  return time.getTime() > Date.now()
 }
 
-// export default {
-//
-//   components: {
-//     // GithubCorner,
-//     PanelGroup
-//     // LineChart,
-//     // RaddarChart,
-//     // PieChart,
-//     // BarChart,
-//     // TransactionTable,
-//     // TodoList,
-//     // BoxCard
-//   },
-//   data() {
-//     return {
-//       lineChartData: lineChartData.newVisitis
-//     }
-//   },
-//   methods: {
-//     handleSetLineChartData(type) {
-//       this.lineChartData = lineChartData[type]
-//     }
-//   }
-// }
+const posList = [
+  'left',
+  'right',
+  'top',
+  'bottom',
+  'inside',
+  'insideTop',
+  'insideLeft',
+  'insideRight',
+  'insideBottom',
+  'insideTopLeft',
+  'insideTopRight',
+  'insideBottomLeft',
+  'insideBottomRight'
+]
+
+const configParameters = {
+  rotate: {
+    min: -90,
+    max: 90
+  },
+  align: {
+    options: {
+      left: 'left',
+      center: 'center',
+      right: 'right'
+    }
+  },
+  verticalAlign: {
+    options: {
+      top: 'top',
+      middle: 'middle',
+      bottom: 'bottom'
+    }
+  },
+  position: {
+    options: posList.reduce(function(map, pos) {
+      map[pos] = pos
+      return map
+    }, {})
+  },
+  distance: {
+    min: 0,
+    max: 10
+  }
+}
+
+const labelOption = {
+  rotate: configParameters.rotate,
+  align: configParameters.align,
+  verticalAlign: configParameters.verticalAlign,
+  position: configParameters.position,
+  distance: configParameters.distance
+}
+
+function genOptions() {
+  const legend = ['reqCnt', 'impressionCnt', 'detailCnt', 'clickCnt', 'answerCnt']
+  const xAxisValue = list.value.map(t => dateFormatter(t.rptDate))
+
+  const reqCntValues = []
+  const impressionCntValues = []
+  const detailCntValues = []
+  const clickCntValues = []
+  const answerCntValues = []
+
+  list.value.forEach((value) => {
+    const { reqCnt, impressionCnt, detailCnt, clickCnt, answerCnt } = value
+    reqCntValues.push(reqCnt)
+    impressionCntValues.push(impressionCnt)
+    detailCntValues.push(detailCnt)
+    clickCntValues.push(clickCnt)
+    answerCntValues.push(answerCnt)
+  })
+
+  options.value = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    legend: {
+      data: legend
+    },
+    toolbox: {
+      show: true,
+      orient: 'vertical',
+      left: 'right',
+      top: 'center',
+      feature: {
+        mark: { show: true },
+        dataView: { show: true, readOnly: false },
+        magicType: { show: true, type: ['line', 'bar'] },
+        restore: { show: false },
+        saveAsImage: { show: true }
+      }
+    },
+    xAxis: [
+      {
+        type: 'category',
+        axisTick: { show: false },
+        data: xAxisValue
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value'
+      }
+    ],
+    series: [
+      {
+        name: 'reqCnt',
+        type: 'bar',
+        barGap: 0,
+        label: labelOption,
+        emphasis: {
+          focus: 'series'
+        },
+        data: reqCntValues
+      },
+      {
+        name: 'impressionCnt',
+        type: 'bar',
+        label: labelOption,
+        emphasis: {
+          focus: 'series'
+        },
+        data: impressionCntValues
+      },
+      {
+        name: 'detailCnt',
+        type: 'bar',
+        label: labelOption,
+        emphasis: {
+          focus: 'series'
+        },
+        data: detailCntValues
+      },
+      {
+        name: 'clickCnt',
+        type: 'bar',
+        label: labelOption,
+        emphasis: {
+          focus: 'series'
+        },
+        data: clickCntValues
+      },
+      {
+        name: 'answerCnt',
+        type: 'bar',
+        label: labelOption,
+        emphasis: {
+          focus: 'series'
+        },
+        data: answerCntValues
+      }
+    ]
+  }
+}
+
+async function reload() {
+  const data = await REPORT_API.searchDashboard({
+    startDate: datepicker.value[0],
+    endDate: datepicker.value[1]
+  })
+
+  const { advertiserCount, partnerCount, campaignCount, groupCount, rptQuizDailyList } = data
+
+  dailyCount.value.advertiserCount = advertiserCount
+  dailyCount.value.partnerCount = partnerCount
+  dailyCount.value.campaignCount = campaignCount
+  dailyCount.value.groupCount = groupCount
+
+  list.value = rptQuizDailyList
+
+  genOptions()
+  quizChart.value.initChart(options.value)
+}
+
+reload()
+
 </script>
 
 <style lang="scss" scoped>
@@ -258,5 +397,6 @@ a.has-text-white:focus,a.has-text-white:hover {
     padding: 8px;
   }
 }
+
 </style>
 

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --mode development",
+    "dev": "vite --mode base",
     "build": "vite build",
     "build-dev": "vite build --mode development",
     "preview": "vite preview"
@@ -25,11 +25,13 @@
     "axios": "^1.4.0",
     "codejar": "^3.7.0",
     "codemirror": "^6.0.1",
+    "echarts": "^5.4.3",
     "element-plus": "2.3.6",
     "eslint4b-prebuilt": "^6.7.2",
     "fuse.js": "^6.6.2",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
     "moment": "^2.29.4",
     "normalize.css": "^8.0.1",
