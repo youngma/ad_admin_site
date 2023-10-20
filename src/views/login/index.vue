@@ -174,6 +174,7 @@ export default {
           this.autoStore.login(this.loginForm)
             .then((d) => {
               this.autoStore.getInfo().then((info) => {
+                localStorage.clear()
 
                 const { userRole } = info
                 this.permission.generateRoutes(this.router, [userRole])

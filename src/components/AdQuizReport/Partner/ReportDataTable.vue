@@ -34,7 +34,6 @@
     </el-table-column>
   </el-table>
 
-  {{ partner }}
   <div class="page-box">
     <el-pagination
       :page-size="partner.searchParams.size"
@@ -55,7 +54,7 @@
 
 import { quizReportStore } from '@/store/modules/admin/quizReportStore.js'
 import { storeToRefs } from 'pinia'
-import { dateFormatter, moneyFormatter } from '../../../utils/customElTableFormatter.js'
+import { dateFormatter, moneyFormatter } from '@/utils/customElTableFormatter.js'
 
 defineOptions({
   name: 'PartnerDailyReportDataTable'
@@ -66,7 +65,7 @@ const store = quizReportStore()
 const { partner } = storeToRefs(store)
 
 function pageChange(number) {
-  this.store.searchByPartner({ page: number })
+  store.searchByPartner({ page: number })
 }
 
 </script>

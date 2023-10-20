@@ -88,15 +88,15 @@ function searchUpdate({ content, current }) {
 
 function onChange(value) {
   selected.value = value
-  this.store.setPartner(value)
+  store.setPartner(value)
 }
 
 function clickInit() {
-  this.store.initByPartner()
+  store.initByPartner()
 }
 
 function search({ page, size }) {
-  this.store.searchByPartner({ page, size })
+  store.searchByPartner({ page, size })
 }
 
 </script>

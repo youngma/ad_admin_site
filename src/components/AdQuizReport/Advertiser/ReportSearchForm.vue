@@ -88,15 +88,15 @@ function searchUpdate({ content, current }) {
 
 function onChange(value) {
   selected.value = value
-  this.store.setAdvertiser(value)
+  store.setAdvertiser(value)
 }
 
 function clickInit() {
-  this.store.initByAdvertiser()
+  store.initByAdvertiser()
 }
 
 function search({ page, size }) {
-  this.store.searchByAdvertiser({ page, size })
+  store.searchByAdvertiser({ page, size })
 }
 
 </script>

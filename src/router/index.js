@@ -311,7 +311,7 @@ export const asyncRoutes = [
     // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
     meta: {
       title: '퀴즈 광고 리포트',
-      icon: 'bi:badge-ad-fill'
+      icon: 'mdi:report-bar'
     },
     name: 'QuizReport',
     redirect: '/report-quiz-management/advertiser',
@@ -320,13 +320,13 @@ export const asyncRoutes = [
         path: 'advertiser',
         component: () => import('@/views/ad-report/quiz/AdvertiserReport.vue'),
         name: 'QuizAdvertiserReport',
-        meta: { title: '광고주 리포트', icon: 'ri:menu-search-fill' }
+        meta: { title: '광고주 리포트', icon: 'mdi:report-line-shimmer' }
       },
       {
         path: 'partner',
         component: () => import('@/views/ad-report/quiz/PartnerReport.vue'),
         name: 'QuizPartnerReport',
-        meta: { title: '파트너 리포트', icon: 'ri:add-box-fill' }
+        meta: { title: '파트너 리포트', icon: 'mdi:report-bell-curve-cumulative' }
       }
     ]
   },

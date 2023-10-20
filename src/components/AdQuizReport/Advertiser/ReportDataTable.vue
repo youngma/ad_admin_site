@@ -54,7 +54,7 @@
 
 import { quizReportStore } from '@/store/modules/admin/quizReportStore.js'
 import { storeToRefs } from 'pinia'
-import { dateFormatter, moneyFormatter } from '../../../utils/customElTableFormatter.js'
+import { dateFormatter, moneyFormatter } from '@/utils/customElTableFormatter.js'
 
 defineOptions({
   name: 'AdvertiserDailyReportDataTable'
@@ -65,7 +65,7 @@ const store = quizReportStore()
 const { advertiser } = storeToRefs(store)
 
 function pageChange(number) {
-  this.store.searchByAdvertiser({ page: number })
+  store.searchByAdvertiser({ page: number })
 }
 
 </script>
