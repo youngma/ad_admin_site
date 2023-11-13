@@ -336,6 +336,25 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/inquiry-management',
+    component: Layout,
+    // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
+    meta: {
+      title: '문의 하기',
+      icon: 'mdi:report-bar'
+    },
+    name: 'InquiryManagement',
+    redirect: '/inquiry-management/search',
+    children: [
+      {
+        path: 'search',
+        component: () => import('@/views/inquiry-management/AdInquiryManagement.vue'),
+        name: 'AdInquiryManagement',
+        meta: { title: '문의 하기', icon: 'mdi:report-line-shimmer' }
+      }
+    ]
+  },
   //
   // {
   //   path: '/example',

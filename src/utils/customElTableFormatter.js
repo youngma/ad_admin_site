@@ -9,10 +9,9 @@ export const businessNumberFormatter = (value) => {
 }
 
 function isNumber(value) {
-  return typeof value === 'number';
+  return typeof value === 'number'
 }
 export const numberFormatter = (value) => {
-
   if (isNumber(value)) {
     return value
   }
@@ -46,6 +45,9 @@ export const endDatePostFix = (value) => value + ':59'
 
 export function replaceNumber(arg) {
   return arg.replace(/[^0-9]/g, '')
+}
+export function lineFormatter(arg) {
+  return arg.split('\\n')
 }
 
 export const dateFormatter = (value) => value.replace(/(\d{4})(\d{2})(\d{2})/g, '$1-$2-$3')
