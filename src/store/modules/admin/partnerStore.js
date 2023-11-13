@@ -4,6 +4,8 @@ import _ from 'lodash'
 import { ElMessage } from 'element-plus'
 import { adGroupModify } from '@/api/PARTNER_API.js'
 import { deepClone } from '@/utils/index.js'
+import { sha512 } from 'js-sha512'
+import * as ADVERTISER_API from '@/api/ADVERTISER_API.js'
 
 const initData = {
   searchParams: {
@@ -81,13 +83,14 @@ export const partnerStore = defineStore('partnerStore', {
       registerModal: false,
       selectedAdGroup: null,
       register: {
-        adType: '',
+        adType: 'ALL',
         groupName: null,
         logoFile: null,
         pointIconFile: null,
         pointName: null,
         callBackUrl: null,
         commissionRate: 1,
+        userCommissionRate: 1,
         rewordRate: 1
       },
       uploadLogoFile: [],
@@ -281,13 +284,14 @@ export const partnerStore = defineStore('partnerStore', {
 
       if (target === 'adGroup') {
         this.adGroups.register = {
-          adType: '',
+          adType: 'ALL',
           groupName: null,
           logoFile: null,
           pointIconFile: null,
           pointName: null,
           callBackUrl: null,
           commissionRate: 1,
+          userCommissionRate: 1,
           rewordRate: 1
         }
         this.adGroups.uploadLogoFile = []
@@ -324,7 +328,16 @@ export const partnerStore = defineStore('partnerStore', {
     userRegister() {
       const newUser = this.generateParams(this.users.register)
 
-      PARTNER_API.userRegister(newUser).then(() => {
+      const hash = sha512.create()
+
+      hash.update(newUser.userPassword)
+      const password = hash.hex()
+
+      PARTNER_API.userRegister(Object.assign(
+        newUser,
+        {
+          userPassword: password
+        })).then(() => {
         this.$alert('등록 되었습니다.', '확인', {})
         this.initRegisterForm('user')
         this.reloadByUsers().then(() => {
@@ -636,11 +649,11 @@ export const partnerStore = defineStore('partnerStore', {
       })
     },
     adGroupModify(callback) {
-      const { groupSeq, partner, groupName, pointName, logoFile, pointIconFile, rewordRate, commissionRate, callBackUrl } = this.adGroups.selectedAdGroup
+      const { groupSeq, partner, groupName, pointName, logoFile, pointIconFile, rewordRate, commissionRate, userCommissionRate, callBackUrl } = this.adGroups.selectedAdGroup
       const { partnerSeq } = partner
 
       const adGroupModify = {
-        partnerSeq, groupSeq, groupName, pointName, logoFile, pointIconFile, rewordRate, commissionRate, callBackUrl
+        partnerSeq, groupSeq, groupName, pointName, logoFile, pointIconFile, rewordRate, commissionRate, userCommissionRate, callBackUrl
       }
 
       PARTNER_API.adGroupModify(adGroupModify).then(() => {

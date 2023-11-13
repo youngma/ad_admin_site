@@ -8,7 +8,19 @@ export const businessNumberFormatter = (value) => {
     .replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3')
 }
 
+function isNumber(value) {
+  return typeof value === 'number';
+}
 export const numberFormatter = (value) => {
+
+  if (isNumber(value)) {
+    return value
+  }
+
+  if (!value) {
+    return 0
+  }
+
   const number = value.replace(/[^0-9]/g, '')
   return number.length === 0 ? '0' : Number(number).toString()
 }
@@ -29,8 +41,8 @@ export const moneyFormatter = (amount, decimalCount = 0, decimal = '.', thousand
   }
 }
 
-export const startDatePostFix = (value) => value + ' 00:00:01'
-export const endDatePostFix = (value) => value + ' 23:59:59'
+export const startDatePostFix = (value) => value + ':00'
+export const endDatePostFix = (value) => value + ':59'
 
 export function replaceNumber(arg) {
   return arg.replace(/[^0-9]/g, '')

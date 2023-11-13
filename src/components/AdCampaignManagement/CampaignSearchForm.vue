@@ -54,22 +54,37 @@
       </el-row>
 
       <el-row :gutter="10">
+<!--        <el-col :span="4">-->
+<!--          <strong class="comm_tit_box">캠페인 타입</strong>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--&lt;!&ndash;          <el-input&ndash;&gt;-->
+<!--&lt;!&ndash;            v-model="campaignSearchParams.campaignType"&ndash;&gt;-->
+<!--&lt;!&ndash;            placeholder="Please input" />&ndash;&gt;-->
+
+<!--          <el-select v-model="campaignSearchParams.campaignType" class="m-2" placeholder="Select" size="large">-->
+<!--            <el-option key="" label="전체" value=""/>-->
+<!--            <el-option-->
+<!--              v-for="code of CampaignType"-->
+<!--              :key="code.key"-->
+<!--              :label="code.value"-->
+<!--              :value="code.key"-->
+<!--            />-->
+<!--          </el-select>-->
+
+<!--        </el-col>-->
         <el-col :span="4">
-          <strong class="comm_tit_box">캠페인 타입</strong>
+          <strong class="comm_tit_box">노출 여부</strong>
         </el-col>
         <el-col :span="8">
-<!--          <el-input-->
-<!--            v-model="campaignSearchParams.campaignType"-->
-<!--            placeholder="Please input" />-->
+          <!--          <el-input-->
+          <!--            v-model="campaignSearchParams.campaignType"-->
+          <!--            placeholder="Please input" />-->
 
-          <el-select v-model="campaignSearchParams.campaignType" class="m-2" placeholder="Select" size="large">
-            <el-option key="" label="전체" value=""/>
-            <el-option
-              v-for="code of CampaignType"
-              :key="code.key"
-              :label="code.value"
-              :value="code.key"
-            />
+          <el-select v-model="campaignSearchParams.exposureStatus" class="m-2" placeholder="Select" size="large">
+            <el-option key="" label="전체" value="" />
+            <el-option key="1" label="노출" value="1"/>
+            <el-option key="0" label="미노출" value="0"/>
           </el-select>
 
         </el-col>

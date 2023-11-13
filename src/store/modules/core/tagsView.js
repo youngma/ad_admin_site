@@ -146,8 +146,7 @@ export const tagsViewStore = defineStore('tagsViewStore',
           }
         }
       }
-    }
-  }, {
+    },
     persist: {
       enabled: true,
       strategies: [
@@ -157,5 +156,7 @@ export const tagsViewStore = defineStore('tagsViewStore',
         }
       ]
     }
+  }, {
+
   }
 )

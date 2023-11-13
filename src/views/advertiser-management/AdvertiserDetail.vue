@@ -49,8 +49,8 @@ const advertiserDetailSearchForm = ref(null)
 const store = advertiserStore()
 const { selected, advertisers, advertiser, tabIndex } = storeToRefs(store)
 
-onMounted(async() => {
-})
+// onMounted(async() => {
+// })
 
 onActivated(async() => {
   console.log('onActivated', tabIndex.value)
@@ -63,6 +63,8 @@ onActivated(async() => {
       case '2': advertiserStore().reloadByCampaigns()
         break
     }
+  } else {
+    searchFormInit()
   }
 })
 
@@ -106,10 +108,9 @@ function reload(name) {
 function searchFormInit() {
   advertiserDetailSearchForm.value.initSet(selected.value, advertisers.value)
 }
-
-onActivated(() => {
-  searchFormInit()
-})
+//
+// onActivated(() => {
+// })
 
 // watch: {
 //   // whenever question changes, this function will run

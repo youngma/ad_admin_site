@@ -11,9 +11,9 @@
         </el-header>
         <el-main class="app-main">
           <app-main />
-          <right-panel v-if="layoutComputed.showSettings">
-              <settings />
-          </right-panel>
+<!--          <right-panel v-if="layoutComputed.showSettings">-->
+<!--              <settings />-->
+<!--          </right-panel>-->
         </el-main>
       </el-container>
     </el-container>

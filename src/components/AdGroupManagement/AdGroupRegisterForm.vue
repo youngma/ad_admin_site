@@ -1,36 +1,36 @@
 <template>
     <div class="comm_comp">
       <div class="comm_comp_table">
+<!--        <el-row :gutter="10" style="display: none">-->
+<!--          <el-col :span="6" class="col_tit">-->
+<!--            <strong class="comm_tit_box">광고 타입</strong>-->
+<!--          </el-col>-->
+<!--          <el-col :span="16" class="col_desc">-->
+<!--            <el-row :gutter="20">-->
+<!--              <el-col :span="7">-->
+<!--                <el-select-->
+<!--                  v-model="adGroups.register.adType"-->
+<!--                  class="m-2"-->
+<!--                  :class="{ 'is-error': !validation.adType.check }"-->
+<!--                  placeholder="광고 타입을 선택 해주세요." size="large">-->
+<!--                  <el-option key="" label="전체" value="ALL"/>-->
+<!--                  <el-option-->
+<!--                    v-for="code of CampaignType"-->
+<!--                    :key="code.key"-->
+<!--                    :label="code.value"-->
+<!--                    :value="code.key"-->
+<!--                  />-->
+<!--                </el-select>-->
+<!--              </el-col>-->
+<!--            </el-row>-->
+<!--            <div v-show="!validation.adType.check" class="invalid-feedback">-->
+<!--              {{validation.adType.message}}-->
+<!--            </div>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
         <el-row :gutter="10">
           <el-col :span="6" class="col_tit">
-            <strong class="comm_tit_box">광고 타입</strong>
-          </el-col>
-          <el-col :span="16" class="col_desc">
-            <el-row :gutter="20">
-              <el-col :span="7">
-                <el-select
-                  v-model="adGroups.register.adType"
-                  class="m-2"
-                  :class="{ 'is-error': !validation.adType.check }"
-                  placeholder="광고 타입을 선택 해주세요." size="large">
-                  <el-option key="" label="전체" value=""/>
-                  <el-option
-                    v-for="code of CampaignType"
-                    :key="code.key"
-                    :label="code.value"
-                    :value="code.key"
-                  />
-                </el-select>
-              </el-col>
-            </el-row>
-            <div v-show="!validation.adType.check" class="invalid-feedback">
-              {{validation.adType.message}}
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="6" class="col_tit">
-            <strong class="comm_tit_box">광고 그룹 명</strong>
+            <strong class="comm_tit_box">광고 지면 명</strong>
           </el-col>
           <el-col :span="16" class="col_desc">
             <el-row :gutter="10">
@@ -38,7 +38,7 @@
                 <el-input
                   v-model="adGroups.register.groupName"
                   :class="{ 'is-error': !validation.groupName.check }"
-                  class="" placeholder="광고 그룹 를 입력 해주세요." />
+                  class="" placeholder="광고 지면 명을 입력 해주세요." />
               </el-col>
             </el-row>
             <div v-show="!validation.groupName.check" class="invalid-feedback">
@@ -158,16 +158,43 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="6" class="col_tit">
-            <strong class="comm_tit_box">수수료 비율</strong>
+            <strong class="comm_tit_box">수수료 비율(매체사)</strong>
           </el-col>
           <el-col :span="16" class="col_desc">
             <el-row :gutter="10">
               <el-col :span="16">
-                <el-input-number v-model="adGroups.register.commissionRate" :min="1" :max="100" />
+                <el-input-number
+                  v-model="adGroups.register.commissionRate"
+                  :min="1"
+                  :max="100"
+                  controls-position="right"
+                  size="large"
+                />
               </el-col>
             </el-row>
             <div v-show="!validation.commissionRate.check" class="invalid-feedback">
               {{validation.commissionRate.message}}
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="6" class="col_tit">
+            <strong class="comm_tit_box">수수료 비율(사용자)</strong>
+          </el-col>
+          <el-col :span="16" class="col_desc">
+            <el-row :gutter="10">
+              <el-col :span="16">
+                <el-input-number
+                  v-model="adGroups.register.userCommissionRate"
+                  :min="1"
+                  :max="100"
+                  controls-position="right"
+                  size="large"
+                />
+              </el-col>
+            </el-row>
+            <div v-show="!validation.userCommissionRate.check" class="invalid-feedback">
+              {{validation.userCommissionRate.message}}
             </div>
           </el-col>
         </el-row>
@@ -179,7 +206,13 @@
             <el-row :gutter="10">
               <el-col :span="16">
 
-                <el-input-number v-model="adGroups.register.rewordRate" :min="1" :max="100" />
+                <el-input-number
+                  v-model="adGroups.register.rewordRate"
+                  :min="1"
+                  :max="100"
+                  controls-position="right"
+                  size="large"
+                />
               </el-col>
             </el-row>
             <div v-show="!validation.rewordRate.check" class="invalid-feedback">
@@ -202,7 +235,7 @@ import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance } from 'vue'
-import { ElMessageBox } from 'element-plus'
+// import { ElMessageBox } from 'element-plus'
 import { getToken } from '@/utils/auth.js'
 import { validURL } from '@/utils/validate.js'
 import { useRoute, useRouter } from 'vue-router'
@@ -211,7 +244,7 @@ defineOptions({
   name: 'AdGroupRegister'
 })
 
-const { appContext } = getCurrentInstance()
+// const { appContext } = getCurrentInstance()
 
 const validation = ref({
   valid: true,
@@ -240,6 +273,10 @@ const validation = ref({
     message: ''
   },
   commissionRate: {
+    check: true,
+    message: ''
+  },
+  userCommissionRate: {
     check: true,
     message: ''
   },
@@ -287,7 +324,7 @@ function validate(...types) {
 
         if (groupName === '' || groupName === null) {
           validation.value.groupName.check = false
-          validation.value.groupName.message = '광고 그룹 를 입력 해주세요.'
+          validation.value.groupName.message = '광고 지면명을 입력 해주세요.'
           validation.value.valid = false
           break
         }
@@ -362,8 +399,6 @@ function validate(...types) {
         }
         break
     }
-
-    console.log(validation)
   }
 }
 
@@ -419,7 +454,7 @@ function handleRemove(type) {
 }
 
 function save() {
-  validate('adType', 'groupName', 'logoFile', 'pointIconFile', 'callBackUrl', 'pointName')
+  validate('groupName', 'logoFile', 'pointIconFile', 'callBackUrl', 'pointName')
   if (validation.value.valid) {
     store.adGroupRegister(() => {
       store.initRegisterForm('adGroup')

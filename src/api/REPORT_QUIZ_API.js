@@ -23,3 +23,11 @@ export function searchByPartner(query) {
     params: query
   })
 }
+
+export function searchByAdmin(query) {
+  return request({
+    url: '/admin/v1/report/quiz/admin/daily',
+    method: 'get',
+    params: query
+  })
+}

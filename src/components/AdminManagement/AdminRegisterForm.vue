@@ -41,10 +41,12 @@
         <el-col :span="16" class="col_desc">
           <el-row :gutter="10">
             <el-col :span="10">
+              <form>
               <el-input
 v-model="register.userPassword" type="password"
                         :class="{ 'is-error': !validation.userPassword.check }"
                         class="" placeholder="관리자 비밀번호를 입력 해주세요." />
+              </form>
             </el-col>
           </el-row>
           <div v-show="!validation.userPassword.check" class="invalid-feedback">

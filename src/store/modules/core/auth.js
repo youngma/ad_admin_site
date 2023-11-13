@@ -8,6 +8,7 @@ import { commonStore } from '@/store/modules/admin/commonStore.js'
 
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
+import { sha512 } from 'js-sha512'
 
 export const authStore = defineStore(
   'authStore', () => {
@@ -20,9 +21,17 @@ export const authStore = defineStore(
     })
 
     function login(userInfo) {
+      const hash = sha512.create()
+
       const { username, password } = userInfo
+
+      hash.update(password)
+
       return new Promise((resolve, reject) => {
-        userAPI.login({ userId: username.trim(), password: password }).then(response => {
+        userAPI.login({
+          userId: username.trim(),
+          password: hash.hex()
+        }).then(response => {
           const { authorization } = response.headers
 
           status.token = authorization
@@ -30,7 +39,7 @@ export const authStore = defineStore(
 
           resolve()
         }).catch(error => {
-          reject(error)
+          reject('로그인정보를 확인해주세요.')
         })
       })
     }

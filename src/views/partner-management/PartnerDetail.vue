@@ -19,7 +19,7 @@
         <PartnerAccounts v-if="partner"/>
         <el-alert v-else title="매체사 를 선택해 주세요." type="info" />
       </el-tab-pane>
-      <el-tab-pane label="광고 그룹" name="ad-group">
+      <el-tab-pane label="광고 지면" name="ad-group">
         <PartnerAdGroups v-if="partner"/>
         <el-alert v-else title="매체사 를 선택해 주세요." type="info" />
       </el-tab-pane>
@@ -60,6 +60,8 @@ onActivated(async() => {
       case 'ad-group': partnerStore().reloadByAdGroups()
         break
     }
+  } else {
+    searchFormInit()
   }
 })
 
@@ -104,9 +106,8 @@ function searchFormInit() {
   partnerDetailSearchForm.value.initSet(selected.value, partners.value)
 }
 
-onActivated(() => {
-  searchFormInit()
-})
+// onActivated(() => {
+// })
 
 // watch: {
 //   // whenever question changes, this function will run

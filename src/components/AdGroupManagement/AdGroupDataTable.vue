@@ -15,7 +15,7 @@
           :src="[filePath, 'files', scope.row.logoFile.fileName].join('/')"
           :alt="scope.row.logoFile.originName"
           @click="open([filePath, 'files', scope.row.logoFile.fileName].join('/'))"
-        />filePath
+        />
         <br/>
         <span> {{scope.row.logoFile.originName}} </span>
       </template>
@@ -35,8 +35,21 @@
     </el-table-column>
 
     <el-table-column prop="pointName" label="포인트 명" align="center" header-align="center" />
-    <el-table-column prop="commissionRate" label="수수료"  align="center" header-align="center" />
-    <el-table-column prop="rewordRate" label="포인트 교환 비율" align="center" header-align="center" />
+    <el-table-column prop="commissionRate" label="수수료(매체사)" width="150" align="center" header-align="center">
+      <template #default="scope">
+        {{ scope.row.commissionRate }}%
+      </template>
+    </el-table-column>
+    <el-table-column prop="userCommissionRate" label="수수료(사용자)" width="150" align="center" header-align="center" >
+      <template #default="scope">
+        {{ scope.row.userCommissionRate }}%
+      </template>
+    </el-table-column>
+    <el-table-column prop="rewordRate" label="포인트 교환 비율" width="150" align="center" header-align="center" >
+      <template #default="scope">
+       1 원을 {{ scope.row.rewordRate }} <b> {{  scope.row.pointName  }} </b> 으로 전환 합니다.
+      </template>
+    </el-table-column>
     <el-table-column prop="groupStatusName" label="서비스 상태" width="170" align="center" header-align="center" >
       <template #default="scope">
         <el-popover

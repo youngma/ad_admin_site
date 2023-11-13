@@ -11,6 +11,7 @@ import {
   phoneFormatter,
   startDatePostFix
 } from '@/utils/customElTableFormatter.js'
+import { sha512 } from 'js-sha512'
 
 const initData = {
   searchParams: {
@@ -111,6 +112,10 @@ export const advertiserStore = defineStore('advertiserStore', {
         adDate: [],
         adStartDate: null,
         adEndDate: null,
+        totalBudget: 0,
+        adPrice: 0,
+        commissionRate: 0,
+        userCommissionRate: 0,
         smartStore: {
           useHow: null,
           image: null,
@@ -184,22 +189,22 @@ export const advertiserStore = defineStore('advertiserStore', {
       this.selected = []
       this.advertisers = []
     },
-    // async reload() {
-    //   const result = await ADVERTISER_API.search(this.searchParams)
-    //   const { content, totalElements } = result
-    //   this.advertisers = content
-    //   this.total = totalElements
-    // },
-    // async search(query) {
-    //   this.loading = true
-    //   this.searchParams.businessName = query
-    //   this.searchParams.page = 1
-    //   this.searchParams.size = 50
-    //
-    //   await this.reload()
-    //
-    //   this.loading = false
-    // },
+    async reload() {
+      const result = await ADVERTISER_API.search(this.searchParams)
+      const { content, totalElements } = result
+      this.advertisers = content
+      this.total = totalElements
+    },
+    async search(query) {
+      this.loading = true
+      this.searchParams.businessName = query
+      this.searchParams.page = 1
+      this.searchParams.size = 50
+
+      await this.reload()
+
+      this.loading = false
+    },
     tabInitUser(type) {
       this.users.searchParams = {
         page: 1,
@@ -338,16 +343,19 @@ export const advertiserStore = defineStore('advertiserStore', {
       }
 
       if (target === 'campaigns') {
-        console.log('campaigns')
         this.campaigns.register = {
           campaignType: null,
           campaignName: null,
           campaignDesc: null,
+          totalBudget: 0,
+          adPrice: 0,
           totalParticipationLimit: 0,
           dayParticipationLimit: 0,
           adDate: [],
           adStartDate: null,
           adEndDate: null,
+          commissionRate: 0,
+          userCommissionRate: 0,
           smartStore: {
             useHow: null,
             image: null,
@@ -419,7 +427,18 @@ export const advertiserStore = defineStore('advertiserStore', {
     userRegister() {
       const newUser = this.generateParams(this.users.register)
 
-      ADVERTISER_API.userRegister(newUser).then(() => {
+      const hash = sha512.create()
+
+      hash.update(newUser.userPassword)
+      const password = hash.hex()
+
+      ADVERTISER_API.userRegister(
+        Object.assign(
+          newUser,
+          {
+            userPassword: password
+          })
+      ).then(() => {
         this.$alert('등록 되었습니다.', '확인', {})
         this.initRegisterForm('user')
         this.reloadByUsers().then(() => {
@@ -590,7 +609,7 @@ export const advertiserStore = defineStore('advertiserStore', {
         // init
         this.initCampaignDetail()
 
-        const { adStartDate, adEndDate, totalParticipationLimit, dayParticipationLimit, smartStore, quiz } = row
+        const { adStartDate, adEndDate, totalParticipationLimit, dayParticipationLimit, totalBudget, adPrice, commissionRate, userCommissionRate, smartStore, quiz } = row
 
         if (smartStore) {
           const { image, holdingTime, totalBudget, adPrice } = smartStore
@@ -631,18 +650,22 @@ export const advertiserStore = defineStore('advertiserStore', {
             }
           })
 
-          this.campaigns.selectedCampaign.uploads.quiz.detailImage2 = [detailImage2].map(file => {
-            const { originName, fileType, fileName } = file
-            return {
-              name: originName,
-              type: fileType,
-              url: [import.meta.env.VITE_FILE_SERVER, 'files', fileName].join('/')
-            }
-          })
+          // this.campaigns.selectedCampaign.uploads.quiz.detailImage2 = [detailImage2].map(file => {
+          //   const { originName, fileType, fileName } = file
+          //   return {
+          //     name: originName,
+          //     type: fileType,
+          //     url: [import.meta.env.VITE_FILE_SERVER, 'files', fileName].join('/')
+          //   }
+          // })
         }
 
         this.campaigns.selectedCampaign = Object.assign(deepClone(row), {
-          adDate: [adStartDate.split(' ')[0], adEndDate.split(' ')[0]],
+          adDate: [adStartDate.substring(0, 16), adEndDate.substring(0, 16)],
+          totalBudget: moneyFormatter(totalBudget),
+          adPrice: moneyFormatter(adPrice),
+          commissionRate: moneyFormatter(commissionRate),
+          userCommissionRate: moneyFormatter(userCommissionRate),
           dayParticipationLimit: moneyFormatter(dayParticipationLimit),
           totalParticipationLimit: moneyFormatter(totalParticipationLimit),
           smartStore,
@@ -674,7 +697,7 @@ export const advertiserStore = defineStore('advertiserStore', {
     },
     campaignRegister() {
       const newCampaign = deepClone(this.campaigns.register)
-      const { adDate, totalParticipationLimit, dayParticipationLimit, campaignType, smartStore, quiz } = this.campaigns.register
+      const { adDate, totalParticipationLimit, dayParticipationLimit, campaignType, adPrice, totalBudget, smartStore, quiz } = this.campaigns.register
 
       let newSmartStore = {}
       let newQuiz = {}
@@ -695,7 +718,7 @@ export const advertiserStore = defineStore('advertiserStore', {
 
       if (quiz) {
         const { quizTitle, quizAnswer, mainImage, detailImage1, detailImage2 } = quiz
-        newQuiz = campaignType === 'QUIZ01' ? Object.assign(newQuiz, {
+        newQuiz = ['QUIZ01', 'QUIZ02'].includes(campaignType) ? Object.assign(newQuiz, {
           useHow: quiz.useHow,
           targetUrlPc: quiz.targetUrlPc,
           targetUrlMobile: quiz.targetUrlMobile,
@@ -709,6 +732,8 @@ export const advertiserStore = defineStore('advertiserStore', {
         adEndDate: endDatePostFix(adDate[1]),
         dayParticipationLimit: numberFormatter(dayParticipationLimit),
         totalParticipationLimit: numberFormatter(totalParticipationLimit),
+        totalBudget: numberFormatter(totalBudget),
+        adPrice: numberFormatter(adPrice),
         smartStore: newSmartStore,
         quiz: newQuiz
       })
@@ -718,7 +743,7 @@ export const advertiserStore = defineStore('advertiserStore', {
     modifyAfCampaign() {
       const selectedCampaign = deepClone(this.campaigns.selectedCampaign)
 
-      const { adDate, totalParticipationLimit, dayParticipationLimit, advertiser, smartStore, quiz } = selectedCampaign
+      const { adDate, totalParticipationLimit, dayParticipationLimit, totalBudget, adPrice, advertiser, smartStore, quiz } = selectedCampaign
       const { advertiserSeq } = advertiser
 
       if (smartStore) {
@@ -734,6 +759,8 @@ export const advertiserStore = defineStore('advertiserStore', {
         advertiserSeq,
         adStartDate: startDatePostFix(adDate[0]),
         adEndDate: endDatePostFix(adDate[1]),
+        totalBudget: numberFormatter(totalBudget),
+        adPrice: numberFormatter(adPrice),
         dayParticipationLimit: numberFormatter(dayParticipationLimit),
         totalParticipationLimit: numberFormatter(totalParticipationLimit),
         smartStore: smartStore,
@@ -789,7 +816,35 @@ export const advertiserStore = defineStore('advertiserStore', {
       }).catch(() => {
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })
+    },
+    campaignExposureStatus(advertiserSeq, seq, exposureStatus) {
+      const status = {
+        advertiserSeq,
+        seq
+      }
+
+      if (exposureStatus) {
+        CAMPAIGN_API.campaignExposure(status).then(() => {
+          this.$alert('노출 처리 되었습니다.', '확인', {})
+          this.reload().then(() => {
+          })
+        }).catch((e) => {
+          console.log(e)
+          this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+        })
+      } else {
+        CAMPAIGN_API.campaignNonExposure(status).then(() => {
+          this.$alert('미노출 처리 되었습니다.', '확인', {})
+          this.reload().then(() => {
+          })
+        }).catch((e) => {
+          console.log(e)
+
+          this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+        })
+      }
     }
+
   },
   persist: {
     enabled: true,

@@ -1,12 +1,12 @@
 <template>
   <div class="comm_comp">
     <el-row>
-      <el-col class="comm_form_box comm_text_tit">광고 그룹 조회</el-col>
+      <el-col class="comm_form_box comm_text_tit">광고 지면 조회</el-col>
     </el-row>
     <div class="frame_comp">
       <el-row :gutter="10">
         <el-col :span="4">
-          <strong class="comm_tit_box">그룹 명</strong>
+          <strong class="comm_tit_box">지면 명</strong>
         </el-col>
         <el-col :span="8">
           <el-input v-model="adGroups.searchParams.groupName" placeholder="Please input" />
@@ -38,7 +38,7 @@
         </el-col>
 
         <el-col :span="4">
-          <strong class="comm_tit_box">광고 그룹 상태</strong>
+          <strong class="comm_tit_box">광고 지면 상태</strong>
         </el-col>
         <el-col :span="8">
           <el-select v-model="adGroups.searchParams.groupStatus" class="m-2" placeholder="Select" size="large">

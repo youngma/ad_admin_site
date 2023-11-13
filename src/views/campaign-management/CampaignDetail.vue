@@ -2,9 +2,9 @@
 <template>
   <div class="components-container">
     <div class="comm_comp">
-          <el-row>
-            <el-col class="comm_form_box comm_text_tit">캠페인 상세</el-col>
-          </el-row>
+      <el-row>
+        <el-col class="comm_form_box comm_text_tit">캠페인 상세</el-col>
+      </el-row>
       <div class="comm_comp_table">
         <el-row :gutter="10">
           <el-col :span="4" class="col_tit">
@@ -46,7 +46,7 @@
               >
                 <el-input
                   v-model="campaigns.selectedCampaign.campaignName"
-                  :readonly="modifyMode"
+                  :readonly="!modifyMode"
                   class=""
                   placeholder="캠페인 명을 입력 해주세요."
                 />
@@ -70,7 +70,7 @@
                 <el-input
                   v-model="campaigns.selectedCampaign.campaignDesc"
                   type="textarea"
-                  :readonly="modifyMode"
+                  :readonly="!modifyMode"
                   :rows="4"
                   :autosize="{ minRows: 4, maxRows: 5 }"
                   class=""
@@ -93,7 +93,7 @@
               <el-col :span="20">
                 <el-input
                   v-model="campaigns.selectedCampaign.totalParticipationLimit"
-                  :readonly="modifyMode"
+                  :readonly="!modifyMode"
 
                   :formatter="(value) => moneyFormatter(value)"
                   :class="{ 'is-error': !validation.totalParticipationLimit.check }"
@@ -114,7 +114,7 @@
               <el-col :span="20">
                 <el-input
                   v-model="campaigns.selectedCampaign.dayParticipationLimit"
-                  :readonly="modifyMode"
+                  :readonly="!modifyMode"
 
                   :formatter="(value) => moneyFormatter(value)"
                   :class="{ 'is-error': !validation.dayParticipationLimit.check }"
@@ -125,6 +125,94 @@
             </el-row>
             <div v-show="!validation.dayParticipationLimit.check" class="invalid-feedback">
               {{validation.dayParticipationLimit.message}}
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="10">
+
+          <el-col :span="4" class="col_tit">
+            <strong class="comm_tit_box">광고 단가</strong>
+          </el-col>
+          <el-col :span="8" class="col_desc">
+            <el-row :gutter="10">
+              <el-col :span="20">
+                <el-input
+                  v-model="campaigns.selectedCampaign.adPrice"
+                  :formatter="(value) => moneyFormatter(value)"
+                  :class="{ 'is-error': !validation.adPrice.check }"
+                  class="text-end" placeholder="광고 단가를 입력 해주세요."
+                  @keyup="(value) => caclTotalBudget(value)"
+                >
+                  <template #append>원</template>
+                </el-input>
+              </el-col>
+            </el-row>
+            <div v-show="!validation.adPrice.check" class="invalid-feedback">
+              {{validation.adPrice.message}}
+            </div>
+          </el-col>
+          <el-col :span="4" class="col_tit">
+            <strong class="comm_tit_box">총 예산</strong>
+          </el-col>
+          <el-col :span="8" class="col_desc text-end">
+            <el-row :gutter="10">
+              <el-col :span="20">
+                <el-input
+                  v-model="campaigns.selectedCampaign.totalBudget"
+                  :formatter="(value) => moneyFormatter(value)"
+                  :class="{ 'is-error': !validation.totalBudget.check }"
+                  class="text-end" placeholder="총 예산 금액 입력 해주세요." >
+                  <template #append>원</template>
+                </el-input>
+              </el-col>
+            </el-row>
+            <div v-show="!validation.totalBudget.check" class="invalid-feedback">
+              {{validation.totalBudget.message}}
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-row v-if="campaigns.selectedCampaign.campaignType === 'QUIZ02'" :gutter="10">
+
+          <el-col :span="4" class="col_tit">
+            <strong class="comm_tit_box">매체사 지급 수수료(원)</strong>
+          </el-col>
+          <el-col :span="8" class="col_desc">
+            <el-row :gutter="10">
+              <el-col :span="20">
+                <el-input-number
+                  v-model="campaigns.selectedCampaign.commissionRate"
+                  :min="0"
+                  :max="adPrice"
+                  :class="{ 'is-error': !validation.commissionRate.check }"
+                  controls-position="right"
+                  size="large"
+                />
+              </el-col>
+            </el-row>
+            <div v-show="!validation.commissionRate.check" class="invalid-feedback">
+              {{validation.commissionRate.message}}
+            </div>
+          </el-col>
+          <el-col :span="4" class="col_tit">
+            <strong class="comm_tit_box">사용자 지급 수수료(원)</strong>
+          </el-col>
+          <el-col :span="8" class="col_desc text-end">
+            <el-row :gutter="10">
+              <el-col :span="20">
+                <el-input-number
+                  v-model="campaigns.selectedCampaign.userCommissionRate"
+                  :min="0"
+                  :max="commissionRate"
+                  :class="{ 'is-error': !validation.userCommissionRate.check }"
+                  controls-position="right"
+                  size="large"
+                />
+              </el-col>
+            </el-row>
+            <div v-show="!validation.userCommissionRate.check" class="invalid-feedback">
+              {{validation.userCommissionRate.message}}
             </div>
           </el-col>
         </el-row>
@@ -141,16 +229,17 @@
               >
                 <el-date-picker
                   v-model="campaigns.selectedCampaign.adDate"
-                  :readonly="modifyMode"
-
-                  type="daterange"
+                  :readonly="!modifyMode"
+                  type="datetimerange"
                   size="large"
                   start-placeholder="광고 시작 일자"
                   end-placeholder="광고 종료 일자"
                   :disabled-date="disabledDate"
                   :default-time="defaultAdDate"
-                  format="YYYY/MM/DD"
-                  value-format="YYYY-MM-DD"
+                  date-format="YYYY/MM/DD"
+                  time-format="HH:mm"
+                  format="YYYY-MM-DD HH:mm"
+                  value-format="YYYY-MM-DD HH:mm"
                 />
               </el-col>
             </el-row>
@@ -158,8 +247,8 @@
               {{validation.adDate.message}}
             </div>
           </el-col>
-          <el-col :span="4" class="col_tit">
-            <strong class="comm_tit_box"></strong>
+          <el-col :span="4" class="col_desc">
+<!--            <strong class="comm_tit_box"></strong>-->
           </el-col>
           <el-col :span="8" class="col_desc">
           </el-col>
@@ -495,28 +584,28 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="10">
-              <el-col :span="4" class="col_tit">
-                <strong class="comm_tit_box">상품 코드</strong>
-              </el-col>
-              <el-col :span="16" class="col_desc">
-                <el-row :gutter="10">
-                  <el-col
-                    :span="20"
-                    :class="{ 'is-error': !validation.goodsCode.check }"
-                  >
-                    <el-input
-                      v-model="campaigns.selectedCampaign.quiz.goodsCode"
-                      :class="{ 'is-error': !validation.goodsCode.check }"
-                      class="" placeholder="상품 코드를 입력 해주세요." />
+<!--            <el-row :gutter="10">-->
+<!--              <el-col :span="4" class="col_tit">-->
+<!--                <strong class="comm_tit_box">상품 코드</strong>-->
+<!--              </el-col>-->
+<!--              <el-col :span="16" class="col_desc">-->
+<!--                <el-row :gutter="10">-->
+<!--                  <el-col-->
+<!--                    :span="20"-->
+<!--                    :class="{ 'is-error': !validation.goodsCode.check }"-->
+<!--                  >-->
+<!--                    <el-input-->
+<!--                      v-model="campaigns.selectedCampaign.quiz.goodsCode"-->
+<!--                      :class="{ 'is-error': !validation.goodsCode.check }"-->
+<!--                      class="" placeholder="상품 코드를 입력 해주세요." />-->
 
-                  </el-col>
-                </el-row>
-                <div v-show="!validation.goodsCode.check" class="invalid-feedback">
-                  {{validation.goodsCode.message}}
-                </div>
-              </el-col>
-            </el-row>
+<!--                  </el-col>-->
+<!--                </el-row>-->
+<!--                <div v-show="!validation.goodsCode.check" class="invalid-feedback">-->
+<!--                  {{validation.goodsCode.message}}-->
+<!--                </div>-->
+<!--              </el-col>-->
+<!--            </el-row>-->
 
             <el-row :gutter="10">
               <el-col :span="4" class="col_tit">
@@ -562,27 +651,27 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="10">
-              <el-col :span="4" class="col_tit">
-                <strong class="comm_tit_box">상세 이미지 2</strong>
-              </el-col>
-              <el-col :span="16" class="col_desc">
-                <el-row
-                  :gutter="10"
-                  :class="{ 'is-error': !validation.detailImage2.check }"
-                >
-                  <CampaignImageUpload
-                    ref="quiz_detailImage2_modify_upload"
-                    :files="campaigns.selectedCampaign.uploads.quiz.detailImage2"
-                    @upload-after="(resp) => onUploadAfter('quiz.detailImage2', resp)"
-                  />
+<!--            <el-row :gutter="10">-->
+<!--              <el-col :span="4" class="col_tit">-->
+<!--                <strong class="comm_tit_box">상세 이미지 2</strong>-->
+<!--              </el-col>-->
+<!--              <el-col :span="16" class="col_desc">-->
+<!--                <el-row-->
+<!--                  :gutter="10"-->
+<!--                  :class="{ 'is-error': !validation.detailImage2.check }"-->
+<!--                >-->
+<!--                  <CampaignImageUpload-->
+<!--                    ref="quiz_detailImage2_modify_upload"-->
+<!--                    :files="campaigns.selectedCampaign.uploads.quiz.detailImage2"-->
+<!--                    @upload-after="(resp) => onUploadAfter('quiz.detailImage2', resp)"-->
+<!--                  />-->
 
-                </el-row>
-                <div v-show="!validation.image.check" class="invalid-feedback">
-                  {{validation.detailImage2.message}}
-                </div>
-              </el-col>
-            </el-row>
+<!--                </el-row>-->
+<!--                <div v-show="!validation.image.check" class="invalid-feedback">-->
+<!--                  {{validation.detailImage2.message}}-->
+<!--                </div>-->
+<!--              </el-col>-->
+<!--            </el-row>-->
 
           </div>
         </div>
@@ -605,7 +694,7 @@ import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 
 import { storeToRefs } from 'pinia'
-import { ref, getCurrentInstance, computed } from 'vue'
+import { ref, getCurrentInstance, computed, onActivated, onMounted } from 'vue'
 import { numberFormatter, moneyFormatter } from '@/utils/customElTableFormatter.js'
 import { validURL } from '@/utils/validate.js'
 import { ElMessageBox } from 'element-plus'
@@ -633,6 +722,17 @@ const validation = ref({
     check: true,
     message: ''
   },
+
+  commissionRate: {
+    check: true,
+    message: ''
+  },
+
+  userCommissionRate: {
+    check: true,
+    message: ''
+  },
+
   adDate: {
     check: true,
     message: ''
@@ -714,7 +814,7 @@ const { CampaignType, PaymentTerms } = storeToRefs(common)
 const smart_store_file_modify_upload = ref(null)
 const quiz_mainImage_modify_upload = ref(null)
 const quiz_detailImage1_modify_upload = ref(null)
-const quiz_detailImage2_modify_upload = ref(null)
+// const quiz_detailImage2_modify_upload = ref(null)
 
 const modifyMode = computed(() => !campaigns.modifyMode)
 const disabledDate = (time) => {
@@ -722,7 +822,7 @@ const disabledDate = (time) => {
 }
 
 function validate(...types) {
-  const { campaignName, campaignType, campaignDesc, dayParticipationLimit, adDate, smartStore, quiz } = campaigns.value.selectedCampaign
+  const { campaignName, campaignType, campaignDesc, dayParticipationLimit, adDate, totalBudget, adPrice, smartStore, quiz } = campaigns.value.selectedCampaign
 
   validation.value.valid = true
 
@@ -808,6 +908,38 @@ function validate(...types) {
 
         break
 
+      case 'totalBudget' :
+
+        validation.value.totalBudget.check = true
+        validation.value.totalBudget.message = ''
+
+        if (totalBudget <= 0) {
+          validation.value.totalBudget.check = false
+          validation.value.totalBudget.message = '총 예산 금액은 0원 이상 만 가능 입니다.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
+      case 'adPrice' :
+
+        validation.value.adPrice.check = true
+        validation.value.adPrice.message = ''
+
+        if (adPrice <= 0) {
+          validation.value.adPrice.check = false
+          validation.value.adPrice.message = '광고 단가는 0원 이상 만 가능 합니다.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
       case 'adDate' :
 
         validation.value.adDate.check = true
@@ -830,7 +962,12 @@ function validate(...types) {
     }
 
     if (campaignType === 'QUIZ01') {
-      quizValidate('useHow', 'mainImage', 'detailImage1', 'detailImage2', 'targetUrlPc', 'targetUrlMobile', 'quizTitle', 'quizAnswer', 'goodsCode')
+      quizValidate('useHow', 'mainImage', 'detailImage1', 'targetUrlPc', 'targetUrlMobile', 'quizTitle', 'quizAnswer')
+    }
+
+    if (campaignType === 'QUIZ02') {
+      quizValidate('useHow', 'mainImage', 'detailImage1', 'targetUrlPc', 'targetUrlMobile', 'quizTitle', 'quizAnswer')
+      quizValidate('commissionRate', 'userCommissionRate')
     }
   }
 }
@@ -1297,12 +1434,13 @@ function save() {
           if (quiz_detailImage1_modify_upload.value) {
             quiz_detailImage1_modify_upload.value.initUploader()
           }
-          if (quiz_detailImage2_modify_upload.value) {
-            quiz_detailImage2_modify_upload.value.initUploader()
-          }
+          // if (quiz_detailImage2_modify_upload.value) {
+          //   quiz_detailImage2_modify_upload.value.initUploader()
+          // }
           store.setCampaignDetail(null)
           const { referrer } = route.query
-          router.push({ path: referrer || route.params.referrer })
+          console.log(route)
+          router.push({ path: referrer || route.params.referrer || '/campaign-management/search'})
         }
       })
     }).catch((e) => {
@@ -1314,6 +1452,29 @@ function save() {
 
 function paymentTermsChange() {
   campaigns.value.selectedCampaign.holdingTime = 0
+}
+
+onMounted(() => {
+  if (!campaigns.value.selectedCampaign.seq) {
+    const { referrer } = route.query
+    router.push({ path: referrer || route.params.referrer || '/campaign-management/search'})
+  }
+})
+
+
+const adPrice = computed(() => {
+  return Number(numberFormatter(campaigns.value.selectedCampaign.adPrice))
+})
+
+const commissionRate = computed(() => {
+  return Number(numberFormatter(campaigns.value.selectedCampaign.commissionRate))
+})
+
+
+function caclTotalBudget(value) {
+  const { adPrice, totalParticipationLimit } = campaigns.value.selectedCampaign
+  const totalBudget = numberFormatter(totalParticipationLimit) * numberFormatter(adPrice)
+  campaigns.value.selectedCampaign.totalBudget = moneyFormatter(totalBudget)
 }
 
 </script>

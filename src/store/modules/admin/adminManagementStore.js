@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import * as ADMIN_API from '@/api/ADMIN_API'
 import _ from 'lodash'
 import { deepClone } from '@/utils/index.js'
+import { sha512 } from 'js-sha512'
 
 const initData = {
   searchParams: {
@@ -83,7 +84,6 @@ export const adminManagementStore = defineStore('adminManagementStore', {
       const { userId } = this.register
       const data = await ADMIN_API.userIdCheck({ userId })
 
-      console.log(data)
       this.register.alReadyCheck = !data
 
       return this.register.alReadyCheck
@@ -98,7 +98,18 @@ export const adminManagementStore = defineStore('adminManagementStore', {
       }
     },
     adminRegister() {
-      ADMIN_API.register(this.register).then(() => {
+      const hash = sha512.create()
+      const { userId, userName, userPassword, phoneNumber } = this.register
+      hash.update(userPassword)
+
+      const register = {
+        userId,
+        userName,
+        userPassword: hash.hex(),
+        phoneNumber
+      }
+
+      ADMIN_API.register(register).then(() => {
         this.$alert('등록 되었습니다.', '확인', {})
         this.initRegisterForm()
       }).catch(() => {

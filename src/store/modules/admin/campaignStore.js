@@ -30,6 +30,7 @@ export const campaignStore = defineStore('campaignStore', {
       campaignType: '',
       paymentTerms: '',
       campaignStatus: '',
+      exposureStatus: '',
       page: 1,
       size: 20
     },
@@ -92,6 +93,7 @@ export const campaignStore = defineStore('campaignStore', {
           campaignType: '',
           paymentTerms: '',
           campaignStatus: '',
+          exposureStatus: '',
           page: 1,
           size: 20
         }
@@ -117,15 +119,18 @@ export const campaignStore = defineStore('campaignStore', {
     async reload(params) {
       const searchParams = Object.assign(
         params,
-        this.searchParams
+        this.campaignSearchParams
       )
+
+      if (searchParams.exposureStatus === null) {
+        searchParams.exposureStatus = undefined
+      }
 
       const result = await CAMPAIGN_API.search(searchParams)
       const { content, totalElements } = result
       return { content, totalElements }
     },
     async search({ selected, page, size }) {
-      console.log(selected)
       const params = {
         partnerSeq: selected.value.join(','),
         page: page,
@@ -133,7 +138,6 @@ export const campaignStore = defineStore('campaignStore', {
       }
       return await this.reload(params)
     }
-
   },
   persist: {
     enabled: true,

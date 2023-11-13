@@ -2,23 +2,23 @@
   <div class="components-container">
     <div v-if="adGroups.selectedAdGroup" class="comm_comp">
       <el-row>
-        <el-col class="comm_form_box comm_text_tit">광고 그룹 상세</el-col>
+        <el-col class="comm_form_box comm_text_tit">광고 지면 상세</el-col>
       </el-row>
       <div class="comm_comp_table">
+<!--        <el-row :gutter="10">-->
+<!--          <el-col :span="6" class="col_tit">-->
+<!--            <strong class="comm_tit_box">광고 타입</strong>-->
+<!--          </el-col>-->
+<!--          <el-col :span="16" class="col_desc">-->
+<!--            <el-input-->
+<!--              v-model="adGroups.selectedAdGroup.adTypeName"-->
+<!--              disabled-->
+<!--              class="" placeholder="광고 타입를 입력 해주세요." />-->
+<!--          </el-col>-->
+<!--        </el-row>-->
         <el-row :gutter="10">
           <el-col :span="6" class="col_tit">
-            <strong class="comm_tit_box">광고 타입</strong>
-          </el-col>
-          <el-col :span="16" class="col_desc">
-            <el-input
-              v-model="adGroups.selectedAdGroup.adTypeName"
-              disabled
-              class="" placeholder="광고 그룹 를 입력 해주세요." />
-          </el-col>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="6" class="col_tit">
-            <strong class="comm_tit_box">광고 그룹 명</strong>
+            <strong class="comm_tit_box">광고 지면 명</strong>
           </el-col>
           <el-col :span="16" class="col_desc">
             <el-row :gutter="10">
@@ -26,7 +26,7 @@
                 <el-input
                   v-model="adGroups.selectedAdGroup.groupName"
                   :class="{ 'is-error': !validation.groupName.check }"
-                  class="" placeholder="광고 그룹 를 입력 해주세요." />
+                  class="" placeholder="광고 지면명을 입력 해주세요." />
               </el-col>
             </el-row>
             <div v-show="!validation.groupName.check" class="invalid-feedback">
@@ -73,7 +73,7 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="6" class="col_tit">
-            <strong class="comm_tit_box">통장 사본</strong>
+            <strong class="comm_tit_box">포인트 로고</strong>
           </el-col>
           <el-col :span="16" class="col_desc">
             <el-row :gutter="10">
@@ -146,12 +146,19 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="6" class="col_tit">
-            <strong class="comm_tit_box">수수료 비율</strong>
+            <strong class="comm_tit_box">수수료 비율(매체사)</strong>
           </el-col>
+
           <el-col :span="16" class="col_desc">
             <el-row :gutter="10">
               <el-col :span="16">
-                <el-input-number v-model="adGroups.selectedAdGroup.commissionRate" :min="1" :max="100" />
+                <el-input-number
+                  v-model="adGroups.selectedAdGroup.commissionRate"
+                  :min="1"
+                  :max="100"
+                  controls-position="right"
+                  size="large"
+                />
               </el-col>
             </el-row>
             <div v-show="!validation.commissionRate.check" class="invalid-feedback">
@@ -161,15 +168,40 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="6" class="col_tit">
-            <strong class="comm_tit_box">포인트 교환 비율</strong>
+            <strong class="comm_tit_box">수수료 비율(사용자)</strong>
           </el-col>
+
           <el-col :span="16" class="col_desc">
             <el-row :gutter="10">
               <el-col :span="16">
-
-                <el-input-number v-model="adGroups.selectedAdGroup.rewordRate" :min="1" :max="100" />
+                <el-input-number
+                  v-model="adGroups.selectedAdGroup.userCommissionRate"
+                  :min="1"
+                  :max="100"
+                  controls-position="right"
+                  size="large"
+                />
               </el-col>
             </el-row>
+            <div v-show="!validation.userCommissionRate.check" class="invalid-feedback">
+              {{validation.userCommissionRate.message}}
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10" >
+          <el-col :span="6" class="col_tit">
+            <strong class="comm_tit_box">
+              포인트 전환 비율 (1원당 전환 비율)
+            </strong>
+          </el-col>
+          <el-col :span="16" class="col_desc pl-10">
+            <el-input-number
+              v-model="adGroups.selectedAdGroup.rewordRate"
+              :min="1"
+              :max="100"
+              controls-position="right"
+              size="large"
+            />
             <div v-show="!validation.rewordRate.check" class="invalid-feedback">
               {{validation.rewordRate.message}}
             </div>
@@ -231,6 +263,10 @@ const validation = ref({
     check: true,
     message: ''
   },
+  userCommissionRate: {
+    check: true,
+    message: ''
+  },
   rewordRate: {
     check: true,
     message: ''
@@ -250,7 +286,7 @@ const dialogImageUrl = ref(import.meta.env.VITE_ADMIN_API + '/admin/v1/upload/ad
 const headers = ref({ Authorization: getToken() })
 
 function validate(...types) {
-  const { adType, groupName, logoFile, pointIconFile, pointName, callBackUrl, commissionRate, rewordRate } = adGroups.value.selectedAdGroup
+  const { adType, groupName, logoFile, pointIconFile, pointName, callBackUrl, userCommissionRate, commissionRate, rewordRate } = adGroups.value.selectedAdGroup
   validation.value.valid = true
 
   for (const type of types) {
@@ -368,7 +404,7 @@ function handleSuccess(regType, data, uploadFile) {
 
     switch (regType) {
       case 'logoFile':
-        adGroups.value.register.logoFile = {
+        adGroups.value.selectedAdGroup.logoFile = {
           newFile: true,
           fileType: type,
           originName: originFileName,
@@ -377,7 +413,7 @@ function handleSuccess(regType, data, uploadFile) {
         break
 
       case 'pointIconFile':
-        adGroups.value.register.pointIconFile = {
+        adGroups.value.selectedAdGroup.pointIconFile = {
           newFile: true,
           fileType: type,
           originName: originFileName,

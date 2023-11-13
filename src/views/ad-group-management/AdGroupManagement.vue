@@ -1,7 +1,7 @@
 <template>
   <div class="components-container" type="">
     <PartnerSearchForm2
-      title="광고 그룹 조회"
+      title="광고 지면 조회"
       class="select-width-full"
       :multiple=true
       :selected="selected"

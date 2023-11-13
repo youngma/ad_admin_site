@@ -16,7 +16,7 @@
       :total="total"
       :page="page"
       :size="size"
-      referrer="/advertiser-management/search"
+      referrer="/campaign-management/search"
       @search-call="({ page, size }) => search({ page, size })"
     />
   </div>

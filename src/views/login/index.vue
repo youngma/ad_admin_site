@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm"  class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
         <h3 class="title">로그인</h3>
@@ -48,20 +48,20 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.prevent="handleLogin">Login</el-button>
 
-      <div style="position:relative" hidden="hidden">
-        <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : any</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;">Username : editor</span>
-          <span>Password : any</span>
-        </div>
+<!--      <div style="position:relative" hidden="hidden">-->
+<!--        <div class="tips">-->
+<!--          <span>Username : admin</span>-->
+<!--          <span>Password : any</span>-->
+<!--        </div>-->
+<!--        <div class="tips">-->
+<!--          <span style="margin-right:18px;">Username : editor</span>-->
+<!--          <span>Password : any</span>-->
+<!--        </div>-->
 
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          Or connect with
-        </el-button>
-      </div>
+<!--        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">-->
+<!--          Or connect with-->
+<!--        </el-button>-->
+<!--      </div>-->
     </el-form>
 
     <el-dialog title="Or connect with" :visible="showDialog">
@@ -82,6 +82,7 @@ import { authStore } from '@/store/modules/core/auth.js'
 import { permissionStore } from '@/store/modules/core/permission.js'
 import { inject } from 'vue'
 import { Hide, Lock, User, View } from '@element-plus/icons-vue'
+import {ElMessage} from "element-plus";
 
 export default {
   name: 'LoginMain',
@@ -157,6 +158,9 @@ export default {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     },
+    createSalt() {
+      return crypto.randomBytes(64).toString('base64')
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -184,7 +188,9 @@ export default {
               })
             })
             .catch((e) => {
-              console.error(e)
+              ElMessage.warning(
+                e
+              )
               this.loading = false
             })
         } else {

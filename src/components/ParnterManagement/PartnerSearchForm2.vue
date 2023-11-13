@@ -25,6 +25,7 @@
             placeholder="매체사 명을 입력 해주세요."
             @remove-tag="onRemoveTag"
             @change="onChange"
+            @clear="onClear"
           />
         </el-col>
       </el-row>
@@ -99,7 +100,7 @@ const { multiple, selected, partners, multipleLimit } = defineProps({
   }
 })
 
-const emit = defineEmits(['search-update', 'on-change'])
+const emit = defineEmits(['search-update', 'on-change', 'on-clear'])
 
 defineOptions({
   name: 'PartnerSearchFrom2'
@@ -167,6 +168,10 @@ function onChange(value) {
   } else {
     emit('on-change', multiple ? [] : [])
   }
+}
+
+function onClear() {
+  emit('on-clear', null)
 }
 
 function initSet(selected, partners) {

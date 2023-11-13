@@ -208,7 +208,7 @@ export const asyncRoutes = [
     component: Layout,
     // component: () => import('@/views/admin-management/AdvertiserManagement.vue'),
     meta: {
-      title: '광고 그룹 관리',
+      title: '광고 지면 관리',
       icon: 'material-symbols:ad-group'
     },
     name: 'AdGroupManagement',
@@ -218,13 +218,13 @@ export const asyncRoutes = [
         path: 'search',
         component: () => import('@/views/ad-group-management/AdGroupManagement.vue'),
         name: 'AdGroupSearch',
-        meta: { title: '광고 그룹 조회', icon: 'ri:menu-search-fill' }
+        meta: { title: '광고 지면 조회', icon: 'ri:menu-search-fill' }
       },
       {
         path: 'register',
         component: () => import('@/views/ad-group-management/AdGroupRegister.vue'),
         name: 'AdGroupRegister',
-        meta: { title: '광고 그룹 등록', icon: 'ri:add-box-fill', params: { init: true, referrer: '/ad-group-management/search' }},
+        meta: { title: '광고 지면 등록', icon: 'ri:add-box-fill', params: { init: true, referrer: '/ad-group-management/search' }},
         beforeEnter: (to, from, next) => {
           const { query } = to
           if (query.init !== 'false') {
@@ -237,7 +237,7 @@ export const asyncRoutes = [
         path: 'detail',
         component: () => import('@/views/ad-group-management/AdGroupDetail.vue'),
         name: 'AdGroupDetail',
-        meta: { title: '광고 그룹 상세', icon: 'cib:campaign-monitor', hidden: true },
+        meta: { title: '광고 지면 상세광고 지면 상세', icon: 'cib:campaign-monitor', hidden: true },
         hidden: true
       }
     ]
@@ -316,6 +316,12 @@ export const asyncRoutes = [
     name: 'QuizReport',
     redirect: '/report-quiz-management/advertiser',
     children: [
+      {
+        path: 'admin',
+        component: () => import('@/views/ad-report/quiz/AdminReport.vue'),
+        name: 'QuizAdminReport',
+        meta: { title: '어드민 리포트', icon: 'mdi:report-line-shimmer' }
+      },
       {
         path: 'advertiser',
         component: () => import('@/views/ad-report/quiz/AdvertiserReport.vue'),

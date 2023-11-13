@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import * as REPORT_QUIZ_API from '@/api/REPORT_QUIZ_API.js'
 import _ from 'lodash'
 import moment from 'moment'
+import {searchByAdmin} from "@/api/REPORT_QUIZ_API.js";
 
 export const quizReportStore = defineStore('quizReportStore', {
   state: () => ({
@@ -10,7 +11,7 @@ export const quizReportStore = defineStore('quizReportStore', {
         advertiserSeq: null,
         page: 1,
         size: 20,
-        searchDate: [moment().add(-10, 'days').toDate(), moment().add(-1, 'days').toDate()]
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().add(-1, 'days').format('YYYYMMDD')]
       },
       list: [],
       total: 0
@@ -20,7 +21,17 @@ export const quizReportStore = defineStore('quizReportStore', {
         partnerSeq: null,
         page: 1,
         size: 20,
-        searchDate: [moment().add(-10, 'days').toDate(), moment().add(-1, 'days').toDate()]
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().add(-1, 'days').format('YYYYMMDD')]
+
+      },
+      list: [],
+      total: 0
+    },
+    admin: {
+      searchParams: {
+        page: 1,
+        size: 20,
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().add(-1, 'days').format('YYYYMMDD')]
       },
       list: [],
       total: 0
@@ -92,6 +103,35 @@ export const quizReportStore = defineStore('quizReportStore', {
     },
     setPartner(partnerSeq) {
       this.partner.searchParams.partnerSeq = partnerSeq
+    },
+
+    initByAdmin() {
+      this.admin.searchParams = {
+        page: 1,
+        size: 20,
+        searchDate: [moment().add(-10, 'days').format('YYYY-MM-DD'), moment().add(-1, 'days').format('YYYY-MM-DD')]
+      }
+    },
+    async reloadByAdmin(params) {
+      const searchParams = Object.assign(
+        params, {
+          startDate: this.admin.searchParams.searchDate[0],
+          endDate: this.admin.searchParams.searchDate[1]
+        }
+      )
+
+      const result = await REPORT_QUIZ_API.searchByAdmin(searchParams)
+      const { content, totalElements } = result
+
+      this.admin.list = content
+      this.admin.total = totalElements
+    },
+    async searchByAdmin({ page, size }) {
+      const params = {
+        page: page,
+        size: !size && size > 0 ? size : undefined
+      }
+      await this.reloadByAdmin(params)
     }
   },
   persist: {

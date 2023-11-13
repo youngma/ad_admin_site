@@ -25,7 +25,7 @@
               :disabled-date="disabledDate"
               format="YYYY/MM/DD"
               value-format="YYYYMMDD"
-              @calendar-change="() => reload"
+              @change="(v) => reload(v)"
             />
           </el-col>
         </el-row>
@@ -66,7 +66,7 @@ const list = ref([])
 const options = ref({})
 const datepicker = ref([
   moment().add(-10, 'days').format('YYYYMMDD'),
-  moment().add(-1, 'days').format('YYYYMMDD')
+  moment().add(0, 'days').format('YYYYMMDD')
 ]
 )
 // const defaultDate = ref([moment().add(-10, 'days').toDate(), moment().add(-1, 'days').toDate()])
@@ -187,7 +187,6 @@ function genOptions() {
       {
         name: 'reqCnt',
         type: 'bar',
-        barGap: 0,
         label: labelOption,
         emphasis: {
           focus: 'series'
@@ -234,7 +233,7 @@ function genOptions() {
   }
 }
 
-async function reload() {
+async function reload(v) {
   const data = await REPORT_API.searchDashboard({
     startDate: datepicker.value[0],
     endDate: datepicker.value[1]

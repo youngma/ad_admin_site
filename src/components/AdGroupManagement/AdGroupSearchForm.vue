@@ -38,7 +38,7 @@
         </el-col>
 
         <el-col :span="4">
-          <strong class="comm_tit_box">광고 그룹 상태</strong>
+          <strong class="comm_tit_box">광고 지면 상태</strong>
         </el-col>
         <el-col :span="8">
           <el-select v-model="searchParams.groupStatus" class="m-2" placeholder="Select" size="large">

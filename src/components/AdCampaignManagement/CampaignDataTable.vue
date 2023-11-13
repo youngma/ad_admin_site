@@ -5,6 +5,20 @@
     style="width: 100%"
   >
     <el-table-column fixed prop="campaignName" label="캠페인 명" width="150" header-align="center" align="center" />
+    <el-table-column  prop="exposureStatusName" label="노출 여부" width="150" header-align="center" align="center" >
+      <template #default="scope">
+        <el-switch
+          v-model="scope.row.exposureStatus"
+          class="ml-2"
+          size="large"
+          inline-prompt
+          style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+          active-text="노출"
+          inactive-text="미노출"
+          @change="onExposureStatus(scope.row)"
+        />
+      </template>
+    </el-table-column>
     <el-table-column  prop="campaignTypeName" label="캠페인 타입" width="150" header-align="center" align="center" />
     <el-table-column  prop="campaignCode" label="캠페인 코드" width="150" header-align="center" align="center" />
     <el-table-column  prop="image" label="이미지" width="300" header-align="center" align="center" >
@@ -42,19 +56,26 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column  prop="totalBudget" label="총예산" width="150" header-align="center" align="right" >
+    <el-table-column  prop="totalBudget" label="광고 단가" width="150" header-align="center" align="right" >
       <template #default="scope">
-        <span v-if="scope.row.smartStore">
-          {{ moneyFormatter(scope.row.smartStore.totalBudget) }} 원
-        </span>
-        <span v-else>
-          - 원
-        </span>
+          {{ moneyFormatter(scope.row.adPrice) }} 원
+
+        <div v-if="scope.row.campaignType === 'QUIZ02'">
+          매체사 : {{moneyFormatter(scope.row.commissionRate) }} 원
+          <br/>
+          사용자 :  {{moneyFormatter(scope.row.userCommissionRate)}} 원
+        </div>
+
       </template>
     </el-table-column>
-    <el-table-column  prop="adEndDate" label="광고 일자" width="250" header-align="center" align="center" >
+    <el-table-column  prop="totalBudget" label="총예산" width="150" header-align="center" align="right" >
       <template #default="scope">
-        {{ scope.row.adEndDate.split(' ')[0] }} ~ {{ scope.row.adEndDate.split(' ')[0] }}
+          {{ moneyFormatter(scope.row.totalBudget) }} 원
+      </template>
+    </el-table-column>
+    <el-table-column  prop="adEndDate" label="광고 일자" width="300" header-align="center" align="center" >
+      <template #default="scope">
+        {{ scope.row.adStartDate.substring(0,16)}} ~ {{ scope.row.adEndDate.substring(0,16) }}
       </template>
     </el-table-column>
     <el-table-column  prop="campaignStatusName" label="캠페인 상태" width="150" header-align="center" align="center" >
@@ -114,7 +135,6 @@
 
 import CampaignStatusModal from '@/components/AdCampaignManagement/CampaignStatusModal.vue'
 
-import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { moneyFormatter, phoneFormatter } from '@/utils/customElTableFormatter'
 import { computed, defineEmits, defineProps, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -235,6 +255,15 @@ function getStatusMessage(row) {
   }
 
   return message
+}
+
+function onExposureStatus(row) {
+  console.log(row, store)
+
+  const { advertiser, seq, exposureStatus } = row
+  const { advertiserSeq } = advertiser
+
+  store.campaignExposureStatus(advertiserSeq, seq, exposureStatus)
 }
 
 </script>

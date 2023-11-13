@@ -33,7 +33,7 @@
         </el-icon>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            광고 그룹
+            광고 지면
           </div>
           <count-to :start-val="0" :end-val="groupCount" :duration="2.5" class="card-panel-num" />
         </div>

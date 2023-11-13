@@ -40,6 +40,9 @@ function install(router) {
   const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
   router.beforeEach(async(to, from, next) => {
+
+    console.log(to, from, next)
+
     // start progress bar
     NProgress.start()
 

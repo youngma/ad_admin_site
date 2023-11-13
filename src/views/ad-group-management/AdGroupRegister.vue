@@ -3,13 +3,15 @@
   <div class="components-container">
     <PartnerSearchForm2
             ref="adGroupRegisterSearchForm"
-            title="광고 그룹 등록"
+            title="광고 지면 등록"
             :multiple=false
             :multiple-limit=1
             :selected="selected"
             :partners="partners"
             @search-update="({ content, current }) => searchUpdate({ content, current })"
-            @on-change="(value) => onSearchChange(value)"/>
+            @on-change="(value) => onSearchChange(value)"
+            @on-clear="(value) => onSearchClear(value)"
+    />
     <AdGroupRegisterForm v-if="selected.length > 0 && selected[0]"/>
   </div>
 
@@ -33,7 +35,6 @@ const store = partnerStore()
 const { selected, partners } = storeToRefs(store)
 
 function searchUpdate({ content, current }) {
-  console.log(current)
   store.setPartners({
     partners: content,
     selected: current
@@ -42,6 +43,10 @@ function searchUpdate({ content, current }) {
 
 function onSearchChange(value) {
   store.setPartnerSeq({ selected: value })
+}
+
+function onSearchClear() {
+  store.initRegisterForm('adGroup')
 }
 
 // function init() {

@@ -47,3 +47,20 @@ export function campaignReject(data) {
     data
   })
 }
+
+
+export function campaignExposure(data) {
+  return request({
+    url: '/admin/v1/campaign/exposure',
+    method: 'PUT',
+    data
+  })
+}
+
+export function campaignNonExposure(data) {
+  return request({
+    url: '/admin/v1/campaign/non-exposure',
+    method: 'PUT',
+    data
+  })
+}
