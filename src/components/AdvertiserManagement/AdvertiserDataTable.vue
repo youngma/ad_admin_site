@@ -26,6 +26,7 @@
     <el-table-column prop="advertiserSeq" label="" align="center">
       <template #default="scope">
         <el-button type="success" @click="open(scope.row)">수정</el-button>
+        <el-button type="danger" @click="openByBusinessNumber(scope.row)">사업자명 변경</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -47,6 +48,7 @@
   </div>
 
   <ModifyModal @close="close" />
+  <AdvertiserBusinessNumberModifyModal @close="close" />
 
 </template>
 
@@ -59,6 +61,7 @@ import { storeToRefs } from 'pinia'
 import { useRouter, useRoute } from 'vue-router'
 
 import ModifyModal from '@/components/AdvertiserManagement/AdvertiserModifyModal.vue'
+import AdvertiserBusinessNumberModifyModal from '@/components/AdvertiserManagement/AdvertiserBusinessNumberModifyModal.vue'
 
 defineOptions({
   name: 'AdvertiserDataTable'
@@ -76,7 +79,11 @@ function pageChange(number) {
 }
 
 function open(row) {
-  store.selectedAdvertiser(row)
+  store.selectedAdvertiser('info', row)
+}
+
+function openByBusinessNumber(row) {
+  store.selectedAdvertiser('businessNumber', row)
 }
 
 function close() {

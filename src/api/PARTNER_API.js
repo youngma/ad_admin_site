@@ -32,6 +32,14 @@ export function modify(data) {
   })
 }
 
+export function businessNumberModify(data) {
+  return request({
+    url: '/admin/v1/partner/businessNumber',
+    method: 'PUT',
+    data
+  })
+}
+
 export function searchByUser(query) {
   return request({
     url: '/admin/v1/partner/users',

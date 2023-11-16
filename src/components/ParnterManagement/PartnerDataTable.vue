@@ -23,9 +23,10 @@
     <el-table-column prop="insertedAt" label="등록일" header-align="center" />
     <el-table-column prop="updatedAt" label="수정일" header-align="center" />
 
-    <el-table-column prop="advertiserSeq" label="" align="center">
+    <el-table-column prop="advertiserSeq" label="" align="center" width="250px">
       <template #default="scope">
-        <el-button @click="open(scope.row)">수정</el-button>
+        <el-button type="success" @click="open(scope.row)">수정</el-button>
+        <el-button type="danger" @click="openByBusinessNumber(scope.row)">사업자명 변경</el-button>
       </template>
     </el-table-column>
 
@@ -47,6 +48,8 @@
 <!--    <b-pagination hide-ellipsis v-model="listCondition.offset" :total-rows="listCondition.total" :per-page="listCondition.limit" @input="pageChange" />-->
   </div>
   <PartnerModifyModal @close="close()"/>
+  <PartnerBusinessNumberModifyModal @close="close()"/>
+
 </template>
 
 <script setup>
@@ -56,6 +59,7 @@ import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { phoneFormatter, businessNumberFormatter } from '@/utils/customElTableFormatter'
 import { storeToRefs } from 'pinia'
 import PartnerModifyModal from '@/components/ParnterManagement/PartnerModifyModal.vue'
+import PartnerBusinessNumberModifyModal from '@/components/ParnterManagement/PartnerBusinessNumberModifyModal.vue'
 import { useRoute, useRouter } from 'vue-router'
 
 defineOptions({
@@ -74,7 +78,11 @@ function pageChange(number) {
 }
 
 function open(row) {
-  store.selectedPartner(row)
+  store.selectedPartner('info', row)
+}
+
+function openByBusinessNumber(row) {
+  store.selectedPartner('businessNumber', row)
 }
 
 function close() {
@@ -86,7 +94,6 @@ function goDetail(row) {
     partners: [row],
     selected: [row.partnerSeq]
   })
-
   router.push({ name: 'PartnerDetail', query: { referrer: '/partner-management/detail' }})
 }
 

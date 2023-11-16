@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { deepClone } from '@/utils/index.js'
 import { ElMessage } from 'element-plus'
 import { replaceNumber } from '@/utils/customElTableFormatter.js'
+import {businessNumberModify} from "@/api/PARTNER_API.js";
 
 const initData = {
   searchParams: {
@@ -39,7 +40,8 @@ export const partnerManagementStore = defineStore('partnerManagementStore', {
       file: null
     },
     selected: null,
-    modifyPopup: false
+    modifyPopup: false,
+    modifyPopupByBusinessNumber: false
   }),
   getters: {
   },
@@ -93,15 +95,25 @@ export const partnerManagementStore = defineStore('partnerManagementStore', {
         }
       }
     },
-    async businessNumberCheck() {
-      const { businessNumber } = this.register
-      const result = await PARNTER_API.businessNumberCheck({
-        businessNumber: replaceNumber(businessNumber)
-      })
+    async businessNumberCheck(target) {
+      if (target === 'register') {
+        const { businessNumber } = this.register
+        const result = await PARNTER_API.businessNumberCheck({
+          businessNumber: replaceNumber(businessNumber)
+        })
 
-      this.register.alReadyCheck = !result
+        this.register.alReadyCheck = !result
+        return this.register.alReadyCheck
+      } else {
+        const { businessNumber } = this.selected
 
-      return this.register.alReadyCheck
+        const result = await PARNTER_API.businessNumberCheck({
+          businessNumber: replaceNumber(businessNumber)
+        })
+
+        this.selected.alReadyCheck = !result
+        return this.selected.alReadyCheck
+      }
     },
     registerPartner() {
       const partner = deepClone(this.register)
@@ -119,10 +131,13 @@ export const partnerManagementStore = defineStore('partnerManagementStore', {
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })
     },
-    selectedPartner(row) {
+    selectedPartner(target, row) {
       if (row) {
         this.selected = deepClone(row)
-        const { file } = this.selected
+
+        const { file, businessNumber } = this.selected
+        this.selected.alReadyCheck = false
+        this.selected.originBusinessNumber = businessNumber
 
         this.uploadFiles = [
           {
@@ -131,10 +146,16 @@ export const partnerManagementStore = defineStore('partnerManagementStore', {
             url: file ? [import.meta.env.VITE_FILE_SERVER, 'files', file.fileName].join('/') : null
           }
         ]
-        this.modifyPopup = true
+
+        if (target === 'info') {
+          this.modifyPopup = true
+        } else if (target === 'businessNumber') {
+          this.modifyPopupByBusinessNumber = true
+        }
       } else {
         this.selected = null
         this.modifyPopup = false
+        this.modifyPopupByBusinessNumber = false
       }
     },
     modifyPartner() {
@@ -149,6 +170,22 @@ export const partnerManagementStore = defineStore('partnerManagementStore', {
         this.$alert('수정 되었습니다.', '확인', {})
         this.reload().then(() => {
           this.modifyPopup = false
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
+    },
+    modifyBusinessNumber() {
+      const { partnerSeq, businessName, businessNumber, file } = this.selected
+      PARNTER_API.businessNumberModify({
+        partnerSeq,
+        businessName,
+        businessNumber: replaceNumber(businessNumber),
+        file
+      }).then(() => {
+        this.$alert('수정 되었습니다.', '확인', {})
+        this.reload().then(() => {
+          this.modifyPopupByBusinessNumber = false
         })
       }).catch(() => {
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})

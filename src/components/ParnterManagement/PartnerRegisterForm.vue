@@ -157,7 +157,7 @@
 <script setup>
 import { partnerManagementStore } from '@/store/modules/admin/partnerManagementStore.js'
 import { storeToRefs } from 'pinia'
-import { getCurrentInstance, ref } from 'vue'
+import { getCurrentInstance, ref, onActivated } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { validBusinessNumber, validEmail, validPhone } from '@/utils/validate.js'
 import { getToken } from '@/utils/auth.js'
@@ -386,7 +386,7 @@ async function check(t) {
 
   validate('businessNumber')
   if (validation.value.valid) {
-    const retMsg = await store.businessNumberCheck() ? '사용 가능한 사업자 번호 입니다.' : '이미 등록된 사업자번호 입니다.'
+    const retMsg = await store.businessNumberCheck('register') ? '사용 가능한 사업자 번호 입니다.' : '이미 등록된 사업자번호 입니다.'
     await ElMessageBox.alert(retMsg, '확인', {}, appContext)
   }
 }
@@ -397,6 +397,10 @@ function save() {
     store.registerPartner()
   }
 }
+
+onActivated(() => {
+  // uploadFiles.value = []
+})
 
 </script>
 

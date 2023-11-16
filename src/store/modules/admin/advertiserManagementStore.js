@@ -5,6 +5,7 @@ import * as ADMIN_API from '@/api/ADMIN_API.js'
 import { deepClone } from '@/utils/index.js'
 import { ElMessage } from 'element-plus'
 import { replaceNumber } from '@/utils/customElTableFormatter.js'
+import * as PARNTER_API from "@/api/PARTNER_API.js";
 
 const initData = {
   searchParams: {
@@ -41,7 +42,8 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       file: null
     },
     selected: null,
-    modifyPopup: false
+    modifyPopup: false,
+    modifyPopupByBusinessNumber: false
   }),
   getters: {
   },
@@ -96,13 +98,26 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
         }
       }
     },
-    async businessNumberCheck() {
-      const { businessNumber } = this.register
-      const result = await ADVERTISER_API.businessNumberCheck({ businessNumber })
+    async businessNumberCheck(target) {
 
-      this.register.alReadyCheck = !result
+      if (target === 'register') {
+        const { businessNumber } = this.register
+        const result = await ADVERTISER_API.businessNumberCheck({
+          businessNumber: replaceNumber(businessNumber)
+        })
 
-      return this.register.alReadyCheck
+        this.register.alReadyCheck = !result
+        return this.register.alReadyCheck
+      } else {
+        const { businessNumber } = this.selected
+
+        const result = await ADVERTISER_API.businessNumberCheck({
+          businessNumber: replaceNumber(businessNumber)
+        })
+
+        this.selected.alReadyCheck = !result
+        return this.selected.alReadyCheck
+      }
     },
     advertiserRegister() {
       const advertiser = deepClone(this.register)
@@ -120,10 +135,13 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })
     },
-    selectedAdvertiser(row) {
+    selectedAdvertiser(target, row) {
       if (row) {
         this.selected = deepClone(row)
-        const { file } = this.selected
+        const { file, businessNumber } = this.selected
+
+        this.selected.alReadyCheck = false
+        this.selected.originBusinessNumber = businessNumber
 
         this.uploadFiles = [
           {
@@ -133,10 +151,15 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
           }
         ]
 
-        this.modifyPopup = true
+        if (target === 'info') {
+          this.modifyPopup = true
+        } else if (target === 'businessNumber') {
+          this.modifyPopupByBusinessNumber = true
+        }
       } else {
         this.selected = null
         this.modifyPopup = false
+        this.modifyPopupByBusinessNumber = false
       }
     },
     modifyAdvertiser() {
@@ -145,6 +168,22 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
         this.$alert('수정 되었습니다.', '확인', {})
         this.reload().then(() => {
           this.modifyPopup = false
+        })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
+    },
+    modifyBusinessNumber() {
+      const { advertiserSeq, businessName, businessNumber, file } = this.selected
+      ADVERTISER_API.businessNumberModify({
+        advertiserSeq,
+        businessName,
+        businessNumber: replaceNumber(businessNumber),
+        file
+      }).then(() => {
+        this.$alert('수정 되었습니다.', '확인', {})
+        this.reload().then(() => {
+          this.modifyPopupByBusinessNumber = false
         })
       }).catch(() => {
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})

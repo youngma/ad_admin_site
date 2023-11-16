@@ -10,17 +10,17 @@
     </template>
     <template v-else>
       <el-sub-menu ref="subMenu" v-if="!item.hidden" :index="resolvePath(item.path)" >
-        <template #title>
+        <template #title v-if="item.meta.title">
           <Icon :icon=item.meta.icon></Icon>
           <span>{{ item.meta.title  }}</span>
         </template>
-        <!--      <el-menu-item-group  :index="resolvePath(item.path)" :class="{'submenu-title-noDropdown':!isNest}">-->
-        <app-link v-for="child in item.children" :key="child.path" :to="resolvePath(child.path)"  >
-          <el-menu-item v-if="!child.hidden"  :index="resolvePath(child.path)" :class="{'submenu-title-noDropdown':!isNest}">
-            <Item :icon="child.meta.icon" :title = "child.meta.title"/>
-          </el-menu-item>
-        </app-link>
-        <!--      </el-menu-item-group>-->
+<!--        <el-menu-item-group  :index="resolvePath(item.path)" :class="{'submenu-title-noDropdown':!isNest}" >-->
+          <app-link v-for="child in item.children" :key="child.path" :to="resolvePath(child.path)"  >
+            <el-menu-item v-if="!child.hidden"  :index="resolvePath(child.path)" :class="{'submenu-title-noDropdown':!isNest}">
+              <Item :icon="child.meta.icon" :title = "child.meta.title"/>
+            </el-menu-item>
+          </app-link>
+<!--        </el-menu-item-group>-->
       </el-sub-menu>
     </template>
   </div>

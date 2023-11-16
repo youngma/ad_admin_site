@@ -9,8 +9,8 @@ export const inquiryStore = defineStore('inquiryStore', {
       size: 20,
       searchType: 'advertiserName',
       searchText: '',
-      inquiryStatus: 'all',
-      searchDate: [moment().add(-10, 'days').format('YYYY-MM-DD'), moment().add(-1, 'days').format('YYYY-MM-DD')]
+      inquiryStatus: 'ALL',
+      searchDate: [moment().add(-10, 'days').format('YYYY-MM-DD'), moment().add(0, 'days').format('YYYY-MM-DD')]
     },
     list: [],
     modal: false,
@@ -26,8 +26,8 @@ export const inquiryStore = defineStore('inquiryStore', {
         size: 20,
         searchType: 'advertiserName',
         searchText: '',
-        inquiryStatus: 'all',
-        searchDate: [moment().add(-10, 'days').format('YYYY-MM-DD'), moment().add(-1, 'days').format('YYYY-MM-DD')]
+        inquiryStatus: 'ALL',
+        searchDate: [moment().add(-10, 'days').format('YYYY-MM-DD'), moment().add(0, 'days').format('YYYY-MM-DD')]
       }
     },
     async reload(params) {
@@ -36,8 +36,8 @@ export const inquiryStore = defineStore('inquiryStore', {
           searchType: this.searchParams.searchType,
           searchText: this.searchParams.searchText,
           inquiryStatus: this.searchParams.inquiryStatus,
-          startDate: this.searchParams.searchDate[0],
-          endDate: this.searchParams.searchDate[1]
+          startDate: this.searchParams.searchDate[0] + ' 00:00:01',
+          endDate: this.searchParams.searchDate[1] + ' 23:59:59'
         }
       )
 
@@ -52,6 +52,11 @@ export const inquiryStore = defineStore('inquiryStore', {
         page: page,
         size: !size && size > 0 ? size : undefined
       }
+
+      if (page) {
+        this.searchParams.page = page
+      }
+
       await this.reload(params)
     },
     setRow(row) {

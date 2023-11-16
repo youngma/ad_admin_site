@@ -67,7 +67,7 @@
 
 <script setup>
 
-import {ref, computed, defineProps, defineEmits, defineExpose} from 'vue'
+import { ref, computed, defineProps, defineEmits, defineExpose } from 'vue'
 import { businessNumberFormatter, phoneFormatter } from '@/utils/customElTableFormatter.js'
 import * as ADVERTISER_API from '@/api/ADVERTISER_API'
 
@@ -145,8 +145,13 @@ async function searchByName(query) {
   })
   const { content } = result
   currentAdvertisers.value = content
+  let _current = current.value
 
-  emit('search-update', { content, current: multiple ? current.value : [current.value] })
+  if (!multiple) {
+    _current = !_current ? [] : [_current]
+  }
+
+  emit('search-update', { content, current: _current })
   loading.value = false
 }
 

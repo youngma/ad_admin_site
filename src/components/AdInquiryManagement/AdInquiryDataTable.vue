@@ -1,4 +1,4 @@
-<template xmlns="http://www.w3.org/1999/html">
+<template >
   <el-table
     :data="list"
     class="custom-table"
@@ -25,6 +25,7 @@
     </el-table-column>
     <el-table-column  prop="phone" label="연락처" header-align="center" align="left" />
     <el-table-column  prop="statusName" label="처리 상태" header-align="center" align="center" />
+    <el-table-column  prop="answerAt" label="답변 등록 일시" header-align="center" align="center" />
     <el-table-column label="" width="250" header-align="center" align="center">
       <template #default="scope">
         <el-button type="success" tag="span" class="comm_form_btn" @click="() => modal(scope.row)">답변 하기</el-button>
@@ -67,6 +68,7 @@ const store = inquiryStore()
 const { list, total, modeal, searchParams } = storeToRefs(store)
 
 function pageChange(number) {
+  console.log(number)
   store.search({ page: number })
 }
 

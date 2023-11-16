@@ -1,7 +1,6 @@
 <template>
-  <div css="">
+  <div style="margin: 10px">
     <div class="editor language-javascript dark">
-
     </div>
   </div>
 </template>
@@ -10,19 +9,34 @@
 import { CodeJar } from 'codejar'
 import { withLineNumbers } from 'codejar/linenumbers'
 import Prism from 'prismjs'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 defineOptions({
   name: 'CodeJarEditor'
 })
 
+let codeJar = null;
+
 const props = defineProps({
-  jsonObject: Object
+  jsonObject: {
+    type: Object, Array,
+    required: true
+  }
 })
 
 const text = ref(props.jsonObject)
 const code = computed(() => JSON.stringify(text.value, null, 2))
 // const code = computed(() => 'p { color: red }')
+//
+watch(
+  () => props.jsonObject,
+  (options) => {
+    codeJar.updateCode(JSON.stringify(props.jsonObject, null, 2))
+  },
+  {
+    deep: true
+  }
+)
 
 onMounted(() => {
   const options = {
@@ -31,11 +45,11 @@ onMounted(() => {
     readonly: true
   }
 
-  const codeJar = CodeJar(document.querySelector('.editor')
+  codeJar = CodeJar(document.querySelector('.editor')
     , withLineNumbers(Prism.highlightElement)
     , options)
 
-  codeJar.updateCode(code.value)
+  codeJar.updateCode(JSON.stringify(props.jsonObject, null, 2))
 })
 
 </script>
@@ -57,7 +71,8 @@ onMounted(() => {
   line-height: 20px;
   padding: 10px;
   tab-size: 4;
-  height: 100%;
+  height: 300px;
   width: 100%;
+  overflow: hidden;
 }
 </style>

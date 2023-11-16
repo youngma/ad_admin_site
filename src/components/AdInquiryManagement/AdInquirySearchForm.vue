@@ -49,9 +49,9 @@
         </el-col>
         <el-col :span="8">
           <el-radio-group v-model="searchParams.inquiryStatus" class="mt_10 mb_10" size="large">
-            <el-radio-button label="all" > 전체 </el-radio-button>
-            <el-radio-button label="reuqest" > 대기 </el-radio-button>
-            <el-radio-button label="answer" > 완료 </el-radio-button>
+            <el-radio-button label="ALL" > 전체 </el-radio-button>
+            <el-radio-button label="REQUEST" > 대기 </el-radio-button>
+            <el-radio-button label="ANSWER" > 완료 </el-radio-button>
           </el-radio-group>
         </el-col>
       </el-row>
@@ -82,7 +82,6 @@ defineOptions({
 })
 
 const store = inquiryStore()
-const common = commonStore()
 
 const { searchParams } = storeToRefs(store)
 

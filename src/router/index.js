@@ -351,7 +351,7 @@ export const asyncRoutes = [
         path: 'search',
         component: () => import('@/views/inquiry-management/AdInquiryManagement.vue'),
         name: 'AdInquiryManagement',
-        meta: { title: '문의 하기', icon: 'mdi:report-line-shimmer' }
+        meta: { title: '문의 하기', icon: 'simple-icons:askubuntu' }
       }
     ]
   },

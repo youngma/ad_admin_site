@@ -16,6 +16,13 @@ export function businessNumberCheck(query) {
   })
 }
 
+export function businessNumberModify(data) {
+  return request({
+    url: '/admin/v1/advertiser/businessNumber',
+    method: 'put',
+    data
+  })
+}
 export function register(data) {
   return request({
     url: '/admin/v1/advertiser/register',
