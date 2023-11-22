@@ -31,3 +31,11 @@ export function searchByAdmin(query) {
     params: query
   })
 }
+
+export function searchByUser(query) {
+  return request({
+    url: '/admin/v1/report/quiz/user/raw',
+    method: 'get',
+    params: query
+  })
+}

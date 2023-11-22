@@ -45,7 +45,7 @@
             start-placeholder="광고 시작 일자"
             end-placeholder="광고 종료 일자"
             format="YYYY/MM/DD"
-            value-format="YYYY-MM-DD"
+            value-format="YYYYMMDD"
           />
         </el-col>
       </el-row>

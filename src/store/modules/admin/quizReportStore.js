@@ -11,7 +11,7 @@ export const quizReportStore = defineStore('quizReportStore', {
         advertiserSeq: null,
         page: 1,
         size: 20,
-        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().add(-1, 'days').format('YYYYMMDD')]
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
       },
       list: [],
       total: 0
@@ -21,7 +21,7 @@ export const quizReportStore = defineStore('quizReportStore', {
         partnerSeq: null,
         page: 1,
         size: 20,
-        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().add(-1, 'days').format('YYYYMMDD')]
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
 
       },
       list: [],
@@ -31,7 +31,19 @@ export const quizReportStore = defineStore('quizReportStore', {
       searchParams: {
         page: 1,
         size: 20,
-        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().add(-1, 'days').format('YYYYMMDD')]
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
+      },
+      list: [],
+      total: 0
+    },
+    user: {
+      searchParams: {
+        page: 1,
+        size: 20,
+        userKey: null,
+        campaignName: null,
+        campaignCode: null,
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
       },
       list: [],
       total: 0
@@ -45,7 +57,7 @@ export const quizReportStore = defineStore('quizReportStore', {
         advertiserSeq: null,
         page: 1,
         size: 20,
-        searchDate: [moment().add(-10, 'days').format('YYYY-MM-DD'), moment().add(-1, 'days').format('YYYY-MM-DD')]
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
       }
     },
     async reloadByAdvertiser(params) {
@@ -59,6 +71,7 @@ export const quizReportStore = defineStore('quizReportStore', {
       const result = await REPORT_QUIZ_API.searchByAdvertiser(searchParams)
       const { content, totalElements } = result
 
+      this.advertiser.searchParams.page = searchParams.page
       this.advertiser.list = content
       this.advertiser.total = totalElements
     },
@@ -77,7 +90,7 @@ export const quizReportStore = defineStore('quizReportStore', {
         partnerSeq: null,
         page: 1,
         size: 20,
-        searchDate: [moment().add(-10, 'days').format('YYYY-MM-DD'), moment().add(-1, 'days').format('YYYY-MM-DD')]
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
       }
     },
     async reloadByPartner(params) {
@@ -91,6 +104,7 @@ export const quizReportStore = defineStore('quizReportStore', {
       const result = await REPORT_QUIZ_API.searchByPartner(searchParams)
       const { content, totalElements } = result
 
+      this.partner.searchParams.page = searchParams.page
       this.partner.list = content
       this.partner.total = totalElements
     },
@@ -109,7 +123,8 @@ export const quizReportStore = defineStore('quizReportStore', {
       this.admin.searchParams = {
         page: 1,
         size: 20,
-        searchDate: [moment().add(-10, 'days').format('YYYY-MM-DD'), moment().add(-1, 'days').format('YYYY-MM-DD')]
+        userKey: null,
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
       }
     },
     async reloadByAdmin(params) {
@@ -123,6 +138,7 @@ export const quizReportStore = defineStore('quizReportStore', {
       const result = await REPORT_QUIZ_API.searchByAdmin(searchParams)
       const { content, totalElements } = result
 
+      this.admin.searchParams.page = searchParams.page
       this.admin.list = content
       this.admin.total = totalElements
     },
@@ -132,6 +148,41 @@ export const quizReportStore = defineStore('quizReportStore', {
         size: !size && size > 0 ? size : undefined
       }
       await this.reloadByAdmin(params)
+    },
+    initByUser() {
+      this.user.searchParams = {
+        page: 1,
+        size: 20,
+        userKey: null,
+        campaignName: null,
+        campaignCode: null,
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
+      }
+    },
+    async reloadByUser(params) {
+      const searchParams = Object.assign(
+        params, {
+          userKey: this.user.searchParams.userKey,
+          campaignName: this.user.searchParams.campaignName,
+          campaignCode: this.user.searchParams.campaignCode,
+          startDate: this.user.searchParams.searchDate[0],
+          endDate: this.user.searchParams.searchDate[1]
+        }
+      )
+
+      const result = await REPORT_QUIZ_API.searchByUser(searchParams)
+      const { content, totalElements } = result
+
+      this.user.searchParams.page = searchParams.page
+      this.user.list = content
+      this.user.total = totalElements
+    },
+    async searchByUser({ page, size }) {
+      const params = {
+        page: page,
+        size: !size && size > 0 ? size : undefined
+      }
+      await this.reloadByUser(params)
     }
   },
   persist: {
