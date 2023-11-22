@@ -1579,8 +1579,7 @@ function AdsInfCallback({ imageType, type, result }) {
 
 function AdInfoCallback({ code, contents }) {
   if (contents) {
-    const ad = contents.client[0].data[0]
-    const { pnm, site_desc4, site_url } = ad
+    const { pnm, site_desc4, site_url } = contents
 
     console.log(pnm, site_desc4, site_url)
     campaigns.value.register.campaignType = 'QUIZ01'
