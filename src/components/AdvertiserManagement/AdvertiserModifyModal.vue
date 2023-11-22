@@ -140,6 +140,22 @@
             </div>
           </el-col>
         </el-row>
+        <el-row :gutter="10">
+          <el-col :span="6" class="col_tit">
+            <strong class="comm_tit_box">광고 연동 코드</strong>
+          </el-col>
+          <el-col :span="16" class="col_desc">
+            <el-row :gutter="10">
+              <el-col :span="10">
+                <el-input
+                  v-model="selected.ifCode"
+                  class="" placeholder="광고 연동 코드를 입력 해주세요." />
+              </el-col>
+            </el-row>
+            <div v-show="true" class="invalid-feedback">
+            </div>
+          </el-col>
+        </el-row>
       </div>
       <el-row justify="end">
         <el-col class="t_r comm_form_box" tag="span">

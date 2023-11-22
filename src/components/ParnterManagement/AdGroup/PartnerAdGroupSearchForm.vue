@@ -9,15 +9,15 @@
           <strong class="comm_tit_box">지면 명</strong>
         </el-col>
         <el-col :span="8">
-          <el-input v-model="adGroups.searchParams.groupName" placeholder="Please input" />
+          <el-input v-model="adGroups.searchParams.groupName" placeholder="지면 명을 입력 해주세요." />
         </el-col>
         <el-col :span="4">
-          <strong class="comm_tit_box">그룹 코드 번호</strong>
+          <strong class="comm_tit_box">지면 코드</strong>
         </el-col>
         <el-col :span="8">
           <el-input
                     v-model="adGroups.searchParams.groupCode"
-                    placeholder="Please input" />
+                    placeholder="지면 코드을 입력 해주세요." />
         </el-col>
       </el-row>
 

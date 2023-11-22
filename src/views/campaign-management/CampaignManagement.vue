@@ -54,6 +54,9 @@ async function search({ page, size }) {
   total.value = totalElements
 }
 
+
+
+
 onMounted(async() => {
 })
 

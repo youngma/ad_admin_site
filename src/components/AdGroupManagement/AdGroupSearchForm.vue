@@ -9,15 +9,15 @@
           <strong class="comm_tit_box">그룹 명</strong>
         </el-col>
         <el-col :span="8">
-          <el-input v-model="searchParams.groupName" placeholder="Please input" />
+          <el-input v-model="searchParams.groupName" placeholder="그룹 명를 입력 해주세요." />
         </el-col>
         <el-col :span="4">
-          <strong class="comm_tit_box">그룹 코드 번호</strong>
+          <strong class="comm_tit_box">지면 코드</strong>
         </el-col>
         <el-col :span="8">
           <el-input
                     v-model="searchParams.groupCode"
-                    placeholder="Please input" />
+                    placeholder="지면 코드를 입력 해주세요." />
         </el-col>
       </el-row>
 
@@ -26,7 +26,7 @@
           <strong class="comm_tit_box">캠페인 타입</strong>
         </el-col>
         <el-col :span="8">
-          <el-select v-model="searchParams.adType" class="m-2" placeholder="Select" size="large">
+          <el-select v-model="searchParams.adType" class="m-2" placeholder="캠페인 타입" size="large">
             <el-option key="" label="전체" value=""/>
             <el-option
               v-for="code of CampaignType"
@@ -41,7 +41,7 @@
           <strong class="comm_tit_box">광고 지면 상태</strong>
         </el-col>
         <el-col :span="8">
-          <el-select v-model="searchParams.groupStatus" class="m-2" placeholder="Select" size="large">
+          <el-select v-model="searchParams.groupStatus" class="m-2" placeholder="지면 상태" size="large">
             <el-option key="" label="전체" value=""/>
             <el-option
               v-for="code of AdGroupStatus"

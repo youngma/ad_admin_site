@@ -164,6 +164,22 @@
           </div>
         </el-col>
       </el-row>
+      <el-row :gutter="10">
+        <el-col :span="4" class="col_tit">
+          <strong class="comm_tit_box">광고 연동 코드</strong>
+        </el-col>
+        <el-col :span="16" class="col_desc">
+          <el-row :gutter="10">
+            <el-col :span="10">
+              <el-input
+                v-model="register.ifCode"
+                class="" placeholder="광고 연동 코드를 입력 해주세요." />
+            </el-col>
+          </el-row>
+          <div v-show="true" class="invalid-feedback">
+          </div>
+        </el-col>
+      </el-row>
     </div>
     <el-row justify="end">
       <el-col class="t_r comm_form_box" tag="span">
@@ -422,13 +438,13 @@ async function check(t) {
 
   validate('businessNumber')
   if (validation.value.valid) {
-    const retMsg = await store.businessNumberCheck() ? '사용 가능한 사업자 번호 입니다.' : '이미 등록된 사업자번호 입니다.'
+    const retMsg = await store.businessNumberCheck('register') ? '사용 가능한 사업자 번호 입니다.' : '이미 등록된 사업자번호 입니다.'
     await ElMessageBox.alert(retMsg, '확인', {}, appContext)
   }
 }
 
 function save() {
-  this.validate('alReadyCheck', 'businessName', 'businessNumber', 'advertiserName', 'phoneNumber', 'email', 'taxBillEmail', 'businessRegistrationFile')
+  validate('alReadyCheck', 'businessName', 'businessNumber', 'advertiserName', 'phoneNumber', 'email', 'taxBillEmail', 'businessRegistrationFile')
   if (validation.value.valid) {
     store.advertiserRegister()
   }

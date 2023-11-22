@@ -102,8 +102,12 @@ function initUploader() {
   uploadFiles.value = []
 }
 
+function addFile(file) {
+  uploadFiles.value.push(file)
+}
+
 defineExpose({
-  initUploader
+  initUploader, addFile
 })
 
 </script>

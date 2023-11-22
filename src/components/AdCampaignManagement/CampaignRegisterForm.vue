@@ -1,5 +1,12 @@
 <template>
   <div class="comm_comp">
+
+    <MobiAdInf
+          v-if="advertiser.ifCode === 'MOBI'"
+          @image-register-cb="(params) => AdsInfCallback(params)"
+          @ad-info-cb="(params) => AdInfoCallback(params)"
+    />
+
     <div class="comm_comp_table">
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
@@ -29,6 +36,7 @@
           </div>
         </el-col>
       </el-row>
+
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
           <strong class="comm_tit_box">캠페인 명</strong>
@@ -51,6 +59,7 @@
           </div>
         </el-col>
       </el-row>
+
       <el-row :gutter="10">
         <el-col :span="4" class="col_tit">
           <strong class="comm_tit_box">캠페인 설명</strong>
@@ -121,7 +130,6 @@
       </el-row>
 
       <el-row :gutter="10">
-
         <el-col :span="4" class="col_tit">
           <strong class="comm_tit_box">광고 단가</strong>
         </el-col>
@@ -172,14 +180,14 @@
         <el-col :span="8" class="col_desc">
           <el-row :gutter="10">
             <el-col :span="20">
-                <el-input-number
-                  v-model="campaigns.register.commissionRate"
-                  :min="0"
-                  :max="adPrice"
-                  :class="{ 'is-error': !validation.commissionRate.check }"
-                  controls-position="right"
-                  size="large"
-                />
+              <el-input-number
+                v-model="campaigns.register.commissionRate"
+                :min="0"
+                :max="adPrice"
+                :class="{ 'is-error': !validation.commissionRate.check }"
+                controls-position="right"
+                size="large"
+              />
             </el-col>
           </el-row>
           <div v-show="!validation.commissionRate.check" class="invalid-feedback">
@@ -238,7 +246,7 @@
           </div>
         </el-col>
         <el-col :span="4" class="col_desc">
-<!--          <strong class="comm_tit_box"></strong>-->
+          <!--          <strong class="comm_tit_box"></strong>-->
         </el-col>
         <el-col :span="8" class="col_desc">
         </el-col>
@@ -575,28 +583,28 @@
             </el-col>
           </el-row>
 
-<!--          <el-row :gutter="10">-->
-<!--            <el-col :span="4" class="col_tit">-->
-<!--              <strong class="comm_tit_box">상품 코드</strong>-->
-<!--            </el-col>-->
-<!--            <el-col :span="16" class="col_desc">-->
-<!--              <el-row :gutter="10">-->
-<!--                <el-col-->
-<!--                  :span="20"-->
-<!--                  :class="{ 'is-error': !validation.goodsCode.check }"-->
-<!--                >-->
-<!--                  <el-input-->
-<!--                    v-model="campaigns.register.quiz.goodsCode"-->
-<!--                    :class="{ 'is-error': !validation.goodsCode.check }"-->
-<!--                    class="" placeholder="상품 코드를 입력 해주세요." />-->
+          <!--          <el-row :gutter="10">-->
+          <!--            <el-col :span="4" class="col_tit">-->
+          <!--              <strong class="comm_tit_box">상품 코드</strong>-->
+          <!--            </el-col>-->
+          <!--            <el-col :span="16" class="col_desc">-->
+          <!--              <el-row :gutter="10">-->
+          <!--                <el-col-->
+          <!--                  :span="20"-->
+          <!--                  :class="{ 'is-error': !validation.goodsCode.check }"-->
+          <!--                >-->
+          <!--                  <el-input-->
+          <!--                    v-model="campaigns.register.quiz.goodsCode"-->
+          <!--                    :class="{ 'is-error': !validation.goodsCode.check }"-->
+          <!--                    class="" placeholder="상품 코드를 입력 해주세요." />-->
 
-<!--                </el-col>-->
-<!--              </el-row>-->
-<!--              <div v-show="!validation.goodsCode.check" class="invalid-feedback">-->
-<!--                {{validation.goodsCode.message}}-->
-<!--              </div>-->
-<!--            </el-col>-->
-<!--          </el-row>-->
+          <!--                </el-col>-->
+          <!--              </el-row>-->
+          <!--              <div v-show="!validation.goodsCode.check" class="invalid-feedback">-->
+          <!--                {{validation.goodsCode.message}}-->
+          <!--              </div>-->
+          <!--            </el-col>-->
+          <!--          </el-row>-->
 
           <el-row :gutter="10">
             <el-col :span="4" class="col_tit">
@@ -607,6 +615,7 @@
                 :gutter="10"
                 :class="{ 'is-error': !validation.mainImage.check }"
               >
+                 {{ campaigns.register.uploads.quiz.mainImage }}
                 <CampaignImageUpload
                   ref="quiz_mainImage_upload"
                   :files="campaigns.register.uploads.quiz.mainImage"
@@ -636,33 +645,33 @@
                 />
 
               </el-row>
-              <div v-show="!validation.image.check" class="invalid-feedback">
+              <div v-show="!validation.detailImage1.check" class="invalid-feedback">
                 {{validation.detailImage1.message}}
               </div>
             </el-col>
           </el-row>
 
-<!--          <el-row :gutter="10">-->
-<!--            <el-col :span="4" class="col_tit">-->
-<!--              <strong class="comm_tit_box">상세 이미지 2</strong>-->
-<!--            </el-col>-->
-<!--            <el-col :span="16" class="col_desc">-->
-<!--              <el-row-->
-<!--                :gutter="10"-->
-<!--                :class="{ 'is-error': !validation.detailImage2.check }"-->
-<!--              >-->
-<!--                <CampaignImageUpload-->
-<!--                  ref="quiz_detailImage2_upload"-->
-<!--                  :files="campaigns.register.uploads.quiz.detailImage2"-->
-<!--                  @upload-after="(resp) => onUploadAfter('quiz.detailImage2', resp)"-->
-<!--                />-->
+          <!--          <el-row :gutter="10">-->
+          <!--            <el-col :span="4" class="col_tit">-->
+          <!--              <strong class="comm_tit_box">상세 이미지 2</strong>-->
+          <!--            </el-col>-->
+          <!--            <el-col :span="16" class="col_desc">-->
+          <!--              <el-row-->
+          <!--                :gutter="10"-->
+          <!--                :class="{ 'is-error': !validation.detailImage2.check }"-->
+          <!--              >-->
+          <!--                <CampaignImageUpload-->
+          <!--                  ref="quiz_detailImage2_upload"-->
+          <!--                  :files="campaigns.register.uploads.quiz.detailImage2"-->
+          <!--                  @upload-after="(resp) => onUploadAfter('quiz.detailImage2', resp)"-->
+          <!--                />-->
 
-<!--              </el-row>-->
-<!--              <div v-show="!validation.image.check" class="invalid-feedback">-->
-<!--                {{validation.detailImage2.message}}-->
-<!--              </div>-->
-<!--            </el-col>-->
-<!--          </el-row>-->
+          <!--              </el-row>-->
+          <!--              <div v-show="!validation.image.check" class="invalid-feedback">-->
+          <!--                {{validation.detailImage2.message}}-->
+          <!--              </div>-->
+          <!--            </el-col>-->
+          <!--          </el-row>-->
 
         </div>
       </div>
@@ -678,7 +687,7 @@
 
 <script setup>
 import CampaignImageUpload from '@/components/AdCampaignManagement/CampaignImageUpload.vue'
-
+import MobiAdInf from '@/components/AdInterface/MobiAdInf.vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
@@ -801,7 +810,7 @@ const store = advertiserStore()
 const common = commonStore()
 const route = useRoute()
 const router = useRouter()
-const { campaigns, defaultAdDate } = storeToRefs(store)
+const { advertiser, campaigns, defaultAdDate } = storeToRefs(store)
 const { CampaignType, PaymentTerms } = storeToRefs(common)
 
 const disabledDate = (time) => {
@@ -1399,47 +1408,70 @@ const onUploadAfter = (imageType, resp) => {
 }
 
 function campaignTypeChanged(value) {
-  if (smart_store_file_upload.value) {
-    smart_store_file_upload.value.initUploader()
-  }
-  if (quiz_mainImage_upload.value) {
-    quiz_mainImage_upload.value.initUploader()
-  }
-  if (quiz_detailImage1_upload.value) {
-    quiz_detailImage1_upload.value.initUploader()
-  }
-  if (quiz_detailImage2_upload.value) {
-    quiz_detailImage2_upload.value.initUploader()
-  }
+  if (!advertiser.value.ifCode) {
+    if (smart_store_file_upload.value) {
+      smart_store_file_upload.value.initUploader()
+    }
+    if (quiz_mainImage_upload.value) {
+      quiz_mainImage_upload.value.initUploader()
+    }
+    if (quiz_detailImage1_upload.value) {
+      quiz_detailImage1_upload.value.initUploader()
+    }
+    if (quiz_detailImage2_upload.value) {
+      quiz_detailImage2_upload.value.initUploader()
+    }
 
-  campaigns.value.register.quiz = {
-    useHow: null,
-    quizTitle: null,
-    quizAnswer: null,
-    mainImage: null,
-    detailImage1: null,
-    detailImage2: null,
-    targetUrlPc: null,
-    targetUrlMobile: null,
-    goodsCode: null
-  }
-  campaigns.value.register.smartStore = {
-    useHow: null,
-    image: null,
-    targetUrlPc: null,
-    targetUrlMobile: null,
-    goodsCode: null,
-    paymentTerms: null,
-    holdingTime: 0,
-    totalBudget: 0,
-    adPrice: 0
-  }
-  campaigns.value.register.uploads = {
-    smartStore: [],
-    quiz: {
-      mainImage: [],
-      detailImage1: [],
-      detailImage2: []
+    campaigns.value.register.quiz = {
+      useHow: null,
+      quizTitle: null,
+      quizAnswer: null,
+      mainImage: null,
+      detailImage1: null,
+      detailImage2: null,
+      targetUrlPc: null,
+      targetUrlMobile: null,
+      goodsCode: null
+    }
+
+    campaigns.value.register.smartStore = {
+      useHow: null,
+      image: null,
+      targetUrlPc: null,
+      targetUrlMobile: null,
+      goodsCode: null,
+      paymentTerms: null,
+      holdingTime: 0,
+      totalBudget: 0,
+      adPrice: 0
+    }
+
+    campaigns.value.register.uploads = {
+      smartStore: [],
+      quiz: {
+        mainImage: [],
+        detailImage1: [],
+        detailImage2: []
+      }
+    }
+  } else {
+    campaigns.value.register.quiz = {
+      useHow: null,
+      quizTitle: null,
+      quizAnswer: null,
+      targetUrlPc: null,
+      targetUrlMobile: null,
+      goodsCode: null
+    }
+
+    campaigns.value.register.smartStore = {
+      useHow: null,
+      targetUrlMobile: null,
+      goodsCode: null,
+      paymentTerms: null,
+      holdingTime: 0,
+      totalBudget: 0,
+      adPrice: 0
     }
   }
 }
@@ -1493,11 +1525,6 @@ function caclTotalBudget(value) {
 onActivated(() => {
   advertiserStore().initRegisterForm('campaigns')
 })
-//
-// onMounted(() => {
-//   console.log('onMounted')
-//   advertiserStore().initRegisterForm('campaigns')
-// })
 
 const adPrice = computed(() => {
   return Number(numberFormatter(campaigns.value.register.adPrice))
@@ -1506,6 +1533,64 @@ const adPrice = computed(() => {
 const commissionRate = computed(() => {
   return Number(numberFormatter(campaigns.value.register.commissionRate))
 })
+
+function AdsInfCallback({ imageType, type, result }) {
+  const { originFileName, newFileName, target } = result
+
+  const newFiles = {
+    name: originFileName,
+    type,
+    url: [import.meta.env.VITE_FILE_SERVER, 'temp', target, newFileName].join('/')
+  }
+
+  switch (imageType) {
+    case 'main' :
+      campaigns.value.register.uploads.quiz.mainImage = []
+
+      campaigns.value.register.uploads.quiz.mainImage.push(newFiles)
+      quiz_mainImage_upload.value.initUploader()
+      quiz_mainImage_upload.value.addFile(newFiles)
+
+      campaigns.value.register.quiz.mainImage = {
+        newFile: true,
+        fileType: type,
+        originName: originFileName,
+        fileName: [target, newFileName].join('/')
+      }
+
+      break
+    case 'detail1' :
+      campaigns.value.register.uploads.quiz.detailImage1 = []
+      campaigns.value.register.uploads.quiz.detailImage1.push(newFiles)
+
+      quiz_detailImage1_upload.value.initUploader()
+      quiz_detailImage1_upload.value.addFile(newFiles)
+
+      campaigns.value.register.quiz.detailImage1 = {
+        newFile: true,
+        fileType: type,
+        originName: originFileName,
+        fileName: [target, newFileName].join('/')
+      }
+
+      break
+  }
+}
+
+function AdInfoCallback({ code, contents }) {
+  if (contents) {
+    const ad = contents.client[0].data[0]
+    const { pnm, site_desc4, site_url } = ad
+
+    console.log(pnm, site_desc4, site_url)
+    campaigns.value.register.campaignType = 'QUIZ01'
+    campaigns.value.register.ifAdCode = code
+    campaigns.value.register.campaignName = pnm
+    campaigns.value.register.campaignDesc = site_desc4
+    campaigns.value.register.quiz.targetUrlPc = site_url
+    campaigns.value.register.quiz.targetUrlMobile = site_url
+  }
+}
 
 </script>
 

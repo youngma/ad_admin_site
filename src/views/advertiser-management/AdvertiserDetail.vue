@@ -39,7 +39,6 @@ import AdvertiserCampaign from '@/views/advertiser-management/tabs/AdvertiserCam
 
 import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 import { storeToRefs } from 'pinia'
-import PartnerSearchForm2 from '@/components/ParnterManagement/PartnerSearchForm2.vue'
 
 defineOptions({
   name: 'AdvertiserDetail'

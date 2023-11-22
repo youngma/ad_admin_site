@@ -9,6 +9,7 @@
         <el-button @click="goDetail(scope.row)">{{ scope.row.businessName }}</el-button>
       </template>
     </el-table-column>
+    <el-table-column prop="ifCode" label="연동 코드"  header-align="center" align="center"/>
     <el-table-column prop="businessNumber" label="사업자 번호"  header-align="center" align="center">
       <template #default="scope">
         {{ businessNumberFormatter(scope.row.businessNumber) }}
@@ -23,7 +24,7 @@
     <el-table-column prop="advertiserName" label="광고주 대표 명" header-align="center" align="center" />
     <el-table-column prop="insertedAt" label="등록일" header-align="center" />
     <el-table-column prop="updatedAt" label="등록일" header-align="center" />
-    <el-table-column prop="advertiserSeq" label="" align="center">
+    <el-table-column prop="advertiserSeq" label="" align="center" width="300">
       <template #default="scope">
         <el-button type="success" @click="open(scope.row)">수정</el-button>
         <el-button type="danger" @click="openByBusinessNumber(scope.row)">사업자명 변경</el-button>

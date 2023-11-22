@@ -39,7 +39,8 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       email: null,
       taxBillEmail: null,
       alReadyCheck: false,
-      file: null
+      file: null,
+      ifCode: null
     },
     selected: null,
     modifyPopup: false,
@@ -89,6 +90,7 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
         email: null,
         taxBillEmail: null,
         alReadyCheck: false,
+        ifCode: null,
         // businessRegistrationOriginFileName: null,
         // businessRegistrationFile: null
         file: {
@@ -163,8 +165,8 @@ export const advertiserManagementStore = defineStore('advertiserManagementStore'
       }
     },
     modifyAdvertiser() {
-      const { advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail } = this.selected
-      ADVERTISER_API.modify({ advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail }).then(() => {
+      const { advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail, ifCode } = this.selected
+      ADVERTISER_API.modify({ advertiserSeq, businessName, advertiserName, phoneNumber, email, taxBillEmail, ifCode }).then(() => {
         this.$alert('수정 되었습니다.', '확인', {})
         this.reload().then(() => {
           this.modifyPopup = false

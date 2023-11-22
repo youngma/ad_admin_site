@@ -10,8 +10,8 @@
       </template>
     </el-table-column>
     <el-table-column  prop="businessName" label="파트너 명" width="150" header-align="center" align="center" />
-    <el-table-column  prop="groupCode" label="그룹 코드" width="150" header-align="center" align="center" />
-    <el-table-column  prop="groupName" label="그룹 명" width="150" header-align="center" align="center" />
+    <el-table-column  prop="groupCode" label="지면 코드" width="150" header-align="center" align="center" />
+    <el-table-column  prop="groupName" label="지면 명" width="150" header-align="center" align="center" />
     <el-table-column  prop="reqCnt" label="광고 요청 건"  header-align="center" align="right" >
       <template #default="scope">
         {{moneyFormatter(scope.row.reqCnt) }} 건

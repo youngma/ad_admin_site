@@ -6,10 +6,10 @@
     <div class="frame_comp">
       <el-row :gutter="10">
         <el-col :span="4">
-          <strong class="comm_tit_box">광고주 사업자 명</strong>
+          <strong class="comm_tit_box">광고 사업자 명</strong>
         </el-col>
         <el-col :span="8">
-          <el-input v-model="searchParams.businessName" placeholder="Please input" />
+          <el-input v-model="searchParams.businessName" placeholder="광고 사업자 명을 입력해주세요." />
         </el-col>
         <el-col :span="4">
           <strong class="comm_tit_box">사업자 번호</strong>
@@ -18,7 +18,7 @@
           <el-input
                     v-model="searchParams.businessNumber"
                     :formatter="(value) => businessNumberFormatter(value)"
-                    placeholder="Please input" />
+                    placeholder="사업자 번호를 입력해주세요." />
         </el-col>
       </el-row>
 
@@ -29,13 +29,13 @@
         <el-col :span="8">
           <el-input v-model="searchParams.phoneNumber"
                     :formatter="(value) => phoneFormatter(value)"
-                    placeholder="Please input" />
+                    placeholder="캠페인 타입" />
         </el-col>
         <el-col :span="4">
           <strong class="comm_tit_box">이메일</strong>
         </el-col>
         <el-col :span="8">
-          <el-input v-model="searchParams.email" placeholder="Please input" />
+          <el-input v-model="searchParams.email" placeholder="이메일을 입력 해주세요." />
         </el-col>
       </el-row>
 

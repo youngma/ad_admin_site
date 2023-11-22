@@ -1,6 +1,5 @@
 
 <template>
-
   <div class="components-container">
     <AdvertiserSearchForm2
       ref="adCampaignRegisterSearchForm"
@@ -24,25 +23,28 @@ import CampaignRegisterForm from '@/components/AdCampaignManagement/CampaignRegi
 
 import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 
-import {onActivated, onBeforeMount, ref} from 'vue'
+import { onActivated, onBeforeMount, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import PartnerSearchForm2 from '@/components/ParnterManagement/PartnerSearchForm2.vue'
 
 defineOptions({
   name: 'CampaignRegister'
 })
+
 const adCampaignRegisterSearchForm = ref(null)
 const store = advertiserStore()
 
 const { selected, advertisers } = storeToRefs(store)
 
 function searchUpdate({ content, current }) {
+  console.log({ content, current })
   store.setAdvertisers({
     advertisers: content,
     selected: current
   })
 }
 function onSearchChange(value) {
+  console.log(value)
+
   store.setAdvertiserSeq({ selected: value })
 }
 

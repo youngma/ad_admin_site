@@ -35,13 +35,13 @@
           <strong class="comm_tit_box">계좌 번호</strong>
         </el-col>
         <el-col :span="8">
-          <el-input v-model="accounts.searchParams.bankAccount" placeholder="Please input" />
+          <el-input v-model="accounts.searchParams.bankAccount" placeholder="계좌 번호을 입력해주세요." />
         </el-col>
         <el-col :span="4">
           <strong class="comm_tit_box">예금주</strong>
         </el-col>
         <el-col :span="8">
-          <el-input v-model="accounts.searchParams.accountHolder" placeholder="Please input" />
+          <el-input v-model="accounts.searchParams.accountHolder" placeholder="예금 주 명을 입력해주세요." />
         </el-col>
       </el-row>
     </div>

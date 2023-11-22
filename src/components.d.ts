@@ -90,6 +90,7 @@ declare module '@vue/runtime-core' {
     IconSupport: typeof import('./components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./components/icons/IconTooling.vue')['default']
     JsonEditor: typeof import('./components/JsonEditor/index.vue')['default']
+    MobiAdInf: typeof import('./components/AdInterface/MobiAdInf.vue')['default']
     PartnerAccountDataTable: typeof import('./components/ParnterManagement/Account/PartnerAccountDataTable.vue')['default']
     PartnerAccountRegisterModal: typeof import('./components/ParnterManagement/Account/PartnerAccountRegisterModal.vue')['default']
     PartnerAccountSearchForm: typeof import('./components/ParnterManagement/Account/PartnerAccountSearchForm.vue')['default']

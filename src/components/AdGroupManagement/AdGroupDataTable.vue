@@ -5,8 +5,8 @@
     style="width: 100%"
   >
     <el-table-column  prop="adTypeName" label="광고 타입" width="150" header-align="center" align="center" />
-    <el-table-column  prop="groupCode" label="그룹 코드" width="150" header-align="center" align="center" />
-    <el-table-column  prop="groupName" label="그룹 명" width="150" header-align="center" align="center" />
+    <el-table-column  prop="groupCode" label="지면 코드" width="150" header-align="center" align="center" />
+    <el-table-column  prop="groupName" label="지면 명" width="150" header-align="center" align="center" />
     <el-table-column  prop="logoFile" label="서비스 로고" width="150" header-align="center" align="center" >
       <template #default="scope">
         <img

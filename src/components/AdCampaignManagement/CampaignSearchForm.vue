@@ -9,7 +9,7 @@
           <strong class="comm_tit_box">캠페인 명</strong>
         </el-col>
         <el-col :span="8">
-          <el-input v-model="campaignSearchParams.campaignName" placeholder="Please input" />
+          <el-input v-model="campaignSearchParams.campaignName" placeholder="캠페인 명을 입력 해주세요." />
         </el-col>
         <el-col :span="4">
           <strong class="comm_tit_box">캠페인 코드</strong>
@@ -17,7 +17,7 @@
         <el-col :span="8">
           <el-input
             v-model="campaignSearchParams.campaignCode"
-            placeholder="Please input" />
+            placeholder="캠페인 코드를 입력 해주세요." />
         </el-col>
       </el-row>
 
@@ -49,7 +49,7 @@
         <el-col :span="8">
           <el-input
             v-model="campaignSearchParams.targetUrl"
-            placeholder="Please input" />
+            placeholder="타켓 URL를 입력 해주세요" />
         </el-col>
       </el-row>
 

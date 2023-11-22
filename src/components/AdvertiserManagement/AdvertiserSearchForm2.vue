@@ -57,6 +57,18 @@
           <p>{{advertiser.email}} </p>
         </el-col>
       </el-row>
+      <el-row :gutter="10">
+        <el-col :span="4" class="col_tit">
+          <strong class="comm_tit_box">연동 코드</strong>
+        </el-col>
+        <el-col :span="8" class="col_desc">
+          <p> {{ advertiser.ifCode }} </p>
+        </el-col>
+        <el-col :span="4" class="col_tit">
+        </el-col>
+        <el-col :span="8" class="col_desc">
+        </el-col>
+      </el-row>
     </div>
     <el-row justify="end" >
       <el-col class="t_r comm_form_box">

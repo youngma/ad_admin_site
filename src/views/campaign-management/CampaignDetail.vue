@@ -5,6 +5,14 @@
       <el-row>
         <el-col class="comm_form_box comm_text_tit">캠페인 상세</el-col>
       </el-row>
+
+      <MobiAdInf
+        v-if="campaigns.selectedCampaign.advertiser.ifCode === 'MOBI'"
+        :if-ad-code="campaigns.selectedCampaign.ifAdCode"
+        @image-register-cb="(params) => AdsInfCallback(params)"
+        @ad-info-cb="(params) => AdInfoCallback(params)"
+      />
+
       <div class="comm_comp_table">
         <el-row :gutter="10">
           <el-col :span="4" class="col_tit">
@@ -699,6 +707,8 @@ import { numberFormatter, moneyFormatter } from '@/utils/customElTableFormatter.
 import { validURL } from '@/utils/validate.js'
 import { ElMessageBox } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
+
+import MobiAdInf from '@/components/AdInterface/MobiAdInf.vue'
 
 defineOptions({
   name: 'CampaignModifyForm'
@@ -1440,7 +1450,7 @@ function save() {
           store.setCampaignDetail(null)
           const { referrer } = route.query
           console.log(route)
-          router.push({ path: referrer || route.params.referrer || '/campaign-management/search'})
+          router.push({ path: referrer || route.params.referrer || '/campaign-management/search' })
         }
       })
     }).catch((e) => {
@@ -1457,10 +1467,9 @@ function paymentTermsChange() {
 onMounted(() => {
   if (!campaigns.value.selectedCampaign.seq) {
     const { referrer } = route.query
-    router.push({ path: referrer || route.params.referrer || '/campaign-management/search'})
+    router.push({ path: referrer || route.params.referrer || '/campaign-management/search' })
   }
 })
-
 
 const adPrice = computed(() => {
   return Number(numberFormatter(campaigns.value.selectedCampaign.adPrice))
@@ -1470,11 +1479,68 @@ const commissionRate = computed(() => {
   return Number(numberFormatter(campaigns.value.selectedCampaign.commissionRate))
 })
 
-
 function caclTotalBudget(value) {
   const { adPrice, totalParticipationLimit } = campaigns.value.selectedCampaign
   const totalBudget = numberFormatter(totalParticipationLimit) * numberFormatter(adPrice)
   campaigns.value.selectedCampaign.totalBudget = moneyFormatter(totalBudget)
+}
+
+function AdsInfCallback({ imageType, type, result }) {
+  const { originFileName, newFileName, target } = result
+
+  const newFiles = {
+    name: originFileName,
+    type,
+    url: [import.meta.env.VITE_FILE_SERVER, 'temp', target, newFileName].join('/')
+  }
+
+  switch (imageType) {
+    case 'main' :
+      campaigns.value.register.uploads.quiz.mainImage = []
+
+      campaigns.value.register.uploads.quiz.mainImage.push(newFiles)
+      quiz_mainImage_modify_upload.value.initUploader()
+      quiz_mainImage_modify_upload.value.addFile(newFiles)
+
+      campaigns.value.register.quiz.mainImage = {
+        newFile: true,
+        fileType: type,
+        originName: originFileName,
+        fileName: [target, newFileName].join('/')
+      }
+
+      break
+    case 'detail1' :
+      campaigns.value.selectedCampaign.uploads.quiz.detailImage1 = []
+      campaigns.value.selectedCampaign.uploads.quiz.detailImage1.push(newFiles)
+
+      quiz_detailImage1_modify_upload.value.initUploader()
+      quiz_detailImage1_modify_upload.value.addFile(newFiles)
+
+      campaigns.value.selectedCampaign.quiz.detailImage1 = {
+        newFile: true,
+        fileType: type,
+        originName: originFileName,
+        fileName: [target, newFileName].join('/')
+      }
+
+      break
+  }
+}
+
+function AdInfoCallback({ code, contents }) {
+  if (contents) {
+    const ad = contents.client[0].data[0]
+    const { pnm, site_desc4, site_url } = ad
+
+    console.log(pnm, site_desc4, site_url)
+    campaigns.value.selectedCampaign.campaignType = 'QUIZ01'
+    campaigns.value.selectedCampaign.ifAdCode = code
+    campaigns.value.selectedCampaign.campaignName = pnm
+    campaigns.value.selectedCampaign.campaignDesc = site_desc4
+    campaigns.value.selectedCampaign.quiz.targetUrlPc = site_url
+    campaigns.value.selectedCampaign.quiz.targetUrlMobile = site_url
+  }
 }
 
 </script>

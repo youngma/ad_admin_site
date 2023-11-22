@@ -30,7 +30,7 @@ export const advertiserStore = defineStore('advertiserStore', {
     advertisers: [],
     selected: [],
 
-    tabIndex: 'user',
+    tabIndex: 0,
 
     users: {
       searchParams: {
@@ -107,6 +107,7 @@ export const advertiserStore = defineStore('advertiserStore', {
         campaignType: null,
         campaignName: null,
         campaignDesc: null,
+        ifAdCode: null,
         totalParticipationLimit: 0,
         dayParticipationLimit: 0,
         adDate: [],
@@ -347,6 +348,7 @@ export const advertiserStore = defineStore('advertiserStore', {
           campaignType: null,
           campaignName: null,
           campaignDesc: null,
+          ifAdCode: null,
           totalBudget: 0,
           adPrice: 0,
           totalParticipationLimit: 0,

@@ -132,7 +132,7 @@ export const campaignStore = defineStore('campaignStore', {
     },
     async search({ selected, page, size }) {
       const params = {
-        partnerSeq: selected.value.join(','),
+        advertiserSeq: selected.value.join(','),
         page: page,
         size: !size && size > 0 ? size : undefined
       }
