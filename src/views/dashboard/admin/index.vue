@@ -14,6 +14,11 @@
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <el-col>
         <el-row justify="end" class="mb_15" >
+          <el-col class="t_r small" tag="span" style="font-size: smaller">
+            * 마지막 업데이트 시간 : {{ sinkSchedule.lastUpdateTim }} (00:10 분 마다 적재)
+          </el-col>
+        </el-row>
+        <el-row justify="end" class="mb_15" >
           <el-col class="t_r comm_form_box" tag="span">
             <el-date-picker
               v-model="datepicker"
@@ -62,6 +67,7 @@ const dailyCount = ref({
 })
 
 const quizChart = ref(null)
+const sinkSchedule = ref({})
 const list = ref([])
 const options = ref({})
 const datepicker = ref([
@@ -239,12 +245,13 @@ async function reload(v) {
     endDate: datepicker.value[1]
   })
 
-  const { advertiserCount, partnerCount, campaignCount, groupCount, rptQuizDailyList } = data
+  const { advertiserCount, partnerCount, campaignCount, groupCount, rptQuizDailyList, lastUpdate } = data
 
   dailyCount.value.advertiserCount = advertiserCount
   dailyCount.value.partnerCount = partnerCount
   dailyCount.value.campaignCount = campaignCount
   dailyCount.value.groupCount = groupCount
+  sinkSchedule.value = lastUpdate
 
   list.value = rptQuizDailyList
 

@@ -1,6 +1,8 @@
 <template>
   <el-table
     :data="partner.list"
+    :summary-method="getSummaries"
+    show-summary
     class="custom-table"
     style="width: 100%"
   >
@@ -27,9 +29,19 @@
         {{moneyFormatter(scope.row.hintCnt) }} 건
       </template>
     </el-table-column>
-    <el-table-column  prop="clickCnt" label="정답 클릭 건"  header-align="center" align="right" >
+    <el-table-column  prop="answerCnt" label="정답 클릭 건"  header-align="center" align="right" >
       <template #default="scope">
         {{moneyFormatter(scope.row.answerCnt) }} 건
+      </template>
+    </el-table-column>
+    <el-table-column  prop="partnerCommission" label="파트너 지급 금액" width="150" header-align="center" align="right" >
+      <template #default="scope">
+        {{ moneyFormatter(scope.row.partnerCommission) }} 원
+      </template>
+    </el-table-column>
+    <el-table-column  prop="userCommission" label="유저 지급 금액" width="150" header-align="center" align="right" >
+      <template #default="scope">
+        {{ moneyFormatter(scope.row.userCommission) }} 원
       </template>
     </el-table-column>
   </el-table>
@@ -66,6 +78,36 @@ const { partner } = storeToRefs(store)
 
 function pageChange(number) {
   store.searchByPartner({ page: number })
+}
+
+
+const getSummaries = (param) => {
+  const { columns, data } = param
+  const { summary } = partner.value
+  const sums = []
+
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[0] = '합계'
+    } else {
+      const key = column.property
+      if (key === 'businessName') {
+        sums[index] = moneyFormatter(summary['partnerCount']).concat(' 건')
+      } else if (key === 'groupCode') {
+        sums[index] = moneyFormatter(summary['adGroupCount']).concat(' 건')
+      } else if (key === 'groupName') {
+        sums[index] = '-'
+      } else if (key === 'partnerCommission') {
+        sums[index] = moneyFormatter(summary['partnerCommission']).concat(' 원')
+      } else if (key === 'userCommission') {
+        sums[index] = moneyFormatter(summary['userCommission']).concat(' 원')
+      } else {
+        sums[index] = moneyFormatter(summary[key]).concat(' 건')
+      }
+    }
+  })
+
+  return sums
 }
 
 </script>

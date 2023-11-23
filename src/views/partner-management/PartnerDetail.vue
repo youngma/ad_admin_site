@@ -104,6 +104,7 @@ function reload(name) {
 
 function searchFormInit() {
   partnerDetailSearchForm.value.initSet(selected.value, partners.value)
+  tabIndex.value = 'user'
 }
 
 // onActivated(() => {

@@ -332,7 +332,7 @@ export const asyncRoutes = [
         path: 'partner',
         component: () => import('@/views/ad-report/quiz/PartnerReport.vue'),
         name: 'QuizPartnerReport',
-        meta: { title: '파트너 리포트', icon: 'mdi:report-bell-curve-cumulative' }
+        meta: { title: '매체사 리포트', icon: 'mdi:report-bell-curve-cumulative' }
       },
       {
         path: 'user',

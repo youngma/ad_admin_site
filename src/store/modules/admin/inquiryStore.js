@@ -36,7 +36,7 @@ export const inquiryStore = defineStore('inquiryStore', {
           searchType: this.searchParams.searchType,
           searchText: this.searchParams.searchText,
           inquiryStatus: this.searchParams.inquiryStatus,
-          startDate: this.searchParams.searchDate[0] + ' 00:00:01',
+          startDate: this.searchParams.searchDate[0] + ' 00:00:00',
           endDate: this.searchParams.searchDate[1] + ' 23:59:59'
         }
       )

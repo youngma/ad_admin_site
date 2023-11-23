@@ -10,6 +10,7 @@
       @on-change="(value) => onSearchChange(value)"
     />
 
+    {{ tabIndex }}
     <el-tabs v-model="tabIndex"  type="border-card" @tab-change="(name) => onTabsChange(name)">
       <el-tab-pane label="사용자">
         <AdvertiserUsers v-if="advertiser" name="user"/>
@@ -52,7 +53,6 @@ const { selected, advertisers, advertiser, tabIndex } = storeToRefs(store)
 // })
 
 onActivated(async() => {
-  console.log('onActivated', tabIndex.value)
   if (advertiser.value) {
     switch (tabIndex.value) {
       case '0': advertiserStore().reloadByUsers()

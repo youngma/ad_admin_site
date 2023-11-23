@@ -1,6 +1,8 @@
 <template>
   <el-table
     :data="user.list"
+    :summary-method="getSummaries"
+    show-summary
     class="custom-table"
     style="width: 100%"
   >
@@ -64,14 +66,20 @@
       </template>
     </el-table-column>
 
+    <el-table-column  prop="adCost" label="광고 금액" width="150" header-align="center" align="right" >
+      <template #default="scope">
+        {{ moneyFormatter(scope.row.adCost) }} 원
+      </template>
+    </el-table-column>
+
     <el-table-column  prop="partnerCommission" label="파트너 지급 금액" width="150" header-align="center" align="right" >
       <template #default="scope">
-        {{ moneyFormatter(scope.row.partnerCommission) }}
+        {{ moneyFormatter(scope.row.partnerCommission) }} 원
       </template>
     </el-table-column>
     <el-table-column  prop="userCommission" label="유저 지급 금액" width="150" header-align="center" align="right" >
       <template #default="scope">
-        {{ moneyFormatter(scope.row.userCommission) }}
+        {{ moneyFormatter(scope.row.userCommission) }} 원
       </template>
     </el-table-column>
     <el-table-column  prop="adReword" label="지급 포인트" width="150" header-align="center" align="right" >
@@ -114,6 +122,42 @@ const { user } = storeToRefs(store)
 
 function pageChange(number) {
   store.searchByUser({ page: number })
+}
+
+const getSummaries = (param) => {
+  const { columns, data } = param
+  const { summary } = user.value
+  const sums = []
+
+  columns.forEach((column, index) => {
+    sums[0] = '합계 ('.concat(summary.reqCnt).concat(' 건)')
+    const key = column.property
+    if (key === 'advertiserName') {
+      sums[index] = moneyFormatter(summary['advertiserCount']).concat(' 건')
+    } else if (key === 'campaignCode') {
+      sums[index] = moneyFormatter(summary['campaignCount']).concat(' 건')
+    } else if (key === 'campaignName') {
+      sums[index] = '-'
+    } if (key === 'partnerName') {
+      sums[index] = moneyFormatter(summary['partnerCount']).concat(' 건')
+    } else if (key === 'groupCode') {
+      sums[index] = moneyFormatter(summary['adGroupCount']).concat(' 건')
+    } else if (key === 'groupName') {
+      sums[index] = '-'
+    } else if (key === 'adReword') {
+      sums[index] = moneyFormatter(summary['adReword'])
+    } else if (key === 'partnerCommission') {
+      sums[index] = moneyFormatter(summary['partnerCommission']).concat(' 원')
+    } else if (key === 'userCommission') {
+      sums[index] = moneyFormatter(summary['userCommission']).concat(' 원')
+    } else if (key === 'userKey') {
+      sums[index] = moneyFormatter(summary['userCount']).concat(' 명')
+    } else {
+      sums[index] = moneyFormatter(summary[key]).concat(' 건')
+    }
+  })
+
+  return sums
 }
 
 </script>

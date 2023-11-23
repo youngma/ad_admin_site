@@ -222,7 +222,7 @@ async function check(t) {
 
   validate('userId')
   if (validation.value.valid) {
-    const retMsg = await this.store.userIdCheck() ? '사용 가능한 아이디 입니다.' : '이미 등록된 아이디 입니다.'
+    const retMsg = await store.userIdCheck() ? '사용 가능한 아이디 입니다.' : '이미 등록된 아이디 입니다.'
     ElMessageBox.alert(retMsg, '확인', {}, appContext)
   }
 }

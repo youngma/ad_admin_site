@@ -184,7 +184,7 @@
         <el-row v-if="campaigns.selectedCampaign.campaignType === 'QUIZ02'" :gutter="10">
 
           <el-col :span="4" class="col_tit">
-            <strong class="comm_tit_box">매체사 지급 수수료(원)</strong>
+            <strong class="comm_tit_box">매체사 지급 금액 (원)</strong>
           </el-col>
           <el-col :span="8" class="col_desc">
             <el-row :gutter="10">
@@ -204,7 +204,7 @@
             </div>
           </el-col>
           <el-col :span="4" class="col_tit">
-            <strong class="comm_tit_box">사용자 지급 수수료(원)</strong>
+            <strong class="comm_tit_box">사용자 지급 금액 (원)</strong>
           </el-col>
           <el-col :span="8" class="col_desc text-end">
             <el-row :gutter="10">

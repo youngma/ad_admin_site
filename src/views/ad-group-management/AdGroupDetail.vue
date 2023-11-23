@@ -146,7 +146,7 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="6" class="col_tit">
-            <strong class="comm_tit_box">수수료 비율(매체사)</strong>
+            <strong class="comm_tit_box">차감 수수료 율(매체사)</strong>
           </el-col>
 
           <el-col :span="16" class="col_desc">
@@ -161,6 +161,9 @@
                 />
               </el-col>
             </el-row>
+            <div class="invalid-feedback">
+              * 광고 단가에서 비율 만큼 차감후 매체사 에게 지급.
+            </div>
             <div v-show="!validation.commissionRate.check" class="invalid-feedback">
               {{validation.commissionRate.message}}
             </div>
@@ -168,7 +171,7 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="6" class="col_tit">
-            <strong class="comm_tit_box">수수료 비율(사용자)</strong>
+            <strong class="comm_tit_box">차감 수수료 율(사용자)</strong>
           </el-col>
 
           <el-col :span="16" class="col_desc">
@@ -183,6 +186,9 @@
                 />
               </el-col>
             </el-row>
+            <div class="invalid-feedback">
+              * 매체사 단가에서 비율 만큼 차감 후 사용자 에게 지급.
+            </div>
             <div v-show="!validation.userCommissionRate.check" class="invalid-feedback">
               {{validation.userCommissionRate.message}}
             </div>
@@ -191,7 +197,7 @@
         <el-row :gutter="10" >
           <el-col :span="6" class="col_tit">
             <strong class="comm_tit_box">
-              포인트 전환 비율 (1원당 전환 비율)
+              포인트 교환 비율
             </strong>
           </el-col>
           <el-col :span="16" class="col_desc pl-10">
@@ -202,6 +208,9 @@
               controls-position="right"
               size="large"
             />
+            <div class="invalid-feedback">
+              * 사용자에게 지급된 금액에 해당 비율 만큼 곱하여 사용자 포인트 지급.
+            </div>
             <div v-show="!validation.rewordRate.check" class="invalid-feedback">
               {{validation.rewordRate.message}}
             </div>

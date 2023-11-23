@@ -1,6 +1,8 @@
 <template>
   <el-table
     :data="admin.list"
+    :summary-method="getSummaries"
+    show-summary
     class="custom-table"
     style="width: 100%"
   >
@@ -54,6 +56,12 @@
         {{moneyFormatter(scope.row.clickCnt) }} 건
       </template>
     </el-table-column>
+
+    <el-table-column  prop="adCost" label="광고 금액" width="150" header-align="center" align="right" >
+      <template #default="scope">
+        {{ moneyFormatter(scope.row.adCost) }}
+      </template>
+    </el-table-column>
     <el-table-column  prop="partnerCommission" label="파트너 지급 금액"  header-align="center" align="right" >
       <template #default="scope">
         {{moneyFormatter(scope.row.partnerCommission) }} 원
@@ -64,6 +72,7 @@
         {{moneyFormatter(scope.row.userCommission) }} 원
       </template>
     </el-table-column>
+
   </el-table>
 
   <div class="page-box">
@@ -87,6 +96,7 @@
 import { quizReportStore } from '@/store/modules/admin/quizReportStore.js'
 import { storeToRefs } from 'pinia'
 import { dateFormatter, moneyFormatter } from '@/utils/customElTableFormatter.js'
+import { isNumber } from 'element-plus/es/utils/index'
 
 defineOptions({
   name: 'AdminDailyReportDataTable'
@@ -98,6 +108,27 @@ const { admin } = storeToRefs(store)
 
 function pageChange(number) {
   store.searchByAdmin({ page: number })
+}
+
+const getSummaries = (param) => {
+  const { columns, data } = param
+  const { summary } = admin.value
+  const sums = []
+
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[0] = '합계'
+    } else {
+      const key = column.property
+      if (isNumber(summary[key])) {
+        sums[index] = moneyFormatter(summary[key]).concat(' 건')
+      } else {
+        sums[index] = '-'
+      }
+    }
+  })
+
+  return sums
 }
 
 </script>

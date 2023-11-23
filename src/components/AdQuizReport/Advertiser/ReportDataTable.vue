@@ -1,6 +1,8 @@
 <template>
   <el-table
     :data="advertiser.list"
+    :summary-method="getSummaries"
+    show-summary
     class="custom-table"
     style="width: 100%"
   >
@@ -30,6 +32,12 @@
     <el-table-column  prop="clickCnt" label="광코 클릭 건"  header-align="center" align="right" >
       <template #default="scope">
         {{moneyFormatter(scope.row.clickCnt) }} 건
+      </template>
+    </el-table-column>
+
+    <el-table-column  prop="adCost" label="광고 금액" width="150" header-align="center" align="right" >
+      <template #default="scope">
+        {{ moneyFormatter(scope.row.partnerCommission) }}
       </template>
     </el-table-column>
   </el-table>
@@ -68,6 +76,35 @@ function pageChange(number) {
   store.searchByAdvertiser({ page: number })
 }
 
+const getSummaries = (param) => {
+  const { columns, data } = param
+  const { summary } = advertiser.value
+  const sums = []
+
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[0] = '합계'
+    } else {
+      const key = column.property
+      if (key === 'businessName') {
+        sums[index] = moneyFormatter(summary['advertiserCount']).concat(' 건')
+      } else if (key === 'campaignCode') {
+        sums[index] = moneyFormatter(summary['campaignCount']).concat(' 건')
+      } else if (key === 'campaignName') {
+        sums[index] = '-'
+      } else {
+        sums[index] = moneyFormatter(summary[key]).concat(' 건')
+      }
+    }
+  })
+
+  return sums
+}
+
+// function getSummaries(columns) {
+
+//
+// }
 </script>
 
 <style scoped lang="scss">
