@@ -245,7 +245,7 @@ function validate(...types) {
 
         if (!file) {
           validation.value.accountFile.check = false
-          validation.value.accountFile.message = '사업자등록증을 추가 해주세요.'
+          validation.value.accountFile.message = '계좌 사본 파일을 추가 해주세요.'
 
           validation.value.valid = false
 
@@ -307,7 +307,7 @@ async function check() {
 }
 
 function save() {
-  validate('alReadyCheck', 'bankCode', 'bankAccount', 'accountHolder')
+  validate('alReadyCheck', 'bankCode', 'bankAccount', 'accountHolder', 'accountFile')
   if (validation.value.valid) {
     store.accountRegister()
   }

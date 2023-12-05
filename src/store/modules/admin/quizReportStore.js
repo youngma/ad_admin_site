@@ -2,13 +2,21 @@ import { defineStore } from 'pinia'
 import * as REPORT_QUIZ_API from '@/api/REPORT_QUIZ_API.js'
 import _ from 'lodash'
 import moment from 'moment'
-import {searchByAdmin, searchByAdminSummary, searchByUserSummary} from '@/api/REPORT_QUIZ_API.js'
+import {
+  searchByAdmin,
+  searchByAdminSummary,
+  searchByPartnerExcel,
+  searchByUserExcel,
+  searchByUserSummary
+} from '@/api/REPORT_QUIZ_API.js'
 
 export const quizReportStore = defineStore('quizReportStore', {
   state: () => ({
     advertiser: {
       searchParams: {
         advertiserSeq: null,
+        campaignName: null,
+        campaignCode: null,
         page: 1,
         size: 20,
         searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
@@ -20,6 +28,8 @@ export const quizReportStore = defineStore('quizReportStore', {
     partner: {
       searchParams: {
         partnerSeq: null,
+        groupName: null,
+        groupCode: null,
         page: 1,
         size: 20,
         searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
@@ -59,6 +69,8 @@ export const quizReportStore = defineStore('quizReportStore', {
     initByAdvertiser() {
       this.advertiser.searchParams = {
         advertiserSeq: null,
+        campaignName: null,
+        campaignCode: null,
         page: 1,
         size: 20,
         searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
@@ -68,7 +80,10 @@ export const quizReportStore = defineStore('quizReportStore', {
       const searchParams = Object.assign(
         params, {
           startDate: this.advertiser.searchParams.searchDate[0],
-          endDate: this.advertiser.searchParams.searchDate[1]
+          endDate: this.advertiser.searchParams.searchDate[1],
+          advertiserSeq: this.advertiser.searchParams.advertiserSeq,
+          campaignName: this.advertiser.searchParams.campaignName,
+          campaignCode: this.advertiser.searchParams.campaignCode
         }
       )
 
@@ -81,6 +96,20 @@ export const quizReportStore = defineStore('quizReportStore', {
       this.advertiser.list = content
       this.advertiser.summary = summary
       this.advertiser.total = totalElements
+    },
+    async excelByAdvertiser(params) {
+      const searchParams = Object.assign(
+        params, {
+          startDate: this.advertiser.searchParams.searchDate[0],
+          endDate: this.advertiser.searchParams.searchDate[1],
+          advertiserSeq: this.advertiser.searchParams.advertiserSeq,
+          campaignName: this.advertiser.searchParams.campaignName,
+          campaignCode: this.advertiser.searchParams.campaignCode
+        }
+      )
+
+      const { data, headers } = await REPORT_QUIZ_API.searchByAdvertiserExcel(searchParams)
+      this.downExcel(data, headers)
     },
     async searchByAdvertiser({ page, size }) {
       const params = {
@@ -95,6 +124,8 @@ export const quizReportStore = defineStore('quizReportStore', {
     initByPartner() {
       this.partner.searchParams = {
         partnerSeq: null,
+        groupName: null,
+        groupCode: null,
         page: 1,
         size: 20,
         searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
@@ -104,7 +135,10 @@ export const quizReportStore = defineStore('quizReportStore', {
       const searchParams = Object.assign(
         params, {
           startDate: this.partner.searchParams.searchDate[0],
-          endDate: this.partner.searchParams.searchDate[1]
+          endDate: this.partner.searchParams.searchDate[1],
+          groupName: this.partner.searchParams.groupName,
+          groupCode: this.partner.searchParams.groupCode,
+          partnerSeq: this.partner.searchParams.partnerSeq
         }
       )
 
@@ -124,6 +158,20 @@ export const quizReportStore = defineStore('quizReportStore', {
         size: !size && size > 0 ? size : undefined
       }
       await this.reloadByPartner(params)
+    },
+    async excelByPartner(params) {
+      const searchParams = Object.assign(
+        params, {
+          startDate: this.partner.searchParams.searchDate[0],
+          endDate: this.partner.searchParams.searchDate[1],
+          groupName: this.partner.searchParams.groupName,
+          groupCode: this.partner.searchParams.groupCode,
+          partnerSeq: this.partner.searchParams.partnerSeq
+        }
+      )
+
+      const { data, headers } = await REPORT_QUIZ_API.searchByPartnerExcel(searchParams)
+      this.downExcel(data, headers)
     },
     setPartner(partnerSeq) {
       this.partner.searchParams.partnerSeq = partnerSeq
@@ -162,6 +210,17 @@ export const quizReportStore = defineStore('quizReportStore', {
       }
       await this.reloadByAdmin(params)
     },
+    async excelByAdmin(params) {
+      const searchParams = Object.assign(
+        params, {
+          startDate: this.admin.searchParams.searchDate[0],
+          endDate: this.admin.searchParams.searchDate[1]
+        }
+      )
+
+      const { data, headers } = await REPORT_QUIZ_API.searchByAdminExcel(searchParams)
+      this.downExcel(data, headers)
+    },
     initByUser() {
       this.user.searchParams = {
         page: 1,
@@ -199,7 +258,35 @@ export const quizReportStore = defineStore('quizReportStore', {
         size: !size && size > 0 ? size : undefined
       }
       await this.reloadByUser(params)
+    },
+    async excelByUser(params) {
+      const searchParams = Object.assign(
+        params, {
+          userKey: this.user.searchParams.userKey,
+          campaignName: this.user.searchParams.campaignName,
+          campaignCode: this.user.searchParams.campaignCode,
+          startDate: this.user.searchParams.searchDate[0],
+          endDate: this.user.searchParams.searchDate[1]
+        }
+      )
+      const { data, headers } = await REPORT_QUIZ_API.searchByUserExcel(searchParams)
+      this.downExcel(data, headers)
+    },
+    downExcel(data, headers) {
+      const blob = new Blob([data], {
+        type: headers['content-type']
+      })
+      const blobUrl = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = blobUrl
+      const filename = headers['content-disposition']
+        .split('filename=')[1]
+        .split('.')[0]
+      link.download = filename // 확장자는 굳이 추가하지 않아도 .xlsx로 다운로드됨
+      link.click()
+      URL.revokeObjectURL(blobUrl)
     }
+
   },
   persist: {
     enabled: true,

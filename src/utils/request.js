@@ -72,7 +72,6 @@ service.interceptors.response.use(
           confirmButtonText: '확인',
           type: 'warning'
         }).then(() => {
-          console.log(router)
           _authStore.resetToken().then(() => {
             router.push(`/login?redirect=${router.currentRoute.value.path}`).then(r => {})
           })

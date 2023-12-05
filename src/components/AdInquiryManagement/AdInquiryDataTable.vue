@@ -68,12 +68,10 @@ const store = inquiryStore()
 const { list, total, modeal, searchParams } = storeToRefs(store)
 
 function pageChange(number) {
-  console.log(number)
   store.search({ page: number })
 }
 
 function modal(row) {
-  console.log(row)
   store.setRow(row)
 }
 

@@ -43,6 +43,7 @@ function searchUpdate({ content, current }) {
 
 function onSearchChange(value) {
   store.setPartnerSeq({ selected: value })
+  store.initRegisterForm('adGroup')
 }
 
 function onSearchClear() {

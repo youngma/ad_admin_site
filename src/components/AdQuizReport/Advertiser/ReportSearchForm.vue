@@ -14,18 +14,24 @@
 
     <div class="frame_comp">
 
-<!--      <el-row :gutter="10">-->
-<!--        <el-col :span="4">-->
-<!--          <strong class="comm_tit_box">광고주</strong>-->
-<!--        </el-col>-->
-<!--        <el-col :span="8">-->
-<!--        </el-col>-->
-<!--        <el-col :span="4">-->
-<!--          <strong class="comm_tit_box">광고 코드</strong>-->
-<!--        </el-col>-->
-<!--        <el-col :span="8">-->
-<!--        </el-col>-->
-<!--      </el-row>-->
+      <el-row :gutter="10">
+        <el-col :span="4">
+          <strong class="comm_tit_box">광고 명</strong>
+        </el-col>
+        <el-col :span="8">
+          <el-input
+            v-model="advertiser.searchParams.campaignName"
+            class="" placeholder="광고 명을 입력 해주세요." />
+        </el-col>
+        <el-col :span="4">
+          <strong class="comm_tit_box">광고 코드</strong>
+        </el-col>
+        <el-col :span="8">
+          <el-input
+            v-model="advertiser.searchParams.campaignCode"
+            class="" placeholder="광고 코드를 입력 해주세요." />
+        </el-col>
+      </el-row>
 
       <el-row :gutter="10">
 <!--        <el-col :span="4">-->
@@ -70,6 +76,7 @@ import { quizReportStore } from '@/store/modules/admin/quizReportStore.js'
 import { storeToRefs } from 'pinia'
 import AdvertiserSearchForm2 from '@/components/AdvertiserManagement/AdvertiserSearchForm2.vue'
 import { ref } from 'vue'
+import {phoneFormatter} from "@/utils/customElTableFormatter.js";
 
 defineOptions({
   name: 'AdvertiserDailyReportSearchForm'

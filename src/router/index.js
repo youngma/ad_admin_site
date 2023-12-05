@@ -217,7 +217,8 @@ export const asyncRoutes = [
       {
         path: 'search',
         component: () => import('@/views/ad-group-management/AdGroupManagement.vue'),
-        name: 'AdGroupSearch',
+        name: '' +
+          'yar',
         meta: { title: '광고 지면 조회', icon: 'ri:menu-search-fill' }
       },
       {
@@ -237,7 +238,14 @@ export const asyncRoutes = [
         path: 'detail',
         component: () => import('@/views/ad-group-management/AdGroupDetail.vue'),
         name: 'AdGroupDetail',
-        meta: { title: '광고 지면 상세광고 지면 상세', icon: 'cib:campaign-monitor', hidden: true },
+        meta: { title: '광고 지면 상세', icon: 'cib:campaign-monitor', hidden: true },
+        hidden: true
+      },
+      {
+        path: 'mappingAds',
+        component: () => import('@/views/ad-group-management/MappingAds.vue'),
+        name: 'MappingAds',
+        meta: { title: '지면 별 광고 맵핑', icon: 'cib:campaign-monitor', hidden: true },
         hidden: true
       }
     ]
@@ -320,7 +328,7 @@ export const asyncRoutes = [
         path: 'admin',
         component: () => import('@/views/ad-report/quiz/AdminReport.vue'),
         name: 'QuizAdminReport',
-        meta: { title: '어드민 리포트', icon: 'mdi:report-line-shimmer' }
+        meta: { title: '자몽랩 리포트(요약)', icon: 'mdi:report-line-shimmer' }
       },
       {
         path: 'advertiser',

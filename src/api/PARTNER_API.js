@@ -135,8 +135,6 @@ export function accountDelete(data) {
   })
 }
 
-
-
 export function searchByAdGroups(query) {
   return request({
     url: '/admin/v1/partner/ad_groups/search',
@@ -177,11 +175,26 @@ export function adGroupReject(data) {
   })
 }
 
-
 export function adGroupModify(data) {
   return request({
     url: '/admin/v1/partner/ad_groups/modify',
     method: 'PUT',
+    data
+  })
+}
+
+export function mappingAds(query) {
+  return request({
+    url: '/admin/v1/partner/ad_groups/mapping/ads',
+    method: 'Get',
+    params: query
+  })
+}
+
+export function saveMappingAds(data) {
+  return request({
+    url: '/admin/v1/partner/ad_groups/mapping/ads',
+    method: 'Put',
     data
   })
 }

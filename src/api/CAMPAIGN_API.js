@@ -64,3 +64,10 @@ export function campaignNonExposure(data) {
     data
   })
 }
+export function already_registeredByMobi(query) {
+  return request({
+    url: '/admin/v1/campaign/mobi/already_registered',
+    method: 'Get',
+    params: query
+  })
+}

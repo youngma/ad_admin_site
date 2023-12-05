@@ -1,4 +1,9 @@
 <template>
+  <el-row justify="end" >
+    <el-col class="t_r comm_form_box mb_15">
+      <el-button type="success" class="comm_form_btn" @click="excel()">Excel</el-button>
+    </el-col>
+  </el-row>
   <el-table
     :data="advertiser.list"
     :summary-method="getSummaries"
@@ -13,31 +18,45 @@
     </el-table-column>
     <el-table-column  prop="businessName" label="광고주 명" width="150" header-align="center" align="center" />
     <el-table-column  prop="campaignCode" label="광고 코드" width="150" header-align="center" align="center" />
-    <el-table-column  prop="campaignName" label="광고 명" width="150" header-align="center" align="center" />
-    <el-table-column  prop="reqCnt" label="광고 요청 건"  header-align="center" align="right" >
-      <template #default="scope">
-        {{moneyFormatter(scope.row.reqCnt) }} 건
-      </template>
-    </el-table-column>
-    <el-table-column  prop="impressionCnt" label="광고 노출 건" header-align="center" align="right" >
+    <el-table-column  prop="campaignName" label="광고 명" header-align="center" align="center" />
+<!--    <el-table-column  prop="reqCnt" label="광고 요청 건"  width="150" header-align="center" align="right" >-->
+<!--      <template #default="scope">-->
+<!--        {{moneyFormatter(scope.row.reqCnt) }} 건-->
+<!--      </template>-->
+<!--    </el-table-column>-->
+    <el-table-column  prop="impressionCnt" label="노출 수" width="150" header-align="center" align="right" >
       <template #default="scope">
         {{moneyFormatter(scope.row.impressionCnt) }} 건
       </template>
     </el-table-column>d
-    <el-table-column  prop="hintCnt" label="힌트 클릭 건" header-align="center" align="right" >
+    <el-table-column  prop="hintCnt" label="클릭 수" width="150" header-align="center" align="right" >
       <template #default="scope">
         {{moneyFormatter(scope.row.hintCnt) }} 건
       </template>
     </el-table-column>
-    <el-table-column  prop="clickCnt" label="광코 클릭 건"  header-align="center" align="right" >
+
+    <el-table-column label="CTR" width="120" align="center" title="CTR" header-align="center" >
       <template #default="scope">
-        {{moneyFormatter(scope.row.clickCnt) }} 건
+        {{
+          scope.row.impressionCnt > 0 ? (scope.row.clickCnt / scope.row.impressionCnt * 100).toFixed(2) : Number(0).toFixed(2)
+        }} %
       </template>
     </el-table-column>
 
-    <el-table-column  prop="adCost" label="광고 금액" width="150" header-align="center" align="right" >
+    <el-table-column  prop="clickCnt" label="참여자 수"   width="150" header-align="center" align="right" >
       <template #default="scope">
-        {{ moneyFormatter(scope.row.partnerCommission) }}
+        {{moneyFormatter(scope.row.clickCnt) }} 명
+      </template>
+    </el-table-column>
+
+    <el-table-column  prop="originAdCost" label="광고 단가" width="150" header-align="center" align="right" >
+      <template #default="scope">
+        {{ moneyFormatter(scope.row.originAdCost) }} 원
+      </template>
+    </el-table-column>
+    <el-table-column  prop="adCost" label="광고 금액(합산)" width="180" header-align="center" align="right" >
+      <template #default="scope">
+        {{ moneyFormatter(scope.row.adCost) }} 원
       </template>
     </el-table-column>
   </el-table>
@@ -75,6 +94,9 @@ const { advertiser } = storeToRefs(store)
 function pageChange(number) {
   store.searchByAdvertiser({ page: number })
 }
+function excel() {
+  store.excelByAdvertiser({})
+}
 
 const getSummaries = (param) => {
   const { columns, data } = param
@@ -90,13 +112,18 @@ const getSummaries = (param) => {
         sums[index] = moneyFormatter(summary['advertiserCount']).concat(' 건')
       } else if (key === 'campaignCode') {
         sums[index] = moneyFormatter(summary['campaignCount']).concat(' 건')
-      } else if (key === 'campaignName') {
+      } else if (
+        key === 'campaignName' ||
+        key === 'originAdCost'
+      ) {
         sums[index] = '-'
       } else {
         sums[index] = moneyFormatter(summary[key]).concat(' 건')
       }
     }
   })
+
+  sums[7] = summary['impressionCnt'] > 0 ? (summary['clickCnt'] / summary['impressionCnt'] * 100).toFixed(2).concat(' %') : Number(0).toFixed(2).concat(' %')
 
   return sums
 }

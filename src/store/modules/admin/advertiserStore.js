@@ -12,6 +12,7 @@ import {
   startDatePostFix
 } from '@/utils/customElTableFormatter.js'
 import { sha512 } from 'js-sha512'
+import { already_registeredByMobi } from '@/api/CAMPAIGN_API.js'
 
 const initData = {
   searchParams: {
@@ -137,7 +138,8 @@ export const advertiserStore = defineStore('advertiserStore', {
           detailImage2: null,
           targetUrlPc: null,
           targetUrlMobile: null,
-          goodsCode: null
+          goodsCode: null,
+          mappingAdsCode: null
         },
         uploads: {
           smartStore: [],
@@ -378,7 +380,8 @@ export const advertiserStore = defineStore('advertiserStore', {
             detailImage2: null,
             targetUrlPc: null,
             targetUrlMobile: null,
-            goodsCode: null
+            goodsCode: null,
+            mappingAdsCode: null
           },
           uploads: {
             smartStore: [],
@@ -570,7 +573,7 @@ export const advertiserStore = defineStore('advertiserStore', {
     },
     handleBeforeUpload(rawFile) {
       const { type, size } = rawFile
-      if (!['application/pdf', 'application/png', 'application/jpg'].includes(type)) {
+      if (!['application/pdf', 'image/png', 'image/jpg'].includes(type)) {
         ElMessage.error('PDF, PNG, JPEG 파일만 등록 가능 합니다.')
         return false
       } else if (size / 1024 / 1024 > 2) {
@@ -725,6 +728,7 @@ export const advertiserStore = defineStore('advertiserStore', {
           targetUrlPc: quiz.targetUrlPc,
           targetUrlMobile: quiz.targetUrlMobile,
           goodsCode: quiz.goodsCode,
+          mappingAdsCode: quiz.mappingAdsCode,
           quizTitle, quizAnswer, mainImage, detailImage1, detailImage2
         }) : null
       }

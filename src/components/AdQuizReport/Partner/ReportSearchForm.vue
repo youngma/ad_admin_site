@@ -14,19 +14,24 @@
 
     <div class="frame_comp">
 
-<!--      <el-row :gutter="10">-->
-<!--        <el-col :span="4">-->
-<!--          <strong class="comm_tit_box">광고주</strong>-->
-<!--        </el-col>-->
-<!--        <el-col :span="8">-->
-<!--        </el-col>-->
-<!--        <el-col :span="4">-->
-<!--          <strong class="comm_tit_box">광고 코드</strong>-->
-<!--        </el-col>-->
-<!--        <el-col :span="8">-->
-<!--        </el-col>-->
-<!--      </el-row>-->
-
+      <el-row :gutter="10">
+        <el-col :span="4">
+          <strong class="comm_tit_box">채널 명</strong>
+        </el-col>
+        <el-col :span="8">
+          <el-input
+            v-model="partner.searchParams.groupName"
+            class="" placeholder="채널 명을 입력 해주세요." />
+        </el-col>
+        <el-col :span="4">
+          <strong class="comm_tit_box">채널 코드</strong>
+        </el-col>
+        <el-col :span="8">
+          <el-input
+            v-model="partner.searchParams.groupCode"
+            class="" placeholder="채널 코드를 입력 해주세요." />
+        </el-col>
+      </el-row>
       <el-row :gutter="10">
 <!--        <el-col :span="4">-->
 <!--          <strong class="comm_tit_box">그룹 명</strong>-->

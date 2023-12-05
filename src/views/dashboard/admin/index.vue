@@ -15,7 +15,7 @@
       <el-col>
         <el-row justify="end" class="mb_15" >
           <el-col class="t_r small" tag="span" style="font-size: smaller">
-            * 마지막 업데이트 시간 : {{ sinkSchedule.lastUpdateTim }} (00:10 분 마다 적재)
+            * 마지막 업데이트 시간 : {{ sinkSchedule.lastUpdateTim }} (00:10 분 업데이트)
           </el-col>
         </el-row>
         <el-row justify="end" class="mb_15" >
@@ -136,7 +136,7 @@ const labelOption = {
 }
 
 function genOptions() {
-  const legend = ['reqCnt', 'impressionCnt', 'detailCnt', 'clickCnt', 'answerCnt']
+  const legend = ['요청', '노출', '상세 진입', '클릭', '정답']
   const xAxisValue = list.value.map(t => dateFormatter(t.rptDate))
 
   const reqCntValues = []
@@ -191,7 +191,7 @@ function genOptions() {
     ],
     series: [
       {
-        name: 'reqCnt',
+        name: '요청',
         type: 'bar',
         label: labelOption,
         emphasis: {
@@ -200,7 +200,7 @@ function genOptions() {
         data: reqCntValues
       },
       {
-        name: 'impressionCnt',
+        name: '노출',
         type: 'bar',
         label: labelOption,
         emphasis: {
@@ -209,7 +209,7 @@ function genOptions() {
         data: impressionCntValues
       },
       {
-        name: 'detailCnt',
+        name: '상세 진입',
         type: 'bar',
         label: labelOption,
         emphasis: {
@@ -218,7 +218,7 @@ function genOptions() {
         data: detailCntValues
       },
       {
-        name: 'clickCnt',
+        name: '클릭',
         type: 'bar',
         label: labelOption,
         emphasis: {
@@ -227,7 +227,7 @@ function genOptions() {
         data: clickCntValues
       },
       {
-        name: 'answerCnt',
+        name: '정답',
         type: 'bar',
         label: labelOption,
         emphasis: {

@@ -69,3 +69,39 @@ export function searchByUserSummary(query) {
     params: query
   })
 }
+
+export function searchByAdvertiserExcel(query) {
+  return request({
+    url: '/admin/v1/report/quiz/advertiser/daily/excel',
+    method: 'get',
+    params: query,
+    responseType: 'blob'
+  })
+}
+
+export function searchByPartnerExcel(query) {
+  return request({
+    url: '/admin/v1/report/quiz/partner/daily/excel',
+    method: 'get',
+    params: query,
+    responseType: 'blob'
+  })
+}
+
+export function searchByUserExcel(query) {
+  return request({
+    url: '/admin/v1/report/quiz/user/raw/excel',
+    method: 'get',
+    params: query,
+    responseType: 'blob'
+  })
+}
+
+export function searchByAdminExcel(query) {
+  return request({
+    url: '/admin/v1/report/quiz/admin/daily/excel',
+    method: 'get',
+    params: query,
+    responseType: 'blob'
+  })
+}

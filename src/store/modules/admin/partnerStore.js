@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import * as PARTNER_API from '@/api/PARTNER_API.js'
+import * as CAMPAIGN_API from '@/api/CAMPAIGN_API.js'
 import _ from 'lodash'
 import { ElMessage } from 'element-plus'
-import { adGroupModify } from '@/api/PARTNER_API.js'
 import { deepClone } from '@/utils/index.js'
 import { sha512 } from 'js-sha512'
-import * as ADVERTISER_API from '@/api/ADVERTISER_API.js'
+import { saveMappingAds } from '@/api/PARTNER_API.js'
 
 const initData = {
   searchParams: {
@@ -78,6 +78,7 @@ export const partnerStore = defineStore('partnerStore', {
         adType: '',
         groupStatus: ''
       },
+      mappingAds: [],
       total: 0,
       list: [],
       registerModal: false,
@@ -97,6 +98,14 @@ export const partnerStore = defineStore('partnerStore', {
       uploadPointIconFile: [],
       statusModal: false,
       modifyModal: false
+    },
+    campaigns: {
+      searchParams: {
+        page: 1,
+        size: 10
+      },
+      total: 0,
+      list: []
     }
   }),
   getters: {
@@ -297,6 +306,16 @@ export const partnerStore = defineStore('partnerStore', {
         this.adGroups.uploadLogoFile = []
         this.adGroups.uploadPointIconFile = []
         this.adGroups.registerModal = false
+        this.adGroups.mappingAds = []
+
+        this.campaigns = {
+          searchParams: {
+            page: 1,
+            size: 10
+          },
+          total: 0,
+          list: []
+        }
       }
     },
     userModalOpen(target) {
@@ -540,7 +559,12 @@ export const partnerStore = defineStore('partnerStore', {
       this.selected = selected
     },
     async adGroupRegister(callback) {
-      const newAdGroup = this.generateParams(this.adGroups.register)
+      let newAdGroup = this.generateParams(this.adGroups.register)
+
+      newAdGroup = Object.assign(newAdGroup, {
+        mappingAds: this.adGroups.mappingAds
+      })
+
       PARTNER_API.adGroupRegister(newAdGroup).then(() => {
         this.$alert('등록 되었습니다.', '확인', { callback })
         // this.reloadByAdGroups().then(() => {
@@ -573,6 +597,15 @@ export const partnerStore = defineStore('partnerStore', {
         })
       } else {
         this.adGroups.selectedAdGroup = null
+        this.adGroups.mappingAds = []
+        this.campaigns = {
+          searchParams: {
+            page: 1,
+            size: 10
+          },
+          total: 0,
+          list: []
+        }
       }
     },
     adGroupModalOpen(target, row) {
@@ -661,7 +694,51 @@ export const partnerStore = defineStore('partnerStore', {
       }).catch(() => {
         this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
       })
+    },
+    async reloadByMappingAds(groupSeq, partnerSeq) {
+      this.adGroups.mappingAds = await PARTNER_API.mappingAds({ partnerSeq, groupSeq })
+    },
+    async searchByMappingAds(groupSeq, partnerSeq) {
+      await this.reloadByMappingAds(groupSeq, partnerSeq)
+    },
+    async reloadByCampaigns(page) {
+      this.campaigns.searchParams.page = page
+
+      const params = Object.assign({
+        campaignStatus: 'APPROVAL',
+        exposureStatus: 1
+
+      }, this.campaigns.searchParams)
+
+      const result = await CAMPAIGN_API.search(params)
+      const { content, totalElements } = result
+
+      this.campaigns.list = content.map(campaign => {
+        return Object.assign({ selected: this.adGroups.mappingAds.includes(campaign.seq) }, campaign)
+      })
+      this.campaigns.total = totalElements
+    },
+    async searchByCampaigns({ page }) {
+      await this.reloadByCampaigns(page)
+    },
+    async savaMappingAds(callback) {
+      const { partnerSeq } = this.adGroups.selectedAdGroup.partner
+      const { groupSeq } = this.adGroups.selectedAdGroup
+      const { mappingAds } = this.adGroups
+
+      const params = {
+        partnerSeq,
+        groupSeq,
+        mappingAds
+      }
+
+      PARTNER_API.saveMappingAds(params).then(() => {
+        this.$alert('저장 되었습니다.', '확인', { callback })
+      }).catch(() => {
+        this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
+      })
     }
+
   },
   persist: {
     enabled: true,

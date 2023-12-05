@@ -82,11 +82,11 @@
           // 승인 요청 -> 거절 -> 승인 요청 -> 승인
           // 승인 -> 중지
         -->
-
         <el-button type="primary" tag="span" class="comm_form_btn" @click="() => goAdGroupDetail(scope.row)">수정</el-button>
-        <el-button v-if="scope.row.groupStatus === 'Request'"  type="success" tag="span" class="comm_form_btn" @click="({ scope }) =>approval(scope.row)">승인</el-button>
-        <el-button v-if="scope.row.groupStatus === 'Request'"  type="success" tag="span" class="comm_form_btn" @click="({ scope }) =>statusModalOpen(scope.row, 'reject')">거절</el-button>
-        <el-button v-if="scope.row.groupStatus === 'Request'"  type="success" tag="span" class="comm_form_btn" @click="({ scope }) =>statusModalOpen(scope.row, 'hold')">보류</el-button>
+        <el-button v-if="scope.row.groupStatus === 'APPROVAL'"  type="info" tag="span" class="comm_form_btn" @click="() => goMappingAds(scope.row)">광고 맵핑</el-button>
+        <el-button v-if="scope.row.groupStatus === 'REQUEST'"  type="success" tag="span" class="comm_form_btn" @click="({ scope }) =>approval(scope.row)">승인</el-button>
+        <el-button v-if="scope.row.groupStatus === 'REQUEST'"  type="success" tag="span" class="comm_form_btn" @click="({ scope }) =>statusModalOpen(scope.row, 'reject')">거절</el-button>
+        <el-button v-if="scope.row.groupStatus === 'REQUEST'"  type="success" tag="span" class="comm_form_btn" @click="({ scope }) =>statusModalOpen(scope.row, 'hold')">보류</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -210,6 +210,14 @@ function getStatusMessage(row) {
 function goAdGroupDetail(row) {
   store.setAdGroupDetail(row)
   router.push({ name: 'AdGroupDetail', query: { referrer }})
+}
+
+async function goMappingAds(row) {
+  await store.setAdGroupDetail(row)
+  console.log(row)
+  await store.searchByMappingAds(row.groupSeq, row.partner.partnerSeq)
+  await store.searchByCampaigns({ page: 1 })
+  await router.push({ name: 'MappingAds', query: { referrer }})
 }
 
 function approval(row) {

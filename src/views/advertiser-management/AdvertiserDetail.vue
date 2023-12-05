@@ -10,7 +10,6 @@
       @on-change="(value) => onSearchChange(value)"
     />
 
-    {{ tabIndex }}
     <el-tabs v-model="tabIndex"  type="border-card" @tab-change="(name) => onTabsChange(name)">
       <el-tab-pane label="사용자">
         <AdvertiserUsers v-if="advertiser" name="user"/>

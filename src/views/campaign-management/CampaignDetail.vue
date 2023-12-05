@@ -545,6 +545,27 @@
                 </div>
               </el-col>
             </el-row>
+
+            <el-row :gutter="10">
+              <el-col :span="4" class="col_tit">
+                <strong class="comm_tit_box">광고 식별 코드</strong>
+              </el-col>
+              <el-col :span="16" class="col_desc">
+                <el-row :gutter="10">
+                  <el-col
+                    :span="20"
+                  >
+                    <el-input
+                      v-model="campaigns.selectedCampaign.quiz.mappingAdsCode"
+                      type="text"
+                      class=""
+                    />
+                  </el-col>
+
+                </el-row>
+              </el-col>
+            </el-row>
+
             <el-row :gutter="10">
               <el-col :span="4" class="col_tit">
                 <strong class="comm_tit_box">PC 랜딩 URL</strong>

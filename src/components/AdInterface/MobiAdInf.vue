@@ -29,26 +29,29 @@
           style="width: 100%"
         >
           <el-table-column fixed prop="pnm" label="캠페인 명" width="150" header-align="center" align="center" />
+          <el-table-column fixed prop="increaseViewKey" label="광고 식별키" width="150" header-align="center" align="center" />
+<!--          <el-table-column fixed prop="alreadyCheck" label="등록 여부" width="150" header-align="center" align="center" />-->
           <el-table-column  prop="image" label="이미지" width="400" header-align="center" align="center" >
             <template #default="scope">
                 <img
                   width="150"
                   height="150"
                   :src="scope.row.mimg_250_250"
-                  @click="open(scope.row.mimg_250_250)"
-                />
+                  alt="이미지 1"
+                 @click="open(scope.row.mimg_250_250)"/>
                 <img
                   width="150"
                   height="150"
                   class="ml_15"
                   :src="scope.row.mimg_850_800"
-                  @click="open(scope.row.mimg_850_800)"
-                />
+                  alt="이미지 2"
+                 @click="open(scope.row.mimg_850_800)"/>
             </template>
           </el-table-column>
           <el-table-column  label="" width="350" header-align="center" align="center" >
             <template #default="scope">
-              <el-button type="primary" tag="span" class="comm_form_btn" @click="selected(scope.row)">선택</el-button>
+              <el-button v-if="!scope.row.alreadyCheck" type="primary" tag="span" class="comm_form_btn" @click="selected(scope.row)">선택</el-button>
+              <span v-else> 이미 등록 된 광고 입니다.</span>
             </template>
           </el-table-column>
         </el-table>
@@ -90,9 +93,10 @@ defineOptions({
 
 import CodeJarEditor from '@/components/CodeJar/index.vue'
 import { defineEmits, ref } from 'vue'
+import * as CAMPAIGN_API from '@/api/CAMPAIGN_API.js'
 import * as UPLOAD_API from '@/api/UPLOAD_API.js'
-
 import * as MOBON_API from '@/api/MOBION_API.js'
+import _ from 'lodash'
 
 const { ifAdCode } = defineProps({
   ifAdCode: {
@@ -123,18 +127,28 @@ const onImageEdit = async(imgUrl) => {
 async function laodAds() {
   const s = code.value
   const params = {
-    s,
-    cntad: 1,
-    cntsr: 1,
-    bntype: 99,
-    sslRedirect: 'Y'
+    s
   }
 
   const result = await MOBON_API.load(params)
 
   if (result.data) {
     contents.value = result.data
+    const keys = _.map(result.data.client[0].data, 'increaseViewKey')
+
+    console.log(keys)
+    const alreadyCheck = await alreadyRegisteredByMobi(s, keys.join(','))
+
     mobionAds.value = result.data.client[0].data
+
+    mobionAds.value.forEach(ad => {
+      const { increaseViewKey } = ad
+      if (alreadyCheck.includes(increaseViewKey)) {
+        ad['alreadyCheck'] = false
+      } else {
+        ad['alreadyCheck'] = true
+      }
+    })
 
     //
     // const {
@@ -175,6 +189,14 @@ async function selected(row) {
     await downloadAndRegister('main', mimg_250_250)
     await downloadAndRegister('detail1', mimg_850_800)
   }
+}
+
+async function alreadyRegisteredByMobi(ifAdCode, keys) {
+  const params = {
+    ifAdCode,
+    keys
+  }
+  return await CAMPAIGN_API.already_registeredByMobi(params)
 }
 
 function open(url) {

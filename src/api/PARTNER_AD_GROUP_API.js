@@ -8,3 +8,11 @@ export function search(query) {
   })
 }
 
+
+export function searchMappingAds(query) {
+  return request({
+    url: '/admin/v1/partners/ad_groups/mapping/ads',
+    method: 'get',
+    params: query
+  })
+}

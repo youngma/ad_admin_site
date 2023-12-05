@@ -536,6 +536,26 @@
               </div>
             </el-col>
           </el-row>
+
+          <el-row :gutter="10">
+            <el-col :span="4" class="col_tit">
+              <strong class="comm_tit_box">광고 식별 코드</strong>
+            </el-col>
+            <el-col :span="16" class="col_desc">
+              <el-row :gutter="10">
+                <el-col
+                  :span="20"
+                >
+                  <el-input
+                    v-model="campaigns.register.quiz.mappingAdsCode"
+                    type="text"
+                    class=""
+                  />
+                </el-col>
+
+              </el-row>
+            </el-col>
+          </el-row>
           <el-row :gutter="10">
             <el-col :span="4" class="col_tit">
               <strong class="comm_tit_box">PC 랜딩 URL</strong>
@@ -615,7 +635,7 @@
                 :gutter="10"
                 :class="{ 'is-error': !validation.mainImage.check }"
               >
-                 {{ campaigns.register.uploads.quiz.mainImage }}
+<!--                 {{ // campaigns.register.uploads.quiz.mainImage }}-->
                 <CampaignImageUpload
                   ref="quiz_mainImage_upload"
                   :files="campaigns.register.uploads.quiz.mainImage"
@@ -698,6 +718,7 @@ import { ref, getCurrentInstance, onActivated, computed } from 'vue'
 import { numberFormatter, moneyFormatter } from '@/utils/customElTableFormatter.js'
 import { validURL } from '@/utils/validate.js'
 import { ElMessageBox } from 'element-plus'
+import moment from 'moment'
 
 defineOptions({
   name: 'CampaignRegisterForm'
@@ -776,6 +797,10 @@ const validation = ref({
     check: true,
     message: ''
   },
+  mappingAdsCode: {
+    check: true,
+    message: ''
+  },
   paymentTerms: {
     check: true,
     message: ''
@@ -813,8 +838,10 @@ const router = useRouter()
 const { advertiser, campaigns, defaultAdDate } = storeToRefs(store)
 const { CampaignType, PaymentTerms } = storeToRefs(common)
 
+const yesterday = moment().add(-1, 'days').valueOf()
+
 const disabledDate = (time) => {
-  return time.getTime() < Date.now()
+  return time.getTime() < yesterday
 }
 
 function validate(...types) {
@@ -1431,7 +1458,8 @@ function campaignTypeChanged(value) {
       detailImage2: null,
       targetUrlPc: null,
       targetUrlMobile: null,
-      goodsCode: null
+      goodsCode: null,
+      mappingAdsCode: null
     }
 
     campaigns.value.register.smartStore = {
@@ -1461,7 +1489,8 @@ function campaignTypeChanged(value) {
       quizAnswer: null,
       targetUrlPc: null,
       targetUrlMobile: null,
-      goodsCode: null
+      goodsCode: null,
+      mappingAdsCode: null
     }
 
     campaigns.value.register.smartStore = {
@@ -1579,15 +1608,15 @@ function AdsInfCallback({ imageType, type, result }) {
 
 function AdInfoCallback({ code, contents }) {
   if (contents) {
-    const { pnm, site_desc4, site_url } = contents
+    const { pnm, site_desc4, purl, increaseViewKey } = contents
 
-    console.log(pnm, site_desc4, site_url)
     campaigns.value.register.campaignType = 'QUIZ01'
     campaigns.value.register.ifAdCode = code
     campaigns.value.register.campaignName = pnm
     campaigns.value.register.campaignDesc = site_desc4
-    campaigns.value.register.quiz.targetUrlPc = site_url
-    campaigns.value.register.quiz.targetUrlMobile = site_url
+    campaigns.value.register.quiz.targetUrlPc = `https://www.mediacategory.com${purl}`
+    campaigns.value.register.quiz.targetUrlMobile = `https://www.mediacategory.com${purl}`
+    campaigns.value.register.quiz.mappingAdsCode = increaseViewKey
   }
 }
 

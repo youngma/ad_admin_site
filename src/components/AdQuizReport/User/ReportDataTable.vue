@@ -1,4 +1,9 @@
 <template>
+  <el-row justify="end" >
+    <el-col class="t_r comm_form_box mb_15">
+      <el-button type="success" class="comm_form_btn" @click="excel()">Excel</el-button>
+    </el-col>
+  </el-row>
   <el-table
     :data="user.list"
     :summary-method="getSummaries"
@@ -16,7 +21,7 @@
     <el-table-column  prop="campaignCode" label="캠페인 코드" width="150" header-align="center" align="center" />
     <el-table-column  prop="campaignName" label="캠페인 명" width="150" header-align="center" align="center" />
 
-    <el-table-column  prop="partnerName" label="파트너 명" width="150" header-align="center" align="center" />
+    <el-table-column  prop="partnerName" label="매체사 명" width="150" header-align="center" align="center" />
     <el-table-column  prop="groupCode" label="지면 코드" width="150" header-align="center" align="center" />
     <el-table-column  prop="groupName" label="지면 명" width="150" header-align="center" align="center" />
 
@@ -31,35 +36,35 @@
       </template>
     </el-table-column>
 
-    <el-table-column  prop="impressionCnt" label="광고 노출 시간" header-align="center" align="right" width="180">
+<!--    <el-table-column  prop="impressionCnt" label="광고 노출 시간" header-align="center" align="right" width="180">-->
+<!--      <template #header="scope">-->
+<!--        광고 노출 시간-->
+<!--        <br/>-->
+<!--        * 상세 이미지 노출-->
+<!--      </template>-->
+<!--      <template #default="scope">-->
+<!--        {{ scope.row.impressaionAt }}-->
+<!--      </template>-->
+<!--    </el-table-column>-->
+    <el-table-column  prop="hintCnt" label="클릭 시간(힌트)" header-align="center" align="right" width="180">
       <template #header="scope">
-        광고 노출 시간
-        <br/>
-        * 상세 이미지 노출
-      </template>
-      <template #default="scope">
-        {{ scope.row.impressaionAt }}
-      </template>
-    </el-table-column>
-    <el-table-column  prop="hintCnt" label="힌트 클릭 건" header-align="center" align="right" width="180">
-      <template #header="scope">
-        힌트 클릭 시간
+        클릭 시간(힌트)
       </template>
       <template #default="scope">
         {{ scope.row.hintAt }}
       </template>
     </el-table-column>
-    <el-table-column  prop="clickCnt" label="클릭 건" header-align="center" align="right" width="180">
+    <el-table-column  prop="clickCnt" label="클릭 시간(정답)" header-align="center" align="right" width="180">
       <template #header="scope">
-        클릭 시간
+        클릭 시간(전환)
       </template>
       <template #default="scope">
         {{ scope.row.clickAt }}
       </template>
     </el-table-column>
-    <el-table-column  prop="clickCnt" label="정답 건"  header-align="center" align="right" width="180">
+    <el-table-column  prop="clickCnt" label="정답 수"  header-align="center" align="right" width="180">
       <template #header="scope">
-        클릭 시간
+        정답 처리 시간
       </template>
       <template #default="scope">
         {{ scope.row.answerAt }}
@@ -72,12 +77,12 @@
       </template>
     </el-table-column>
 
-    <el-table-column  prop="partnerCommission" label="파트너 지급 금액" width="150" header-align="center" align="right" >
+    <el-table-column  prop="partnerCommission" label="매체사 리워드" width="150" header-align="center" align="right" >
       <template #default="scope">
         {{ moneyFormatter(scope.row.partnerCommission) }} 원
       </template>
     </el-table-column>
-    <el-table-column  prop="userCommission" label="유저 지급 금액" width="150" header-align="center" align="right" >
+    <el-table-column  prop="userCommission" label="사용자 리워드" width="150" header-align="center" align="right" >
       <template #default="scope">
         {{ moneyFormatter(scope.row.userCommission) }} 원
       </template>
@@ -123,6 +128,11 @@ const { user } = storeToRefs(store)
 function pageChange(number) {
   store.searchByUser({ page: number })
 }
+
+function excel() {
+  store.excelByUser({})
+}
+
 
 const getSummaries = (param) => {
   const { columns, data } = param
