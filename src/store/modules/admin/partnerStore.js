@@ -511,7 +511,7 @@ export const partnerStore = defineStore('partnerStore', {
       window.open(uploadFile.url)
     },
     handleBeforeUpload(regType, rawFile) {
-      console.log(rawFile)
+      // console.log(rawFile)
       const { type, size } = rawFile
 
       switch (regType) {

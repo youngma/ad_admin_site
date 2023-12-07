@@ -152,9 +152,9 @@ const handleSelectionChange = (row) => {
       count += 1
     }
     if (campaign.seq === row.seq) {
-      console.log(campaign.seq, row.seq, !campaign.selected)
+      // console.log(campaign.seq, row.seq, !campaign.selected)
       campaign.selected = row.selected
-      console.log(campaign.seq, row.seq, !campaign.selected)
+      // console.log(campaign.seq, row.seq, !campaign.selected)
     }
   })
 

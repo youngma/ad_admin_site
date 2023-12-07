@@ -190,7 +190,7 @@ function validate(...types) {
         validation.value.businessRegistrationFile.check = true
         validation.value.businessRegistrationFile.message = ''
 
-        console.log(file)
+        // console.log(file)
         if (!file) {
           validation.value.businessRegistrationFile.check = false
           validation.value.businessRegistrationFile.message = '사업자등록증을 추가 해주세요.'

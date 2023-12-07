@@ -19,6 +19,7 @@ declare module '@vue/runtime-core' {
     AdInquiryDataTable: typeof import('./components/AdInquiryManagement/AdInquiryDataTable.vue')['default']
     AdInquiryModal: typeof import('./components/AdInquiryManagement/AdInquiryModal.vue')['default']
     AdInquirySearchForm: typeof import('./components/AdInquiryManagement/AdInquirySearchForm.vue')['default']
+    AdMappingDataTable: typeof import('./components/AdGroupManagement/AdMappingDataTable.vue')['default']
     AdminDataTable: typeof import('./components/AdminManagement/AdminDataTable.vue')['default']
     AdminModifyModal: typeof import('./components/AdminManagement/AdminModifyModal.vue')['default']
     AdminRegisterForm: typeof import('./components/AdminManagement/AdminRegisterForm.vue')['default']

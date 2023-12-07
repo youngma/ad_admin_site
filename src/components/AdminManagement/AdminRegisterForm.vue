@@ -140,7 +140,7 @@ const { register } = storeToRefs(store)
 function validate(...types) {
   const { userId, userPassword, userName, phoneNumber, alReadyCheck } = register.value
 
-  console.log(userId, userPassword, userName, phoneNumber, alReadyCheck)
+  // console.log(userId, userPassword, userName, phoneNumber, alReadyCheck)
   validation.value.valid = true
 
   for (const type of types) {

@@ -1470,7 +1470,7 @@ function save() {
           // }
           store.setCampaignDetail(null)
           const { referrer } = route.query
-          console.log(route)
+          // console.log(route)
           router.push({ path: referrer || route.params.referrer || '/campaign-management/search' })
         }
       })
@@ -1553,7 +1553,7 @@ function AdInfoCallback({ code, contents }) {
   if (contents) {
     const { pnm, site_desc4, site_url } = contents
 
-    console.log(pnm, site_desc4, site_url)
+    // console.log(pnm, site_desc4, site_url)
     campaigns.value.selectedCampaign.campaignType = 'QUIZ01'
     campaigns.value.selectedCampaign.ifAdCode = code
     campaigns.value.selectedCampaign.campaignName = pnm

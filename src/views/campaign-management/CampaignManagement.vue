@@ -48,14 +48,11 @@ function onChange(value) {
 }
 
 async function search({ page, size }) {
-  console.log(selected)
+  // console.log(selected)
   const { content, totalElements } = await campaignStore().search({ selected, page, size })
   list.value = content
   total.value = totalElements
 }
-
-
-
 
 onMounted(async() => {
 })

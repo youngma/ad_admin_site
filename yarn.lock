@@ -3906,11 +3906,6 @@ semver@^7.3.6, semver@^7.5.4:
   dependencies:
     lru-cache "^6.0.0"
 
-sha512@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/sha512/-/sha512-0.0.1.tgz#26e59022ef6abc75c7344f0a5ef3936caf2542d5"
-  integrity sha512-2t5rZu72ebMg2/OK44S/48UKxgBl7Kc3w/I0DkIzNld8NzDUxFBL2pOYAWEVknnuOqO62a3W+3x/xD7LrosGBg==
-
 shebang-command@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/shebang-command/-/shebang-command-2.0.0.tgz"

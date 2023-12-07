@@ -91,10 +91,10 @@ const { selectedUser, modifyPopup } = storeToRefs(store)
 
 function validate(...types) {
 
-  console.log(selectedUser)
+  // console.log(selectedUser)
   const { userSeq, userId, userName, phoneNumber } = selectedUser.value
 
-  console.log(userName, phoneNumber)
+  // console.log(userName, phoneNumber)
 
   validation.value.valid = true
 

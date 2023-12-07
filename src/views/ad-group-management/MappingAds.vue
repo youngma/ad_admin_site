@@ -129,7 +129,7 @@
 
 <script setup>
 
-import CampaignDataTable from '@/components/AdGroupManagement/CampaignDataTable.vue'
+import CampaignDataTable from '@/components/AdGroupManagement/AdMappingDataTable.vue'
 
 import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
@@ -172,7 +172,7 @@ const handleSelectionInit = () => {
     }
   })
 
-  console.log(count === campaigns.value.list.length)
+  // console.log(count === campaigns.value.list.length)
   isIndeterminate.value = count > 0 && count < campaigns.value.list.length
   checkAll.value = count === campaigns.value.list.length
 }

@@ -113,8 +113,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: 'password1'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -194,7 +194,7 @@ export default {
               this.loading = false
             })
         } else {
-          console.log('error submit!!')
+          // console.log('error submit!!')
           return false
         }
       })

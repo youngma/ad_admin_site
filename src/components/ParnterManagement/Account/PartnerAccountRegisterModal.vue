@@ -255,7 +255,7 @@ function validate(...types) {
         break
     }
 
-    console.log(validation)
+    // console.log(validation)
   }
 }
 

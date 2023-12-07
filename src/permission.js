@@ -41,7 +41,7 @@ function install(router) {
 
   router.beforeEach(async(to, from, next) => {
 
-    console.log(to, from, next)
+    // console.log(to, from, next)
 
     // start progress bar
     NProgress.start()

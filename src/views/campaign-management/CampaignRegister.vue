@@ -36,15 +36,13 @@ const store = advertiserStore()
 const { selected, advertisers } = storeToRefs(store)
 
 function searchUpdate({ content, current }) {
-  console.log({ content, current })
   store.setAdvertisers({
     advertisers: content,
     selected: current
   })
 }
 function onSearchChange(value) {
-  console.log(value)
-
+  // console.log(value)
   store.setAdvertiserSeq({ selected: value })
 }
 

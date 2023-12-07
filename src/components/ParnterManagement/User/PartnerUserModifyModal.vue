@@ -92,7 +92,7 @@ const { users } = storeToRefs(store)
 function validate(...types) {
   const { userSeq, userId, userName, phoneNumber } = users.value.selectedUser
 
-  console.log(userName, phoneNumber)
+  // console.log(userName, phoneNumber)
   validation.value.valid = true
 
   for (const type of types) {

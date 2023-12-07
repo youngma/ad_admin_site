@@ -258,7 +258,7 @@ function getStatusMessage(row) {
 }
 
 function onExposureStatus(row) {
-  console.log(row, store)
+  // console.log(row, store)
 
   const { advertiser, seq, exposureStatus } = row
   const { advertiserSeq } = advertiser

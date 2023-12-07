@@ -214,7 +214,7 @@ function goAdGroupDetail(row) {
 
 async function goMappingAds(row) {
   await store.setAdGroupDetail(row)
-  console.log(row)
+  // console.log(row)
   await store.searchByMappingAds(row.groupSeq, row.partner.partnerSeq)
   await store.searchByCampaigns({ page: 1 })
   await router.push({ name: 'MappingAds', query: { referrer }})

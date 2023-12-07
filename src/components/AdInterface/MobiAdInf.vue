@@ -24,8 +24,9 @@
     <el-row :gutter="10">
       <el-col :span="24" class="col_desc">
         <el-table
-          :data="mobionAds"
+          :data="showMobiAds"
           class="custom-table"
+          max-height="500px"
           style="width: 100%"
         >
           <el-table-column fixed prop="pnm" label="캠페인 명" width="150" header-align="center" align="center" />
@@ -92,7 +93,7 @@ defineOptions({
 })
 
 import CodeJarEditor from '@/components/CodeJar/index.vue'
-import { defineEmits, ref } from 'vue'
+import { defineEmits, ref, computed } from 'vue'
 import * as CAMPAIGN_API from '@/api/CAMPAIGN_API.js'
 import * as UPLOAD_API from '@/api/UPLOAD_API.js'
 import * as MOBON_API from '@/api/MOBION_API.js'
@@ -111,9 +112,14 @@ const contents = ref({})
 const mobionAds = ref([])
 const images = ref([])
 
+const showMobiAds = computed(() => {
+  return mobionAds.value.filter(t => !t.alreadyCheck)
+})
+
 async function downloadAndRegister(imageType, url) {
-  const type = await onImageEdit(url)
-  const result = await UPLOAD_API.upload('campaign', url)
+  const URL = url.startsWith('//') ? 'https://'.concat(url) : url
+  const type = await onImageEdit(URL)
+  const result = await UPLOAD_API.upload('campaign', URL)
 
   emit('image-register-cb', { imageType, type, result: result[0] })
 }
@@ -136,7 +142,7 @@ async function laodAds() {
     contents.value = result.data
     const keys = _.map(result.data.client[0].data, 'increaseViewKey')
 
-    console.log(keys)
+    // console.log(keys)
     const alreadyCheck = await alreadyRegisteredByMobi(s, keys.join(','))
 
     mobionAds.value = result.data.client[0].data

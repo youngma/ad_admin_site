@@ -347,7 +347,7 @@ export const advertiserStore = defineStore('advertiserStore', {
 
       if (target === 'campaigns') {
         this.campaigns.register = {
-          campaignType: null,
+          campaignType: '',
           campaignName: null,
           campaignDesc: null,
           ifAdCode: null,
@@ -594,6 +594,11 @@ export const advertiserStore = defineStore('advertiserStore', {
     },
     setAdvertiserSeq({ selected }) {
       this.selected = selected
+
+      if (selected.length === 0) {
+        this.initRegisterForm('campaigns')
+
+      }
     },
     initCampaignDetail() {
       this.campaigns.selectedCampaign = {
@@ -835,7 +840,7 @@ export const advertiserStore = defineStore('advertiserStore', {
           this.reload().then(() => {
           })
         }).catch((e) => {
-          console.log(e)
+          // console.log(e)
           this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
         })
       } else {
@@ -844,7 +849,7 @@ export const advertiserStore = defineStore('advertiserStore', {
           this.reload().then(() => {
           })
         }).catch((e) => {
-          console.log(e)
+          // console.log(e)
 
           this.$alert('처리 중 오류가 발생 했습니다.', '확인', {})
         })

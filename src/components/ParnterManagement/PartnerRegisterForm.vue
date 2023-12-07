@@ -212,6 +212,10 @@ function validate(...types) {
   for (const type of types) {
     switch (type) {
       case 'alReadyCheck':
+
+        validation.value.businessNumber.check = true
+        validation.value.businessNumber.message = ''
+
         if (!alReadyCheck) {
           validation.value.businessNumber.check = false
           validation.value.businessNumber.message = '사업자번호 중복 체크를 해주세요.'
@@ -235,9 +239,6 @@ function validate(...types) {
         break
 
       case 'businessNumber' :
-
-        validation.value.businessNumber.check = true
-        validation.value.businessNumber.message = ''
 
         if (businessNumber === null || businessNumber === '') {
           validation.value.businessNumber.check = false

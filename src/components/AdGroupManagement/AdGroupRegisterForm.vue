@@ -231,7 +231,7 @@
         </el-row>
         <el-row :gutter="10" >
           <el-col :span="24" class="col_desc" >
-            <CampaignDataTable/>
+            <AdMappingDataTable/>
           </el-col>
         </el-row>
       </div>
@@ -248,7 +248,7 @@
 import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { commonStore } from '@/store/modules/admin/commonStore.js'
 import { storeToRefs } from 'pinia'
-import CampaignDataTable from '@/components/AdGroupManagement/CampaignDataTable.vue'
+import AdMappingDataTable from '@/components/AdGroupManagement/AdMappingDataTable.vue'
 import { ref, getCurrentInstance } from 'vue'
 // import { ElMessageBox } from 'element-plus'
 import { getToken } from '@/utils/auth.js'

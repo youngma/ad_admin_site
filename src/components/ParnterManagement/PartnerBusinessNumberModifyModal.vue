@@ -141,7 +141,7 @@ const headers = ref({ Authorization: getToken() })
 function validate(...types) {
   const { advertiserSeq, businessName, businessNumber, file } = selected.value
 
-  console.log(advertiserSeq, businessName, file)
+  // console.log(advertiserSeq, businessName, file)
   validation.value.valid = true
 
   for (const type of types) {
@@ -187,7 +187,7 @@ function validate(...types) {
         validation.value.businessRegistrationFile.check = true
         validation.value.businessRegistrationFile.message = ''
 
-        console.log(file)
+        // console.log(file)
         if (!file) {
           validation.value.businessRegistrationFile.check = false
           validation.value.businessRegistrationFile.message = '사업자등록증을 추가 해주세요.'
