@@ -69,6 +69,20 @@ export function searchByUserSummary(query) {
     params: query
   })
 }
+export function searchByXCode(query) {
+  return request({
+    url: '/admin/v1/report/quiz/xcode',
+    method: 'get',
+    params: query
+  })
+}
+export function searchByXCodeSummary(query) {
+  return request({
+    url: '/admin/v1/report/quiz/xcode/summary',
+    method: 'get',
+    params: query
+  })
+}
 
 export function searchByAdvertiserExcel(query) {
   return request({
@@ -100,6 +114,15 @@ export function searchByUserExcel(query) {
 export function searchByAdminExcel(query) {
   return request({
     url: '/admin/v1/report/quiz/admin/daily/excel',
+    method: 'get',
+    params: query,
+    responseType: 'blob'
+  })
+}
+
+export function searchByXCodeExcel(query) {
+  return request({
+    url: '/admin/v1/report/quiz/xcode/daily/excel',
     method: 'get',
     params: query,
     responseType: 'blob'

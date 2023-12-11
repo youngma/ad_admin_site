@@ -49,6 +49,20 @@ export const quizReportStore = defineStore('quizReportStore', {
       summary: [],
       total: 0
     },
+    xcode: {
+      searchParams: {
+        page: 1,
+        size: 20,
+        groupName: null,
+        groupCode: null,
+        campaignName: null,
+        campaignCode: null,
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
+      },
+      list: [],
+      summary: [],
+      total: 0
+    },
     user: {
       searchParams: {
         page: 1,
@@ -272,6 +286,62 @@ export const quizReportStore = defineStore('quizReportStore', {
       const { data, headers } = await REPORT_QUIZ_API.searchByUserExcel(searchParams)
       this.downExcel(data, headers)
     },
+
+    initByXCode() {
+      this.xcode.searchParams = {
+        page: 1,
+        size: 20,
+        campaignName: null,
+        campaignCode: null,
+        groupCode: null,
+        groupName: null,
+        searchDate: [moment().add(-10, 'days').format('YYYYMMDD'), moment().format('YYYYMMDD')]
+      }
+    },
+    async reloadByXCode(params) {
+      const searchParams = Object.assign(
+        params, {
+          campaignName: this.xcode.searchParams.campaignName,
+          campaignCode: this.xcode.searchParams.campaignCode,
+          groupCode: this.xcode.searchParams.groupCode,
+          groupName: this.xcode.searchParams.groupName,
+          startDate: this.user.searchParams.searchDate[0],
+          endDate: this.user.searchParams.searchDate[1]
+        }
+      )
+
+      const result = await REPORT_QUIZ_API.searchByXCode(searchParams)
+      const summary = await REPORT_QUIZ_API.searchByXCodeSummary(searchParams)
+
+      const { content, totalElements } = result
+
+      this.xcode.searchParams.page = searchParams.page
+      this.xcode.list = content
+      this.xcode.summary = summary
+      this.xcode.total = totalElements
+    },
+    async searchByXCode({ page, size }) {
+      const params = {
+        page: page,
+        size: !size && size > 0 ? size : undefined
+      }
+      await this.reloadByXCode(params)
+    },
+    async excelByXCode(params) {
+      const searchParams = Object.assign(
+        params, {
+          campaignName: this.xcode.searchParams.campaignName,
+          campaignCode: this.xcode.searchParams.campaignCode,
+          groupCode: this.xcode.searchParams.groupCode,
+          groupName: this.xcode.searchParams.groupName,
+          startDate: this.user.searchParams.searchDate[0],
+          endDate: this.user.searchParams.searchDate[1]
+        }
+      )
+      const { data, headers } = await REPORT_QUIZ_API.searchByXCodeExcel(searchParams)
+      this.downExcel(data, headers)
+    },
+
     downExcel(data, headers) {
       const blob = new Blob([data], {
         type: headers['content-type']

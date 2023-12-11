@@ -82,7 +82,7 @@ import { authStore } from '@/store/modules/core/auth.js'
 import { permissionStore } from '@/store/modules/core/permission.js'
 import { inject } from 'vue'
 import { Hide, Lock, User, View } from '@element-plus/icons-vue'
-import {ElMessage} from "element-plus";
+import { ElMessage } from 'element-plus'
 
 export default {
   name: 'LoginMain',

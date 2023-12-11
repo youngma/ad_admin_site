@@ -12,6 +12,7 @@
         <span>{{ phoneFormatter(scope.row.phoneNumber) }}</span>
       </template>
     </el-table-column>
+    <el-table-column prop="email" label="E-MAIL" header-align="center" align="center"/>
     <el-table-column prop="userStatusName" label="사용자 상태" width="120" header-align="center" align="center" />
     <el-table-column prop="insertedAt" label="등록일" width="170" header-align="center" />
     <el-table-column prop="updatedAt" label="수정일" width="170" header-align="center" />

@@ -331,6 +331,12 @@ export const asyncRoutes = [
         meta: { title: '자몽랩 리포트(요약)', icon: 'mdi:report-line-shimmer' }
       },
       {
+        path: 'admin-detail',
+        component: () => import('@/views/ad-report/quiz/AdminDetailReport.vue'),
+        name: 'QuizXCodeReport',
+        meta: { title: '자몽랩 리포트(상세)', icon: 'mdi:report-line-shimmer' }
+      },
+      {
         path: 'advertiser',
         component: () => import('@/views/ad-report/quiz/AdvertiserReport.vue'),
         name: 'QuizAdvertiserReport',
