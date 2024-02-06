@@ -86,6 +86,24 @@
             </div>
           </el-col>
         </el-row>
+        <el-row :gutter="10">
+          <el-col :span="6" class="col_tit">
+            <strong class="comm_tit_box">이메일</strong>
+          </el-col>
+          <el-col :span="16" class="col_desc">
+            <el-row :gutter="10">
+              <el-col :span="16">
+                <el-input
+                  v-model="users.register.email"
+                  :class="{ 'is-error': !validation.email.check }"
+                  class="" placeholder="이메일을 입력 해주세요." />
+              </el-col>
+            </el-row>
+            <div v-show="!validation.email.check" class="invalid-feedback">
+              {{validation.email.message}}
+            </div>
+          </el-col>
+        </el-row>
       </div>
       <el-row justify="end">
         <el-col class="t_r comm_form_box" tag="span">
@@ -101,7 +119,7 @@ import { partnerStore } from '@/store/modules/admin/partnerStore.js'
 import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance } from 'vue'
 import { ElMessageBox } from 'element-plus'
-import {validPhone} from "@/utils/validate.js";
+import { validEmail, validPhone } from '@/utils/validate.js'
 
 defineOptions({
   name: 'PartnerUserRegisterModal'
@@ -126,6 +144,10 @@ const validation = ref({
   phoneNumber: {
     check: true,
     message: ''
+  },
+  email: {
+    check: true,
+    message: ''
   }
 })
 
@@ -134,8 +156,7 @@ const store = partnerStore()
 const { users } = storeToRefs(store)
 
 function validate(...types) {
-
-  const { userId, userPassword, userName, phoneNumber, alReadyCheck } = users.value.register
+  const { userId, userPassword, userName, phoneNumber, alReadyCheck, email } = users.value.register
 
   // console.log(userId, userPassword, userName, phoneNumber, alReadyCheck)
   validation.value.valid = true
@@ -216,6 +237,30 @@ function validate(...types) {
           validation.value.phoneNumber.check = false
           validation.value.phoneNumber.message = '전화번호 형식을 확인 해주세요.'
           users.value.register.phoneNumber = null
+          validation.value.valid = false
+
+          break
+        }
+
+        break
+
+      case 'email' :
+
+        validation.value.email.check = true
+        validation.value.email.message = ''
+
+        if (email === null || email === '') {
+          validation.value.email.check = false
+          validation.value.email.message = '이메일를 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        if (!validEmail(email)) {
+          validation.value.email.check = false
+          validation.value.email.message = '이메일 형식을 확인 해주세요.'
           validation.value.valid = false
 
           break

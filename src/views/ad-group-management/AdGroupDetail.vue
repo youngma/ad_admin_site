@@ -203,8 +203,9 @@
           <el-col :span="16" class="col_desc pl-10">
             <el-input-number
               v-model="adGroups.selectedAdGroup.rewordRate"
-              :min="1"
+              :min="0.1"
               :max="100"
+              :step="0.1"
               controls-position="right"
               size="large"
             />

@@ -6,13 +6,12 @@
   >
     <el-table-column fixed prop="userId" label="사용자 아이디" width="150" header-align="center" align="center" />
     <el-table-column prop="userName" label="사용자 이름" header-align="center" />
-<!--    <el-table-column prop="phoneNumber" label="전화 번호" :formatter="phoneFormatter" header-align="center" align="center">-->
     <el-table-column prop="phoneNumber" label="전화 번호" width="150" header-align="center" align="center">
       <template #default="scope">
         <span>{{ phoneFormatter(scope.row.phoneNumber) }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="email" label="E-MAIL" header-align="center" align="center"/>
+    <el-table-column prop="email" label="이메일" header-align="center" align="center"/>
     <el-table-column prop="userStatusName" label="사용자 상태" width="120" header-align="center" align="center" />
     <el-table-column prop="insertedAt" label="등록일" width="170" header-align="center" />
     <el-table-column prop="updatedAt" label="수정일" width="170" header-align="center" />

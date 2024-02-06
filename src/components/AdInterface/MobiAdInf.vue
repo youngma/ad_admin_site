@@ -146,6 +146,7 @@ async function laodAds() {
     const alreadyCheck = await alreadyRegisteredByMobi(s, keys.join(','))
 
     mobionAds.value = result.data.client[0].data
+    // .filter(t => t.pnm.startsWith('#'))
 
     mobionAds.value.forEach(ad => {
       const { increaseViewKey } = ad

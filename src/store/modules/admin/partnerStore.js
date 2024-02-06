@@ -44,7 +44,8 @@ export const partnerStore = defineStore('partnerStore', {
         alReadyCheck: false,
         userName: null,
         userPassword: null,
-        phoneNumber: null
+        phoneNumber: null,
+        email: null
       }
     },
     accounts: {
@@ -92,7 +93,7 @@ export const partnerStore = defineStore('partnerStore', {
         callBackUrl: null,
         commissionRate: 1,
         userCommissionRate: 1,
-        rewordRate: 1
+        rewordRate: 0.1
       },
       uploadLogoFile: [],
       uploadPointIconFile: [],
@@ -273,7 +274,9 @@ export const partnerStore = defineStore('partnerStore', {
           alReadyCheck: false,
           userName: null,
           userPassword: null,
-          phoneNumber: null
+          phoneNumber: null,
+          email: null
+
         }
         this.users.registerModal = false
       }
@@ -301,7 +304,7 @@ export const partnerStore = defineStore('partnerStore', {
           callBackUrl: null,
           commissionRate: 1,
           userCommissionRate: 1,
-          rewordRate: 1
+          rewordRate: 0.1
         }
         this.adGroups.uploadLogoFile = []
         this.adGroups.uploadPointIconFile = []
@@ -366,8 +369,8 @@ export const partnerStore = defineStore('partnerStore', {
       })
     },
     userModify() {
-      const { userSeq, userName, phoneNumber } = this.users.selectedUser
-      const params = this.generateParams({ userSeq, userName, phoneNumber })
+      const { userSeq, userName, phoneNumber, email } = this.users.selectedUser
+      const params = this.generateParams({ userSeq, userName, phoneNumber, email })
 
       PARTNER_API.userModify(params).then(() => {
         this.$alert('수정 되었습니다.', '확인', {})

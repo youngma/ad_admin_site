@@ -292,7 +292,7 @@ function validate(...types) {
 
         if (!validEmail(email)) {
           validation.value.email.check = false
-          validation.value.email.message = '이메일형식을 확인 해주세요.'
+          validation.value.email.message = '이메일 형식을 확인 해주세요.'
           selected.value.email = null
           validation.value.valid = false
 

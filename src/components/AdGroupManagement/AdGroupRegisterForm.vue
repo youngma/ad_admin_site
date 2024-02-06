@@ -214,8 +214,9 @@
 
                 <el-input-number
                   v-model="adGroups.register.rewordRate"
-                  :min="1"
+                  :min="0.1"
                   :max="100"
+                  :step="0.1"
                   controls-position="right"
                   size="large"
                 />

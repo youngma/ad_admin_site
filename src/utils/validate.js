@@ -87,7 +87,7 @@ export function validPhone(phone) {
 
 export function validBusinessNumber(str) {
   // const reg = /^[0-9]{3}[0-9]{2}[0-9]{5}$/
-  const reg = /^([0-2])([0-9])([0-9])([0-9])([0-9])([0-9])([0-4])([0-9])([0-9])([0-9])$/
+  const reg = /^([0-2])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])$/
   return reg.test(str.replaceAll('-', ''))
 }
 
@@ -112,7 +112,6 @@ export function isArray(arg) {
   }
   return Array.isArray(arg)
 }
-
 
 export function replaceWhiteSpace(arg) {
   return arg.replace(/\s+/g, '')

@@ -52,6 +52,24 @@
             </div>
           </el-col>
         </el-row>
+        <el-row :gutter="10">
+          <el-col :span="4" class="col_tit">
+            <strong class="comm_tit_box">이메일</strong>
+          </el-col>
+          <el-col :span="16" class="col_desc">
+            <el-row :gutter="10">
+              <el-col :span="20">
+                <el-input
+                  v-model="users.selectedUser.email"
+                  :class="{ 'is-error': !validation.email.check }"
+                  class="" placeholder="이메일을 입력 해주세요." />
+              </el-col>
+            </el-row>
+            <div v-show="!validation.email.check" class="invalid-feedback">
+              {{validation.email.message}}
+            </div>
+          </el-col>
+        </el-row>
       </div>
       <el-row justify="end">
         <el-col class="t_r comm_form_box" tag="span">
@@ -66,6 +84,7 @@
 import { advertiserStore } from '@/store/modules/admin/advertiserStore.js'
 import { storeToRefs } from 'pinia'
 import { ref, getCurrentInstance } from 'vue'
+import { validEmail } from '@/utils/validate.js'
 
 defineOptions({
   name: 'AdvertiserUserModifyModal'
@@ -82,6 +101,10 @@ const validation = ref({
   phoneNumber: {
     check: true,
     message: ''
+  },
+  email: {
+    check: true,
+    message: ''
   }
 })
 
@@ -90,7 +113,7 @@ const store = advertiserStore()
 const { users } = storeToRefs(store)
 
 function validate(...types) {
-  const { userSeq, userId, userName, phoneNumber } = users.value.selectedUser
+  const { userSeq, userId, userName, phoneNumber, email } = users.value.selectedUser
 
   validation.value.valid = true
 
@@ -125,12 +148,36 @@ function validate(...types) {
         }
 
         break
+
+      case 'email' :
+
+        validation.value.email.check = true
+        validation.value.email.message = ''
+
+        if (email === null || email === '') {
+          validation.value.email.check = false
+          validation.value.email.message = '이메일를 입력 하세요.'
+
+          validation.value.valid = false
+
+          break
+        }
+
+        if (!validEmail(email)) {
+          validation.value.email.check = false
+          validation.value.email.message = '이메일 형식을 확인 해주세요.'
+          validation.value.valid = false
+
+          break
+        }
+
+        break
     }
   }
 }
 
 function save() {
-  validate('userName', 'phoneNumber')
+  validate('userName', 'phoneNumber', 'email')
   if (validation.value.valid) {
     store.userModify()
   }

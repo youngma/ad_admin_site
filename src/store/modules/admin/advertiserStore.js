@@ -51,7 +51,8 @@ export const advertiserStore = defineStore('advertiserStore', {
         alReadyCheck: false,
         userName: null,
         userPassword: null,
-        phoneNumber: null
+        phoneNumber: null,
+        email: null
       }
     },
     accounts: {
@@ -327,7 +328,8 @@ export const advertiserStore = defineStore('advertiserStore', {
           alReadyCheck: false,
           userName: null,
           userPassword: null,
-          phoneNumber: null
+          phoneNumber: null,
+          email: null
         }
         this.users.registerModal = false
       }
@@ -453,8 +455,8 @@ export const advertiserStore = defineStore('advertiserStore', {
       })
     },
     userModify() {
-      const { userSeq, userName, phoneNumber } = this.users.selectedUser
-      const params = this.generateParams({ userSeq, userName, phoneNumber })
+      const { userSeq, userName, phoneNumber, email } = this.users.selectedUser
+      const params = this.generateParams({ userSeq, userName, phoneNumber, email })
 
       ADVERTISER_API.userModify(params).then(() => {
         this.$alert('수정 되었습니다.', '확인', {})
@@ -597,7 +599,6 @@ export const advertiserStore = defineStore('advertiserStore', {
 
       if (selected.length === 0) {
         this.initRegisterForm('campaigns')
-
       }
     },
     initCampaignDetail() {

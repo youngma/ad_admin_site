@@ -92,6 +92,31 @@
         {{ moneyFormatter(scope.row.adReword) }}
       </template>
     </el-table-column>
+    <el-table-column  prop="postBackStatus" label="포스트백 결과" width="150" header-align="center" align="center" >
+      <template #default="scope">
+        <div>
+          <el-popover
+            ref="popover"
+            title="연동 결과"
+            trigger="hover"
+            width="auto"
+            content=""
+          >
+            <template #reference>
+              {{ scope.row.postBackStatus === 200 ? '성공' : '실패'}}
+
+            </template>
+            <template #default>
+              {{
+                scope.row.postBackResult != null ? JSON.stringify(JSON.parse(scope.row.postBackResult),null,2) : null
+              }}
+            </template>
+
+          </el-popover>
+        </div>
+      </template>
+
+    </el-table-column>
 
   </el-table>
 
@@ -101,6 +126,7 @@
       :current-page="user.searchParams.page"
       background
       :default-current-page=1
+
       :default-page-size=20
       :total="user.total"
       layout="prev, pager, next"
@@ -132,7 +158,6 @@ function pageChange(number) {
 function excel() {
   store.excelByUser({})
 }
-
 
 const getSummaries = (param) => {
   const { columns, data } = param
